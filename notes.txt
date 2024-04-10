@@ -1,0 +1,2 @@
+một đề cương có thể dùng cho tối đa 2 khoá học liên tiếp
+tạm thời query trong db số relation <= 2 thì nhận (không check liên tiếp)

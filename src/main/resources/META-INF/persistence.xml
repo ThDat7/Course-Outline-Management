@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+    <persistence-unit name="com.dat_QuanLyDeCuong_war_1.0-SNAPSHOTPU" transaction-type="RESOURCE_LOCAL">
+        <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+        <class>com.dat.pojo.User</class>
+        <class>com.dat.pojo.Teacher</class>
+        <class>com.dat.pojo.Faculty</class>
+        <class>com.dat.pojo.Major</class>
+        <class>com.dat.pojo.Course</class>
+        <class>com.dat.pojo.CourseOutline</class>
+        <class>com.dat.pojo.CourseOutlineDetail</class>
+        <class>com.dat.pojo.CourseAssessment</class>
+        <class>com.dat.pojo.AssignOutline</class>
+        <class>com.dat.pojo.Comment</class>
+        <exclude-unlisted-classes>false</exclude-unlisted-classes>
+        <properties>
+            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/quanlydecuong?createDatabaseIfNotExist=true&zeroDateTimeBehavior=CONVERT_TO_NULL"/>
+            <property name="javax.persistence.jdbc.user" value="root"/>
+            <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
+            <property name="javax.persistence.jdbc.password" value="root"/>
+        </properties>
+    </persistence-unit>
+</persistence>

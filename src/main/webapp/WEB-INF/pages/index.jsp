@@ -1,4 +1,4 @@
-<%-- 
+<%--
     Document   : index
     Created on : Apr 10, 2024, 1:05:58 AM
     Author     : PC
@@ -12,6 +12,6 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <h1>Hello the gioi </h1>
+        <h1>JSP</h1>
     </body>
 </html>

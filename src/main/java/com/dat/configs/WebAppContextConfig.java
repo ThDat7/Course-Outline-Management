@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -16,12 +17,15 @@ import org.springframework.web.servlet.view.JstlView;
 
 /**
  *
- * @author PC
+ * @author admin
  */
 @Configuration
 @EnableWebMvc
+@EnableTransactionManagement
 @ComponentScan(basePackages = {
-    "com.dat.controllers"
+    "com.dat.controllers",
+    "com.dat.repository",
+    "com.dat.service"
 })
 public class WebAppContextConfig implements WebMvcConfigurer {
 
