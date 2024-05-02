@@ -14,13 +14,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- *
  * @author DELL
  */
 @Entity
@@ -46,7 +46,7 @@ public class CourseOutline {
     private Set<Comment> comments;
     @OneToOne
     @JoinColumn(
-            name = "user_id",
+            name = "assign_outline_id",
             referencedColumnName = "id")
     private AssignOutline assignOutline;
 }

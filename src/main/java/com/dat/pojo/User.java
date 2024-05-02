@@ -4,18 +4,15 @@
  */
 package com.dat.pojo;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
- *
  * @author DELL
  */
 @Entity
@@ -35,6 +32,14 @@ public class User {
     private String phone;
     private String username;
     private String password;
-    private Boolean active;
-    private String userRole;
+    private UserStatus status;
+    private UserRole role;
+    private String image;
+
+    @Transient
+    private MultipartFile file;
+
+    public User(Integer id) {
+        this.id = id;
+    }
 }

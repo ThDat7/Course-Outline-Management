@@ -1,2 +1,43 @@
 một đề cương có thể dùng cho tối đa 2 khoá học liên tiếp
 tạm thời query trong db số relation <= 2 thì nhận (không check liên tiếp)
+
+users: active => status: có 4 trạng thái, enable, disable, not_active (user đợi admin kích hoạt), info (chờ bổ sung mật khẩu, avt)
+
+admin pages:
+Quản lý tài khoản
+Quản lý yêu cầu tài khoản (học sinh, giáo viên)
+Quản lý năm học
+Quản lý khoa
+Quản lý ngành (lọc theo khoa)
+Quản lý môn học (lọc theo ngành => lọc trạng thái đề cương theo năm)
+Quản lý phân công (lọc theo trạng thái (Chưa tạo đề cương, đang làm, đã hoàn thành))
+Quản lý đề cương (lọc theo năm => lọc theo ngành => lọc theo trạng thái (đã hoàn thành, đang hoàn thành))
+
+
+client pages:
+đăng ký tài khoản
+bổ sung thông tin
+đăng nhập
+
+
+teacher pages:
+quản lý
+thông tin cá nhân
+quản lý yêu cầu phân công (truy cập đến đề cương, tạo mới đề cương)
+quản lý đề cương
+
+student pages:
+thông tin cá nhân
+tìm kiếm đề cương (filtering theo năm học, theo khoa, theo ngành, theo môn học)
+    xem chi tiết, cmt
+
+
+** tích hợp firebase realtime chat
+
+lấy tất cả đề cương của K23 ngành cntt khoa cntt
+lấy các môn học chưa có đề cương của K23 ngành cntt khoa cntt
+
+đề cương môn học chỉ thuộc 1 khóa học, có thể phân nhiều năm học
+1 năm học có nhiều khóa học
+
+mỗi năm học có thể có các khoa khác nhau

@@ -4,10 +4,10 @@ package com.dat.configs;
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
+
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 /**
- *
  * @author admin
  */
 public class DispatcherServletInit extends AbstractAnnotationConfigDispatcherServletInitializer {
@@ -15,14 +15,15 @@ public class DispatcherServletInit extends AbstractAnnotationConfigDispatcherSer
     @Override
     protected Class<?>[] getRootConfigClasses() {
         return new Class[]{
-            HibernateConfig.class
+                HibernateConfig.class,
+                TilesConfigs.class
         };
     }
 
     @Override
     protected Class<?>[] getServletConfigClasses() {
         return new Class[]{
-            WebAppContextConfig.class
+                WebAppContextConfig.class
         };
     }
 
