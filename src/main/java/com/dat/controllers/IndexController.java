@@ -4,6 +4,7 @@
  */
 package com.dat.controllers;
 
+import com.dat.DataGenerator;
 import com.dat.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
@@ -30,6 +31,9 @@ public class IndexController {
     @Autowired
     private Environment env;
 
+    @Autowired
+    private DataGenerator dataGenerator;
+
     @GetMapping("/")
     public String index(Model model, @RequestParam Map<String, String> params) {
         model.addAttribute("users", userService.getUsers(params));
@@ -39,6 +43,18 @@ public class IndexController {
         model.addAttribute("counter", Math.ceil(count * 1.0 / pageSize));
 
         return "index";
+    }
+
+    @GetMapping("/data")
+    public String generateData() {
+        dataGenerator.FakeData();
+        return "redirect:/";
+    }
+
+    @GetMapping("/test")
+    public String test() {
+        throw new RuntimeException();
+//        return "redirect:/";
     }
 }
 

@@ -13,13 +13,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- *
  * @author DELL
  */
 @Entity
@@ -36,9 +36,15 @@ public class AssignOutline {
     @ManyToOne
     @JoinColumn(name = "teacher_id", nullable = false)
     private Teacher teacher;
+
+    @ManyToOne
+    @JoinColumn(name = "course_id", nullable = false)
+    private Course course;
+
     @OneToOne(mappedBy = "assignOutline")
     private CourseOutline courseOutline;
+    
     private Date assignDate;
     private Date deadlineDate;
-    private Boolean status;
+    private AssignStatus status;
 }

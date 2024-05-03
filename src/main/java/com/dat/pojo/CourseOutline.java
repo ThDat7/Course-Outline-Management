@@ -35,9 +35,6 @@ public class CourseOutline {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String content;
-    @ManyToOne
-    @JoinColumn(name = "course_id", nullable = false)
-    private Course course;
     @OneToMany(mappedBy = "courseOutline")
     private Set<CourseOutlineDetail> courseOutlineDetails;
     @OneToMany(mappedBy = "courseOutline")

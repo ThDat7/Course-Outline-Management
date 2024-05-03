@@ -10,16 +10,20 @@ import javax.persistence.Embeddable;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
- *
  * @author DELL
  */
 @Embeddable
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 public class CourseOutlineDetailId implements Serializable {
 
     @Column(name = "course_outline_id")

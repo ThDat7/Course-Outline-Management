@@ -33,7 +33,8 @@ import org.springframework.web.servlet.view.JstlView;
 @ComponentScan(basePackages = {
         "com.dat.controllers",
         "com.dat.repository",
-        "com.dat.service"
+        "com.dat.service",
+        "com.dat"
 })
 @PropertySource("classpath:configs.properties")
 public class WebAppContextConfig implements WebMvcConfigurer {

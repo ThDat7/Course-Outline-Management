@@ -34,10 +34,12 @@ tìm kiếm đề cương (filtering theo năm học, theo khoa, theo ngành, th
 
 ** tích hợp firebase realtime chat
 
+
+
+
+
 lấy tất cả đề cương của K23 ngành cntt khoa cntt
 lấy các môn học chưa có đề cương của K23 ngành cntt khoa cntt
-
 đề cương môn học chỉ thuộc 1 khóa học, có thể phân nhiều năm học
 1 năm học có nhiều khóa học
-
 mỗi năm học có thể có các khoa khác nhau

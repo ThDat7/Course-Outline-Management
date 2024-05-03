@@ -12,13 +12,13 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- *
  * @author DELL
  */
 @Entity
@@ -38,5 +38,5 @@ public class Course {
     @ManyToMany(mappedBy = "courses")
     private Set<Major> majors;
     @OneToMany(mappedBy = "course")
-    private Set<CourseOutline> courseOutlines;
+    private Set<AssignOutline> assignOutlines;
 }
