@@ -46,3 +46,4 @@ mỗi năm học có thể có các khoa khác nhau
 
 
 ADMIN: DELETE METHOD SỬA SAU, HIỆN GET METHOD.
+TẠM THỜI EAGER CÁC RELATION ĐỂ VIEWS.

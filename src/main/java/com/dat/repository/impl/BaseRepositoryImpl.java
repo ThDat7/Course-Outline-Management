@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -19,7 +20,8 @@ import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import java.util.Map;
 
-@PropertySource("classpath:configs.properties")
+
+@Transactional
 public abstract class BaseRepositoryImpl<T, K extends Serializable> implements BaseRepository<T, K> {
     private Class<T> tClass;
 
@@ -30,10 +32,8 @@ public abstract class BaseRepositoryImpl<T, K extends Serializable> implements B
         this.tClass = (Class<T>) genericSuperclass.getActualTypeArguments()[0];
     }
 
-    @Autowired
     protected LocalSessionFactoryBean factory;
 
-    @Autowired
     protected Environment env;
 
     protected abstract K getId(T t);
@@ -47,32 +47,31 @@ public abstract class BaseRepositoryImpl<T, K extends Serializable> implements B
         Root root = q.from(tClass);
         q.select(root);
 
-        if (params != null) {
+        if (params != null && params.size() > 0) {
             List<Predicate> predicates = filterByParams(params, b, root);
-            q.where(predicates.toArray(Predicate[]::new));
+            if (predicates != null && predicates.size() > 0)
+                q.where(predicates.toArray(Predicate[]::new));
         }
 
         q.orderBy(b.asc(root.get("id")));
 
         Query query = s.createQuery(q);
 
-        if (params != null) {
-            String page = params.get("page");
-            if (page != null && !page.isEmpty()) {
-                int p = Integer.parseInt(page);
-                int pageSize = Integer.parseInt(env.getProperty("PAGE_SIZE"));
+        String page = "1";
+        if (params != null && params.get("page") != null && !params.get("page").isEmpty())
+            page = params.get("page");
+        int p = Integer.parseInt(page);
+        int pageSize = Integer.parseInt(env.getProperty("PAGE_SIZE"));
 
-                query.setMaxResults(pageSize);
-                query.setFirstResult((p - 1) * pageSize);
-            }
-        }
+        query.setMaxResults(pageSize);
+        query.setFirstResult((p - 1) * pageSize);
 
         return query.getResultList();
     }
 
     public Long count() {
         Session s = factory.getObject().getCurrentSession();
-        Query q = s.createQuery(String.format("SELECT COUNT(*) FROM {0}", tClass));
+        Query q = s.createQuery(String.format("SELECT COUNT(*) FROM %s", tClass.getSimpleName()));
 
         return Long.parseLong(q.getSingleResult().toString());
     }

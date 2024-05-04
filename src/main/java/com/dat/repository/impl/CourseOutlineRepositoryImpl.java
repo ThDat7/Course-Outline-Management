@@ -1,8 +1,10 @@
 package com.dat.repository.impl;
 
-import com.dat.pojo.Major;
+import com.dat.pojo.Course;
+import com.dat.pojo.CourseOutline;
 import com.dat.pojo.User;
-import com.dat.repository.MajorRepository;
+import com.dat.repository.CourseOutlineRepository;
+import com.dat.repository.CourseRepository;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
@@ -18,16 +20,17 @@ import java.util.Map;
 @Repository
 @Transactional
 @PropertySource("classpath:configs.properties")
-public class MajorRepositoryImpl
-        extends BaseRepositoryImpl<Major, Integer>
-        implements MajorRepository {
-    public MajorRepositoryImpl(LocalSessionFactoryBean factory, Environment env) {
+public class CourseOutlineRepositoryImpl
+        extends BaseRepositoryImpl<CourseOutline, Integer>
+        implements CourseOutlineRepository {
+
+    public CourseOutlineRepositoryImpl(LocalSessionFactoryBean factory, Environment env) {
         super(factory, env);
     }
 
     @Override
-    protected Integer getId(Major major) {
-        return major.getId();
+    protected Integer getId(CourseOutline courseOutline) {
+        return courseOutline.getId();
     }
 
     @Override

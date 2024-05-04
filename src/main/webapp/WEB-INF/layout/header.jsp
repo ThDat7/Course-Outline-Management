@@ -19,25 +19,25 @@
                     <a class="nav-link" href="/">Trang chủ</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/users/">Quản lý Người dùng</a>
+                    <a class="nav-link" href=<c:url value='/users/'/>>Quản lý Người dùng</a>
+                </li>
+                <li class=" nav-item">
+                    <a class="nav-link" href=<c:url value="/users/pending/"/>>Quản lý Yêu cầu tài khoản</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/users/pending/">Quản lý Yêu cầu tài khoản</a>
+                    <a class="nav-link" href=<c:url value="/faculties/"/>>Quản lý Khoa</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/faculties/">Quản lý Khoa</a>
+                    <a class="nav-link" href=<c:url value="/majors/"/>>Quản lý Ngành</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/majors/">Quản lý Ngành</a>
+                    <a class="nav-link" href=<c:url value="/courses/"/>>Quản lý Môn học</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/courses/">Quản lý Môn học</a>
+                    <a class="nav-link" href=<c:url value="/assign-outlines/"/>>Quản lý Phân công biên soạn</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/assigns/">Quản lý Phân công biên soạn</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/outlines/">Quản lý Đề cương</a>
+                    <a class="nav-link" href=<c:url value="/course-outlines/"/>>Quản lý Đề cương</a>
                 </li>
             </ul>
 
