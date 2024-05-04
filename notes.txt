@@ -6,7 +6,7 @@ users: active => status: có 4 trạng thái, enable, disable, not_active (user 
 admin pages:
 Quản lý tài khoản
 Quản lý yêu cầu tài khoản (học sinh, giáo viên)
-Quản lý năm học
+- Quản lý năm học
 Quản lý khoa
 Quản lý ngành (lọc theo khoa)
 Quản lý môn học (lọc theo ngành => lọc trạng thái đề cương theo năm)
@@ -43,3 +43,6 @@ lấy các môn học chưa có đề cương của K23 ngành cntt khoa cntt
 đề cương môn học chỉ thuộc 1 khóa học, có thể phân nhiều năm học
 1 năm học có nhiều khóa học
 mỗi năm học có thể có các khoa khác nhau
+
+
+ADMIN: DELETE METHOD SỬA SAU, HIỆN GET METHOD.

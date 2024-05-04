@@ -5,10 +5,11 @@ import com.dat.pojo.User;
 import java.util.List;
 import java.util.Map;
 
-public interface UserService {
-    List<User> getUsers(Map<String, String> params);
+public interface UserService extends BaseService<User, Integer> {
 
-    Long countUser();
+    List<User> getUserPending(Map<String, String> params);
 
-    boolean addOrUpdateUser(User u);
+    boolean updateAndAcceptUser(User user);
+
+    void rejectPending(Integer id);
 }

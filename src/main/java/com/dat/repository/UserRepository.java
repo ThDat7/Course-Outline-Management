@@ -1,14 +1,11 @@
 package com.dat.repository;
 
 import com.dat.pojo.User;
+import com.dat.pojo.UserStatus;
 
 import java.util.List;
 import java.util.Map;
 
-public interface UserRepository {
-    List<User> getUsers(Map<String, String> params);
-
-    Long countUser();
-
-    boolean addOrUpdateUser(User u);
+public interface UserRepository extends BaseRepository<User, Integer> {
+    void updateStatus(Integer id, UserStatus status);
 }

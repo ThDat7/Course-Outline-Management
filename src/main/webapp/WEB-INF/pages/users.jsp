@@ -1,62 +1,51 @@
 <%--
-    Document   : products
-    Created on : Jul 21, 2023, 1:18:29 PM
+    Document   : index
+    Created on : Jul 7, 2023, 1:08:19 PM
     Author     : admin
 --%>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
-<%@taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<section class="container">
+    <h1 class="text-center text-info mt-1">DANH SÁCH NGƯỜI DÙNG</h1>
+    <a href="<c:url value='/users/create' />" class="btn btn-info">Thêm nguười dùng</a>
 
-<h1 class="text-center text-info mt-1">QUẢN LÝ SẢN PHẨM</h1>
 
-<c:url value="/users" var="action"/>
-<form:form method="post" action="${action}" modelAttribute="user" enctype="multipart/form-data">
-    <form:errors path="*" element="div"/>
-    <div class="form-floating mb-3 mt-3">
-        <form:input type="text" class="form-control"
-                    path="lastName" id="lastName" placeholder="Họ..."/>
-        <label for="lastName">Họ</label>
-    </div>
-    <div class="form-floating mb-3 mt-3">
-        <form:input type="text" class="form-control"
-                    path="firstName" id="firstName" placeholder="Tên..."/>
-        <label for="firstName">Tên</label>
-    </div>
-    <div class="form-floating mb-3 mt-3">
-        <form:input type="text" class="form-control"
-                    path="email" id="email" placeholder="Email..."/>
-        <label for="email">Email</label>
-    </div>
-    <div class="form-floating mb-3 mt-3">
-        <form:input type="text" class="form-control"
-                    path="username" id="username" placeholder="Tên đăng nhập..."/>
-        <label for="username">Tên đăng nhập</label>
-    </div>
-    <div class="form-floating mb-3 mt-3">
-        <form:input type="password" class="form-control"
-                    path="password" id="password" placeholder="Mật khẩu..."/>
-        <label for="password">Mật khẩu</label>
-    </div>
-    <div class="form-floating mb-3 mt-3">
-        <form:select class="form-control" path="role" id="role">
-            <form:options items="${roles}"/>
-        </form:select>
-        <label for="role">Chức vụ</label>
-    </div>
-    <div class="form-floating mb-3 mt-3">
-        <form:select class="form-control" path="status" id="status">
-            <form:options items="${statuses}"/>
-        </form:select>
-        <label for="status">Trạng thái</label>
-    </div>
-    <div class="form-floating mb-3 mt-3">
-        <form:input type="file" class="form-control"
-                    path="file" id="file"/>
-        <label for="file">Avatar</label>
-    </div>
+    <c:if test="${counter > 1}">
+        <ul class="pagination mt-1">
+            <li class="page-item"><a class="page-link" href="${action}">Tất cả</a></li>
+            <c:forEach begin="1" end="${counter}" var="i">
+                <c:url value="/" var="pageUrl">
+                    <c:param name="page" value="${i}"></c:param>
+                </c:url>
+                <li class="page-item"><a class="page-link" href="${pageUrl}">${i}</a></li>
+            </c:forEach>
+        </ul>
+    </c:if>
 
-    <div class="form-floating mt-1">
-        <button class="btn btn-info" type="submit">Thêm người dùng</button>
-    </div>
-</form:form>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Tên</th>
+            <th>Chức vụ</th>
+            <th>Email</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <c:forEach items="${users}" var="u">
+            <tr>
+                <td>${u.id}</td>
+                <td>${u.lastName} ${u.firstName}</td>
+                <td>${u.role}</td>
+                <td>${u.email}</td>
+                <td>
+                    <a href="<c:url value='/users/${u.id}'/>" class="btn btn-success">Cập nhật</a>
+                    <a href="<c:url value='/users/delete/${u.id}'/>" class="btn btn-danger">Xóa</a>
+                </td>
+            </tr>
+        </c:forEach>
+        </tbody>
+    </table>
+</section>

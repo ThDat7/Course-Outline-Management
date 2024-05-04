@@ -7,10 +7,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
 <section class="container">
-    <h1 class="text-center text-info mt-1">DANH SÁCH SẢN PHẨM</h1>
-    <a href="<c:url value="/users" />" class="btn btn-info">Thêm nguười dùng</a>
+    <h1 class="text-center text-info mt-1">DANH SÁCH YÊU CẦU TÀI KHOẢN</h1
 
-    
+
     <c:if test="${counter > 1}">
         <ul class="pagination mt-1">
             <li class="page-item"><a class="page-link" href="${action}">Tất cả</a></li>
@@ -28,6 +27,7 @@
         <tr>
             <th>Id</th>
             <th>Tên</th>
+            <th>Chức vụ</th>
             <th>Email</th>
             <th></th>
         </tr>
@@ -37,10 +37,11 @@
             <tr>
                 <td>${u.id}</td>
                 <td>${u.lastName} ${u.firstName}</td>
+                <td>${u.role}</td>
                 <td>${u.email}</td>
                 <td>
-                    <a href="#" class="btn btn-success">Cập nhật</a>
-                    <button class="btn btn-danger">Xóa</button>
+                    <a href="<c:url value='/users/pending/${u.id}'/>" class="btn btn-success">Chi tiết</a>
+                    <a href="<c:url value='/users/pending/reject/${u.id}'/>" class="btn btn-danger">Từ chối</a>
                 </td>
             </tr>
         </c:forEach>

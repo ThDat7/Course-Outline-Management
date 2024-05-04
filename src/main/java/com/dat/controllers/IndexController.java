@@ -22,27 +22,15 @@ import java.util.Map;
  * @author PC
  */
 @Controller
-@ControllerAdvice
 @PropertySource("classpath:configs.properties")
 public class IndexController {
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private Environment env;
 
     @Autowired
     private DataGenerator dataGenerator;
 
     @GetMapping("/")
-    public String index(Model model, @RequestParam Map<String, String> params) {
-        model.addAttribute("users", userService.getUsers(params));
-
-        int pageSize = Integer.parseInt(env.getProperty("PAGE_SIZE"));
-        long count = userService.countUser();
-        model.addAttribute("counter", Math.ceil(count * 1.0 / pageSize));
-
-        return "index";
+    public String index() {
+        return "forward:/users/";
     }
 
     @GetMapping("/data")

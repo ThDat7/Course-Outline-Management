@@ -16,16 +16,29 @@
         <div class="collapse navbar-collapse" id="collapsibleNavbar">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="${action}">Trang chủ</a>
+                    <a class="nav-link" href="/">Trang chủ</a>
                 </li>
-                <c:forEach items="${categories}" var="c">
-                    <c:url value="/" var="searchUrl">
-                        <c:param name="cateId" value="${c.id}"></c:param>
-                    </c:url>
-                    <li class="nav-item">
-                        <a class="nav-link" href="${searchUrl}">${c.name}</a>
-                    </li>
-                </c:forEach>
+                <li class="nav-item">
+                    <a class="nav-link" href="/users/">Quản lý Người dùng</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/users/pending/">Quản lý Yêu cầu tài khoản</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/faculties/">Quản lý Khoa</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/majors/">Quản lý Ngành</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/courses/">Quản lý Môn học</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/assigns/">Quản lý Phân công biên soạn</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/outlines/">Quản lý Đề cương</a>
+                </li>
             </ul>
 
             <form class="d-flex" action="${action}">
