@@ -5,15 +5,7 @@
 package com.dat.pojo;
 
 import java.util.Set;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -35,13 +27,13 @@ public class CourseOutline {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String content;
-    @OneToMany(mappedBy = "courseOutline")
+    @OneToMany(mappedBy = "courseOutline", fetch = FetchType.EAGER)
     private Set<CourseOutlineDetail> courseOutlineDetails;
     @OneToMany(mappedBy = "courseOutline")
     private Set<CourseAssessment> courseAssessments;
     @OneToMany(mappedBy = "courseOutline")
     private Set<Comment> comments;
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(
             name = "assign_outline_id",
             referencedColumnName = "id")

@@ -31,7 +31,7 @@ public class Major {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "faculty_id", nullable = false)
     private Faculty faculty;
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "major_course",
             joinColumns = @JoinColumn(name = "major_id"),

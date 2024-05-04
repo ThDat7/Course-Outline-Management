@@ -16,7 +16,7 @@
         <div class="collapse navbar-collapse" id="collapsibleNavbar">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="/">Trang chủ</a>
+                    <a class="nav-link" href=<c:url value='/'/>>Trang chủ</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href=<c:url value='/users/'/>>Quản lý Người dùng</a>

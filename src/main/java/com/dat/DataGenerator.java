@@ -135,12 +135,12 @@ public class DataGenerator {
             course.setCredits(faker.number().numberBetween(1, 5));
 
             Major majorRandom = majorList.get(faker.random().nextInt(majorList.size()));
-            Set<Major> majors = new HashSet<>();
-            majors.add(majorRandom);
-            course.setMajors(majors);
+            course.setMajors(Set.of(majorRandom));
+            majorRandom.setCourses(Set.of(course));
 
             courseList.add(course);
             s.save(course);
+            s.update(majorRandom);
         }
     }
 
@@ -164,7 +164,7 @@ public class DataGenerator {
     private void generateCourseOutline() {
         for (AssignOutline assignOutline : assignOutlineList) {
             CourseOutline courseOutline = new CourseOutline();
-            courseOutline.setContent(faker.lorem().paragraph());
+            courseOutline.setContent(faker.lorem().paragraph(1));
 
             courseOutline.setAssignOutline(assignOutline);
 

@@ -29,7 +29,7 @@ public class Course {
     private String name;
     private String code;
     private Integer credits;
-    @ManyToMany(mappedBy = "courses", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "courses", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Major> majors;
     @OneToMany(mappedBy = "course")
     private Set<AssignOutline> assignOutlines;

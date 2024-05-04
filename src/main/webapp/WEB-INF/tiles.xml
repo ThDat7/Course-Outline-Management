@@ -23,4 +23,14 @@
         <put-attribute name="content"
                        value="/WEB-INF/pages/user-detail.jsp"/>
     </definition>
+    <definition name="users-pending" extends="baseLayout">
+        <put-attribute name="title" value="Quản trị yêu cầu tài khoản"/>
+        <put-attribute name="content"
+                       value="/WEB-INF/pages/users-pending.jsp"/>
+    </definition>
+    <definition name="list-base" extends="baseLayout">
+        <put-attribute name="title" value="Quản trị"/>
+        <put-attribute name="content"
+                       value="/WEB-INF/pages/list-base.jsp"/>
+    </definition>
 </tiles-definitions>
