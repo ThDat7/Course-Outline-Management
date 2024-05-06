@@ -19,13 +19,13 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping("/assign-outlines")
 @PropertySource("classpath:configs.properties")
-public class AssignOutlineController extends EntityListController {
+public class AssignOutlineController extends EntityListController<AssignOutline, Integer> {
 
     private Environment env;
     private AssignOutlineService assignOutlineService;
 
     public AssignOutlineController(Environment env, AssignOutlineService assignOutlineService) {
-        super("assign-outlines",
+        super("assignOutline", "/assign-outlines",
                 "Phân công đề cương",
                 List.of("id",
                         "Giáo viên",
@@ -52,8 +52,8 @@ public class AssignOutlineController extends EntityListController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping
-    public String list(Model model, @RequestParam Map<String, String> params) {
-        return super.list(model, params);
+    @Override
+    protected void addAtributes(Model model) {
+        
     }
 }

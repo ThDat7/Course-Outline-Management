@@ -20,13 +20,14 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping("/course-outlines")
 @PropertySource("classpath:configs.properties")
-public class CourseOutlineController extends EntityListController {
+public class CourseOutlineController
+        extends EntityListController<CourseOutline, Integer> {
 
     private Environment env;
     private CourseOutlineService courseOutlineService;
 
     public CourseOutlineController(Environment env, CourseOutlineService courseOutlineService) {
-        super("course-outlines",
+        super("courseOutline", "/course-outlines",
                 "Đề cương môn học",
                 List.of("id",
                         "Tên môn học",
@@ -55,8 +56,8 @@ public class CourseOutlineController extends EntityListController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping
-    public String list(Model model, @RequestParam Map<String, String> params) {
-        return super.list(model, params);
+    @Override
+    protected void addAtributes(Model model) {
+
     }
 }

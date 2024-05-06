@@ -19,13 +19,14 @@ import java.util.stream.Collectors;
 @RequestMapping("/courses")
 @PropertySource("classpath:configs.properties")
 public class CourseController
-        extends EntityListController {
+        extends EntityListController<Course, Integer> {
 
     private Environment env;
     private CourseService courseService;
 
     public CourseController(Environment env, CourseService courseService) {
-        super("courses",
+        super("course",
+                "/courses",
                 "Môn học",
                 List.of("id", "Tên", "Mã môn", "Số tín chỉ", "Ngành"),
                 env, courseService);
@@ -40,14 +41,14 @@ public class CourseController
                         course.getName(),
                         course.getCode(),
                         course.getCredits(),
-                        course.getMajors().stream()
-                                .map(major -> major.getName())
+                        course.getEducationPrograms().stream()
+                                .map(ep -> ep.getMajor().getName())
                                 .collect(Collectors.joining(", "))))
                 .collect(Collectors.toList());
     }
 
-    @GetMapping
-    public String list(Model model, @RequestParam Map<String, String> params) {
-        return super.list(model, params);
+    @Override
+    protected void addAtributes(Model model) {
+
     }
 }

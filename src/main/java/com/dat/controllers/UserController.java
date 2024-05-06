@@ -51,7 +51,7 @@ public class UserController {
     }
 
     @PostMapping
-    public String add(@ModelAttribute(value = "user") User user) {
+    public String add(@ModelAttribute User user) {
         if (userService.addOrUpdate(user) == true)
             return "redirect:/users/";
 

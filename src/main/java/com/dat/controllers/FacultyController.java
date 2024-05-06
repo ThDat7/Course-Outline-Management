@@ -17,13 +17,14 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping("/faculties")
 @PropertySource("classpath:configs.properties")
-public class FacultyController extends EntityListController {
+public class FacultyController
+        extends EntityListController<Faculty, Integer> {
 
     private Environment env;
     private FacultyService facultyService;
 
     public FacultyController(Environment env, FacultyService facultyService) {
-        super("faculties",
+        super("faculty", "/faculties",
                 "Khoa",
                 List.of("id",
                         "Tên",
@@ -42,8 +43,8 @@ public class FacultyController extends EntityListController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping
-    public String list(Model model, @RequestParam Map<String, String> params) {
-        return super.list(model, params);
+    @Override
+    protected void addAtributes(Model model) {
+
     }
 }

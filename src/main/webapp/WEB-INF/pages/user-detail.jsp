@@ -13,6 +13,7 @@
 <c:url value="/users" var="action"/>
 <form:form method="post" action="${action}" modelAttribute="user" enctype="multipart/form-data">
     <form:errors path="*" element="div"/>
+    <form:hidden path="id"/>
     <div class="form-floating mb-3 mt-3">
         <form:input type="text" class="form-control"
                     path="lastName" id="lastName" placeholder="Họ..."/>

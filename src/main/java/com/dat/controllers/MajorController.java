@@ -1,17 +1,17 @@
 package com.dat.controllers;
 
-import com.dat.pojo.AssignOutline;
-import com.dat.pojo.Major;
-import com.dat.service.AssignOutlineService;
+import com.dat.pojo.*;
+import com.dat.service.FacultyService;
 import com.dat.service.MajorService;
+import com.google.common.base.Splitter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -19,13 +19,15 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping("/majors")
 @PropertySource("classpath:configs.properties")
-public class MajorController extends EntityListController {
+public class MajorController
+        extends EntityListController<Major, Integer> {
 
     private Environment env;
     private MajorService majorService;
+    private FacultyService facultyService;
 
-    public MajorController(Environment env, MajorService majorService) {
-        super("majors",
+    public MajorController(Environment env, MajorService majorService, FacultyService facultyService) {
+        super("major", "/majors",
                 "Ngành học",
                 List.of("id",
                         "Tên",
@@ -33,6 +35,7 @@ public class MajorController extends EntityListController {
                         "Khoa"),
                 env, majorService);
         this.majorService = majorService;
+        this.facultyService = facultyService;
         this.env = env;
     }
 
@@ -46,8 +49,14 @@ public class MajorController extends EntityListController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping
-    public String list(Model model, @RequestParam Map<String, String> params) {
-        return super.list(model, params);
+    @Override
+    protected void addAtributes(Model model) {
+        List<Faculty> faculties = facultyService.getAll(null);
+        Map facultySelectItems = faculties.stream()
+                .collect(Collectors.toMap(Faculty::getId, Faculty::getName));
+
+
+        model.addAttribute("faculties", facultySelectItems);
+
     }
 }

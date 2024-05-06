@@ -33,4 +33,34 @@
         <put-attribute name="content"
                        value="/WEB-INF/pages/list-base.jsp"/>
     </definition>
+
+    <!-- Detail entity-->
+
+    <definition name="detailBase"
+                extends="baseLayout">
+        <put-attribute name="title" value="Quản trị"/>
+        <put-attribute name="content"
+                       value="/WEB-INF/pages/detail-base.jsp"/>
+    </definition>
+
+    <definition name="major-detail" extends="detailBase">
+        <put-attribute cascade="true" name="form-field-content" value="/WEB-INF/pages/major-detail.jsp"/>
+    </definition>
+
+    <definition name="faculty-detail" extends="detailBase">
+        <put-attribute cascade="true" name="form-field-content" value="/WEB-INF/pages/faculty-detail.jsp"/>
+    </definition>
+
+    <definition name="course-detail" extends="detailBase">
+        <put-attribute cascade="true" name="form-field-content" value="/WEB-INF/pages/course-detail.jsp"/>
+    </definition>
+
+    <definition name="assign-outline-detail" extends="detailBase">
+        <put-attribute cascade="true" name="form-field-content" value="/WEB-INF/pages/assign-outline-detail.jsp"/>
+    </definition>
+
+    <definition name="course-outline-detail" extends="detailBase">
+        <put-attribute cascade="true" name="form-field-content" value="/WEB-INF/pages/course-outline-detail.jsp"/>
+    </definition>
+
 </tiles-definitions>
