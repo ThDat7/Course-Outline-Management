@@ -31,10 +31,7 @@ public class Major {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "faculty_id", nullable = false)
     private Faculty faculty;
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "major_course",
-            joinColumns = @JoinColumn(name = "major_id"),
-            inverseJoinColumns = @JoinColumn(name = "course_id"))
-    private Set<Course> courses;
+
+    @OneToMany(mappedBy = "major", fetch = FetchType.EAGER)
+    private Set<EducationProgram> educationPrograms;
 }

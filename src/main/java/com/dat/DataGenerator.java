@@ -50,6 +50,7 @@ public class DataGenerator {
         generateMajor(10);
         generateTeacher(3);
         generateCourse(30);
+        generateEducationProgram();
         generateAssignOutline();
         generateCourseOutline();
         generateCourseOutlineDetail();
@@ -109,7 +110,7 @@ public class DataGenerator {
 
         for (int i = 0; i < number; i++) {
             Teacher teacher = new Teacher();
-            User userRandom = userList.get(faker.random().nextInt(userList.size()));
+            User userRandom = available.get(faker.random().nextInt(available.size()));
             available.remove(userRandom);
 
             userRandom.setRole(UserRole.TEACHER);
@@ -135,12 +136,35 @@ public class DataGenerator {
             course.setCredits(faker.number().numberBetween(1, 5));
 
             Major majorRandom = majorList.get(faker.random().nextInt(majorList.size()));
-            course.setMajors(Set.of(majorRandom));
-            majorRandom.setCourses(Set.of(course));
 
             courseList.add(course);
             s.save(course);
             s.update(majorRandom);
+        }
+    }
+
+    private void generateEducationProgram() {
+        for (Major major : majorList) {
+
+            List<Course> available = new ArrayList<>(courseList);
+            for (int i = 1; i < 9; i++) {
+                for (int j = 0; j < 3; j++) {
+                    Course courseRandom = available.get(faker.random().nextInt(available.size()));
+                    if (courseRandom == null)
+                        break;
+                    available.remove(courseRandom);
+
+                    EducationProgramId id = new EducationProgramId();
+
+                    EducationProgram educationProgram = new EducationProgram();
+                    educationProgram.setSemester(i);
+                    educationProgram.setMajor(major);
+                    educationProgram.setCourse(courseRandom);
+                    educationProgram.setId(id);
+
+                    s.save(educationProgram);
+                }
+            }
         }
     }
 
