@@ -20,25 +20,22 @@
 </div>
 
 <%--#######################################--%>
+<c:set var="countCurrentAssessment" value="0"/>
 
-<div class="row">
-    <c:set var="countCurrentAssessment" value="0"/>
+<c:forEach var="assessment" items="${courseOutline.courseAssessments}">
+    <c:set var="countCurrentAssessment" value="${countCurrentAssessment + 1}"/>
+    <jsp:include page="../utils/course-assessment-item.jsp">
+        <jsp:param name="type" value="${assessment.type}"/>
+        <jsp:param name="method" value="${assessment.method}"/>
+        <jsp:param name="time" value="${assessment.time}"/>
+        <jsp:param name="clos" value="${assessment.clos}"/>
+        <jsp:param name="weightPercent" value="${assessment.weightPercent}"/>
+    </jsp:include>
+</c:forEach>
 
-    <c:forEach var="assessment" items="${courseOutline.courseAssessments}">
-        <c:set var="countCurrentAssessment" value="${countCurrentAssessment + 1}"/>
-        <jsp:include page="../utils/course-assessment-item.jsp">
-            <jsp:param name="type" value="${assessment.type}"/>
-            <jsp:param name="method" value="${assessment.method}"/>
-            <jsp:param name="time" value="${assessment.time}"/>
-            <jsp:param name="clos" value="${assessment.clos}"/>
-            <jsp:param name="weightPercent" value="${assessment.weightPercent}"/>
-        </jsp:include>
-    </c:forEach>
-
-    <c:forEach begin="${countCurrentAssessment + 1}" end="4">
-        <jsp:include page="../utils/course-assessment-item.jsp"/>
-    </c:forEach>
-</div>
+<c:forEach begin="${countCurrentAssessment + 1}" end="4">
+    <jsp:include page="../utils/course-assessment-item.jsp"/>
+</c:forEach>
 <%--#######################################--%>
 
 <c:set var="schoolYear" value="${[0,0]}"/>
@@ -65,6 +62,6 @@
                 <option value="${j}">${j}</option>
             </c:otherwise>
         </c:choose>
-        
+
     </c:forEach>
 </select>

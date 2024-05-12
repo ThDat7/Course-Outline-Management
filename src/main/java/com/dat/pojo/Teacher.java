@@ -15,13 +15,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- *
  * @author DELL
  */
 @Entity
@@ -44,4 +44,8 @@ public class Teacher {
 
     @OneToMany(mappedBy = "teacher")
     private List<AssignOutline> assignOutlines;
+
+    public Teacher(Integer id) {
+        this.id = id;
+    }
 }

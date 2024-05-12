@@ -1,16 +1,18 @@
 package com.dat.controllers;
 
 import com.dat.pojo.AssignOutline;
+import com.dat.pojo.AssignStatus;
 import com.dat.pojo.Course;
+import com.dat.pojo.Teacher;
 import com.dat.service.AssignOutlineService;
 import com.dat.service.CourseService;
+import com.dat.service.TeacherService;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Map;
@@ -23,8 +25,12 @@ public class AssignOutlineController extends EntityListController<AssignOutline,
 
     private Environment env;
     private AssignOutlineService assignOutlineService;
+    private TeacherService teacherService;
+    private CourseService courseService;
 
-    public AssignOutlineController(Environment env, AssignOutlineService assignOutlineService) {
+    public AssignOutlineController(Environment env, AssignOutlineService assignOutlineService,
+                                   TeacherService teacherService,
+                                   CourseService courseService) {
         super("assignOutline", "/assign-outlines",
                 "Phân công đề cương",
                 List.of("id",
@@ -36,6 +42,8 @@ public class AssignOutlineController extends EntityListController<AssignOutline,
                 env, assignOutlineService);
         this.assignOutlineService = assignOutlineService;
         this.env = env;
+        this.teacherService = teacherService;
+        this.courseService = courseService;
     }
 
     protected List<List> getRecords(Map<String, String> params) {
@@ -52,8 +60,22 @@ public class AssignOutlineController extends EntityListController<AssignOutline,
                 .collect(Collectors.toList());
     }
 
+    @PostMapping
+    public String add(AssignOutline ao) {
+        return super.add(ao);
+    }
+
     @Override
     protected void addAtributes(Model model) {
-        
+        Map teacherSelectItems = teacherService.getAll(null).stream()
+                .collect(Collectors.toMap(Teacher::getId, t -> String.format("%s %s",
+                        t.getUser().getLastName(),
+                        t.getUser().getFirstName())));
+        Map courseSelectItems = courseService.getAll().stream()
+                .collect(Collectors.toMap(Course::getId, Course::getName));
+
+        model.addAttribute("teachers", teacherSelectItems);
+        model.addAttribute("courses", courseSelectItems);
+        model.addAttribute("statuses", AssignStatus.values());
     }
 }
