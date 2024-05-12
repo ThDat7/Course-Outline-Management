@@ -8,7 +8,7 @@ import java.text.SimpleDateFormat;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
-import com.dat.formatters.UserFormatter;
+import com.dat.formatters.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -17,12 +17,15 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
-import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.*;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
+
+import javax.servlet.FilterRegistration;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 
 /**
  * @author admin
@@ -47,8 +50,17 @@ public class WebAppContextConfig implements WebMvcConfigurer {
     }
 
     @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/js/**").addResourceLocations("/WEB-INF/resources/js/");
+    }
+
+    @Override
     public void addFormatters(FormatterRegistry registry) {
         registry.addFormatter(new UserFormatter());
+        registry.addFormatter(new MajorFormatter());
+        registry.addFormatter(new FacultyFormatter());
+        registry.addFormatter(new CourseFormatter());
+        registry.addFormatter(new AssignOutlineFormatter());
     }
 
 //    @Bean

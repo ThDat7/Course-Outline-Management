@@ -32,4 +32,8 @@ public class Faculty {
 
     @OneToMany(mappedBy = "faculty")
     private Set<Major> majors;
+
+    public Faculty(Integer id) {
+        this.id = id;
+    }
 }

@@ -34,4 +34,8 @@ public class Course {
 
     @OneToMany(mappedBy = "course", fetch = FetchType.EAGER)
     private Set<EducationProgram> educationPrograms;
+
+    public Course(Integer id) {
+        this.id = id;
+    }
 }

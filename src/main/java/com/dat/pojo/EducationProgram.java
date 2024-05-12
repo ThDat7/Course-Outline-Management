@@ -17,15 +17,15 @@ import javax.persistence.*;
 public class EducationProgram {
     @EmbeddedId
     private EducationProgramId id;
-    
+
     private int semester;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @MapsId("courseId")
     private Course course;
 
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @MapsId("majorId")
     private Major major;
 }

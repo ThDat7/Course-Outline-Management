@@ -43,8 +43,11 @@
                        value="/WEB-INF/pages/detail-base.jsp"/>
     </definition>
 
-    <definition name="major-detail" extends="detailBase">
-        <put-attribute cascade="true" name="form-field-content" value="/WEB-INF/pages/major-detail.jsp"/>
+    <definition name="major-detail"
+                extends="baseLayout">
+        <put-attribute name="title" value="Quản trị"/>
+        <put-attribute name="content"
+                       value="/WEB-INF/pages/major-detail.jsp"/>
     </definition>
 
     <definition name="faculty-detail" extends="detailBase">
@@ -55,12 +58,12 @@
         <put-attribute cascade="true" name="form-field-content" value="/WEB-INF/pages/course-detail.jsp"/>
     </definition>
 
-    <definition name="assign-outline-detail" extends="detailBase">
-        <put-attribute cascade="true" name="form-field-content" value="/WEB-INF/pages/assign-outline-detail.jsp"/>
+    <definition name="assignOutline-detail" extends="detailBase">
+        <put-attribute cascade="true" name="form-field-content" value="/WEB-INF/pages/assignOutline-detail.jsp"/>
     </definition>
 
-    <definition name="course-outline-detail" extends="detailBase">
-        <put-attribute cascade="true" name="form-field-content" value="/WEB-INF/pages/course-outline-detail.jsp"/>
+    <definition name="courseOutline-detail" extends="detailBase">
+        <put-attribute cascade="true" name="form-field-content" value="/WEB-INF/pages/courseOutline-detail.jsp"/>
     </definition>
 
 </tiles-definitions>

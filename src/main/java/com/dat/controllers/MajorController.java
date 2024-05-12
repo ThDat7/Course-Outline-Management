@@ -1,6 +1,7 @@
 package com.dat.controllers;
 
 import com.dat.pojo.*;
+import com.dat.service.CourseService;
 import com.dat.service.FacultyService;
 import com.dat.service.MajorService;
 import com.google.common.base.Splitter;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Controller
@@ -26,7 +28,11 @@ public class MajorController
     private MajorService majorService;
     private FacultyService facultyService;
 
-    public MajorController(Environment env, MajorService majorService, FacultyService facultyService) {
+    private CourseService courseService;
+
+    public MajorController(Environment env, MajorService majorService,
+                           FacultyService facultyService,
+                           CourseService courseService) {
         super("major", "/majors",
                 "Ngành học",
                 List.of("id",
@@ -37,6 +43,7 @@ public class MajorController
         this.majorService = majorService;
         this.facultyService = facultyService;
         this.env = env;
+        this.courseService = courseService;
     }
 
     protected List<List> getRecords(Map<String, String> params) {
@@ -51,12 +58,32 @@ public class MajorController
 
     @Override
     protected void addAtributes(Model model) {
-        List<Faculty> faculties = facultyService.getAll(null);
-        Map facultySelectItems = faculties.stream()
+        Map facultySelectItems = facultyService.getAll(null).stream()
                 .collect(Collectors.toMap(Faculty::getId, Faculty::getName));
+
+        List relationCoursesId = null;
+        if (((Major) model.getAttribute("major"))
+                .getEducationPrograms() != null)
+
+            relationCoursesId = ((Major) model.getAttribute("major"))
+                    .getEducationPrograms().stream()
+                    .map(ep -> ep.getId())
+                    .collect(Collectors.toList());
+        
+        Map allCourses = courseService.getAll().stream()
+                .collect(Collectors.toMap(Course::getId, Course::getName));
 
 
         model.addAttribute("faculties", facultySelectItems);
+        model.addAttribute("relationCoursesId", relationCoursesId);
+        model.addAttribute("allCourses", allCourses);
+    }
 
+    @PostMapping()
+    public String add(@ModelAttribute("major") Major major, @RequestParam(name = "courses", required = false) List<String> courses) {
+        if (majorService.addOrUpdate(major, courses))
+            return "redirect:/majors/";
+
+        return "major-detail";
     }
 }

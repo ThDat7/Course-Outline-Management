@@ -1,8 +1,9 @@
 package com.dat.repository.impl;
 
 import com.dat.pojo.Course;
+import com.dat.pojo.Teacher;
 import com.dat.pojo.User;
-import com.dat.repository.CourseRepository;
+import com.dat.repository.TeacherRepository;
 import org.hibernate.Session;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -19,17 +20,17 @@ import java.util.Map;
 @Repository
 @Transactional
 @PropertySource("classpath:configs.properties")
-public class CourseRepositoryImpl
-        extends BaseRepositoryImpl<Course, Integer>
-        implements CourseRepository {
+public class TeacherRepositoryImpl
+        extends BaseRepositoryImpl<Teacher, Integer>
+        implements TeacherRepository {
 
-    public CourseRepositoryImpl(LocalSessionFactoryBean factory, Environment env) {
+    public TeacherRepositoryImpl(LocalSessionFactoryBean factory, Environment env) {
         super(factory, env);
     }
 
     @Override
-    protected Integer getId(Course course) {
-        return course.getId();
+    protected Integer getId(Teacher teacher) {
+        return teacher.getId();
     }
 
     @Override
@@ -38,8 +39,8 @@ public class CourseRepositoryImpl
     }
 
     @Override
-    public List<Course> getAll() {
+    public List<Teacher> getAll() {
         Session s = factory.getObject().openSession();
-        return s.createQuery("SELECT c FROM Course c", Course.class).list();
+        return s.createQuery("SELECT t FROM Teacher t", Teacher.class).list();
     }
 }
