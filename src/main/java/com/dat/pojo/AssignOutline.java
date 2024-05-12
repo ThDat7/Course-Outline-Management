@@ -34,10 +34,14 @@ public class AssignOutline {
     @JoinColumn(name = "course_id", nullable = false)
     private Course course;
 
-    @OneToOne(mappedBy = "assignOutline")
+    @OneToOne(mappedBy = "assignOutline", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private CourseOutline courseOutline;
 
     private Date assignDate;
     private Date deadlineDate;
     private AssignStatus status;
+
+    public AssignOutline(Integer id) {
+        this.id = id;
+    }
 }

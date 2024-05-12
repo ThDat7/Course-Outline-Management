@@ -27,13 +27,13 @@ public class CourseOutline {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String content;
-    @OneToMany(mappedBy = "courseOutline", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "courseOutline", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<CourseOutlineDetail> courseOutlineDetails;
-    @OneToMany(mappedBy = "courseOutline")
+    @OneToMany(mappedBy = "courseOutline", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<CourseAssessment> courseAssessments;
     @OneToMany(mappedBy = "courseOutline")
     private Set<Comment> comments;
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinColumn(
             name = "assign_outline_id",
             referencedColumnName = "id")
