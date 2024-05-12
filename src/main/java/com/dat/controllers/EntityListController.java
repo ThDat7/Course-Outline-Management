@@ -85,7 +85,7 @@ public abstract class EntityListController<T, K extends Serializable> {
     //    @PostMapping
     public String add(@ModelAttribute T t) {
         if (service.addOrUpdate(t) == true)
-            return String.format("redirect:/%ss/", entityName);
+            return String.format("redirect:/%s/", rootEndpoint);
 
         return String.format("%s-detail", entityName);
     }

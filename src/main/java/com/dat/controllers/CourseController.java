@@ -1,6 +1,7 @@
 package com.dat.controllers;
 
 import com.dat.pojo.Course;
+import com.dat.pojo.Faculty;
 import com.dat.service.BaseService;
 import com.dat.service.CourseService;
 import org.springframework.context.annotation.PropertySource;
@@ -8,6 +9,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -41,10 +43,17 @@ public class CourseController
                         course.getName(),
                         course.getCode(),
                         course.getCredits(),
-                        course.getEducationPrograms().stream()
-                                .map(ep -> ep.getMajor().getName())
-                                .collect(Collectors.joining(", "))))
+                        course.getEducationPrograms() != null ?
+                                course.getEducationPrograms().stream()
+                                        .map(ep -> ep.getMajor().getName())
+                                        .collect(Collectors.joining(", "))
+                                : ""))
                 .collect(Collectors.toList());
+    }
+
+    @PostMapping
+    public String add(Course c) {
+        return super.add(c);
     }
 
     @Override
