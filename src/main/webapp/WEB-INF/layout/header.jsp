@@ -6,7 +6,8 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<c:url value="/" var="action"/>
+
+<c:set var="action" value=""/>
 <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">E-commerce Website</a>
@@ -40,11 +41,6 @@
                     <a class="nav-link" href=<c:url value="/course-outlines/"/>>Quản lý Đề cương</a>
                 </li>
             </ul>
-
-            <form class="d-flex" action="${action}">
-                <input class="form-control me-2" type="text" name="kw" placeholder="Nhập từ khóa...">
-                <button class="btn btn-primary" type="submit">Tìm</button>
-            </form>
         </div>
     </div>
 </nav>

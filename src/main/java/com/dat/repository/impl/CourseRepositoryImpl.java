@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -33,8 +34,18 @@ public class CourseRepositoryImpl
     }
 
     @Override
-    protected List<Predicate> filterByParams(Map<String, String> params, CriteriaBuilder b, Root<User> root) {
-        return null;
+    protected List<Predicate> filterByParams(Map<String, String> params, CriteriaBuilder b, Root root) {
+        List<Predicate> predicates = new ArrayList<>();
+
+        if (params.containsKey("kw")) {
+            predicates.add(b.like(root.get("name"), "%" + params.get("kw") + "%"));
+        }
+
+        if (params.containsKey("credits")) {
+            predicates.add(b.equal(root.get("credits"), Integer.parseInt(params.get("credits"))));
+        }
+
+        return predicates;
     }
 
     @Override

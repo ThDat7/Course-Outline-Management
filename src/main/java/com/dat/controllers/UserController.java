@@ -44,10 +44,25 @@ public class UserController extends EntityListController<User, Integer> {
         List<User> users = userService.getAll(params);
         return users.stream().map(user -> List.of(
                         user.getId(),
-                        String.format("%s %s", user.getFirstName(), user.getLastName()),
+                        String.format("%s %s", user.getLastName(), user.getFirstName()),
                         user.getRole().toString(),
                         user.getEmail()))
                 .collect(java.util.stream.Collectors.toList());
+    }
+
+    @Override
+    protected List<EntityListController<User, Integer>.Filter> getFilters() {
+        Filter roleFilter = new Filter("Chức vụ", "role",
+                List.of(new FilterItem(UserRole.TEACHER.toString(), UserRole.TEACHER.name()),
+                        new FilterItem(UserRole.STUDENT.toString(), UserRole.STUDENT.name()),
+                        new FilterItem(UserRole.ADMIN.toString(), UserRole.ADMIN.name())));
+        Filter statusFilter = new Filter("Trạng thái", "status",
+                List.of(new FilterItem(UserStatus.ENABLED.toString(), UserStatus.ENABLED.name()),
+                        new FilterItem(UserStatus.DISABLED.toString(), UserStatus.DISABLED.name()),
+                        new FilterItem(UserStatus.PENDING.toString(), UserStatus.PENDING.name()),
+                        new FilterItem(UserStatus.NEED_INFO.toString(), UserStatus.NEED_INFO.name())));
+
+        return List.of(roleFilter, statusFilter);
     }
 
     protected void addAtributes(Model model) {

@@ -2,6 +2,7 @@ package com.dat.controllers;
 
 import com.dat.pojo.AssignOutline;
 import com.dat.pojo.Course;
+import com.dat.pojo.OutlineStatus;
 import com.dat.pojo.Teacher;
 import com.dat.service.AssignOutlineService;
 import com.dat.service.CourseService;
@@ -14,8 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.text.SimpleDateFormat;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -63,6 +63,30 @@ public class AssignOutlineController extends EntityListController<AssignOutline,
                 .collect(Collectors.toList());
     }
 
+    @Override
+    protected List<Filter> getFilters() {
+        List<Filter> filters = new ArrayList<>();
+        Filter statusFilter = new Filter("Trạng thái", "status",
+                List.of(new FilterItem("Chưa tạo", "NOT_CREATED"),
+                        new FilterItem(OutlineStatus.DOING.toString(), OutlineStatus.DOING.name()),
+                        new FilterItem(OutlineStatus.COMPLETED.toString(), OutlineStatus.COMPLETED.name())));
+        Filter teacherFilter = new Filter("Giáo viên", "teacher",
+                teacherService.getAll().stream()
+                        .map(t -> new FilterItem(String.format("%s %s",
+                                t.getUser().getLastName(),
+                                t.getUser().getFirstName()), t.getId().toString()))
+                        .collect(Collectors.toList()));
+
+        Filter courseFilter = new Filter("Môn học", "course",
+                courseService.getAll().stream()
+                        .map(c -> new FilterItem(c.getName(), c.getId().toString()))
+                        .collect(Collectors.toList()));
+        filters.add(statusFilter);
+        filters.add(teacherFilter);
+        filters.add(courseFilter);
+        return filters;
+    }
+
     @PostMapping
     public String add(AssignOutline ao) {
         return super.add(ao);
@@ -70,7 +94,7 @@ public class AssignOutlineController extends EntityListController<AssignOutline,
 
     @Override
     protected void addAtributes(Model model) {
-        Map teacherSelectItems = teacherService.getAll(null).stream()
+        Map teacherSelectItems = teacherService.getAll().stream()
                 .collect(Collectors.toMap(Teacher::getId, t -> String.format("%s %s",
                         t.getUser().getLastName(),
                         t.getUser().getFirstName())));

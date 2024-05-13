@@ -34,7 +34,7 @@ public class TeacherRepositoryImpl
     }
 
     @Override
-    protected List<Predicate> filterByParams(Map<String, String> params, CriteriaBuilder b, Root<User> root) {
+    protected List<Predicate> filterByParams(Map<String, String> params, CriteriaBuilder b, Root root) {
         return null;
     }
 

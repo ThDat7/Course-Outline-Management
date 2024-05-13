@@ -6,4 +6,5 @@ import java.util.List;
 import java.util.Map;
 
 public interface FacultyRepository extends BaseRepository<Faculty, Integer> {
+    List<Faculty> getAll();
 }

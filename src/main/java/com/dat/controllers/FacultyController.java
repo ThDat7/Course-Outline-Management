@@ -41,6 +41,11 @@ public class FacultyController
                 .collect(Collectors.toList());
     }
 
+    @Override
+    protected List<EntityListController<Faculty, Integer>.Filter> getFilters() {
+        return List.of();
+    }
+
     @PostMapping
     public String add(Faculty f) {
         return super.add(f);

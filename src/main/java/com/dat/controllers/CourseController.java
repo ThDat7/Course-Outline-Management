@@ -51,6 +51,17 @@ public class CourseController
                 .collect(Collectors.toList());
     }
 
+    @Override
+    protected List<Filter> getFilters() {
+        Filter creditsFilter = new Filter("Số tín chỉ", "credits",
+                List.of(new FilterItem("1", "1"),
+                        new FilterItem("2", "2"),
+                        new FilterItem("3", "3"),
+                        new FilterItem("4", "4")));
+
+        return List.of(creditsFilter);
+    }
+
     @PostMapping
     public String add(Course c) {
         return super.add(c);

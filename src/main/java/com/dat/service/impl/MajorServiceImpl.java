@@ -58,4 +58,8 @@ public class MajorServiceImpl
 
         return addOrUpdate(major);
     }
+
+    public List<Major> getAll() {
+        return majorRepository.getAll();
+    }
 }

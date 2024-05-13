@@ -25,7 +25,7 @@ public class UserPendingController {
         model.addAttribute("users", userService.getUserPending(params));
 
         int pageSize = Integer.parseInt(env.getProperty("PAGE_SIZE"));
-        long count = userService.count();
+        long count = userService.count(params);
         model.addAttribute("counter", Math.ceil(count * 1.0 / pageSize));
 
         return "users-pending";

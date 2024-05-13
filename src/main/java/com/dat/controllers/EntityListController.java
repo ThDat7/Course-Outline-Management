@@ -14,6 +14,7 @@ import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public abstract class EntityListController<T, K extends Serializable> {
@@ -41,6 +42,9 @@ public abstract class EntityListController<T, K extends Serializable> {
 
     protected abstract List<List> getRecords(Map<String, String> params);
 
+    protected abstract List<Filter> getFilters();
+
+
     private T createNewEntity() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         return entityClass.getDeclaredConstructor().newInstance();
     }
@@ -48,12 +52,13 @@ public abstract class EntityListController<T, K extends Serializable> {
     @GetMapping
     public String list(Model model, @RequestParam Map<String, String> params) {
         model.addAttribute("rootEndpoint", rootEndpoint);
-        model.addAttribute("entityLabelName", entityLabelName);
+        model.addAttribute("entityLabelName", entityLabelName.toUpperCase());
         model.addAttribute("labels", labels);
         model.addAttribute("records", getRecords(params));
+        model.addAttribute("filters", getFilters());
 
         int pageSize = Integer.parseInt(env.getProperty("PAGE_SIZE"));
-        long count = service.count();
+        long count = service.count(params);
         model.addAttribute("counter", Math.ceil(count * 1.0 / pageSize));
 
         return "list-base";
@@ -66,7 +71,7 @@ public abstract class EntityListController<T, K extends Serializable> {
         T t = service.getById(id);
         model.addAttribute("rootEndpoint", rootEndpoint);
         model.addAttribute("entityName", entityName);
-        model.addAttribute("entityLabelName", entityLabelName);
+        model.addAttribute("entityLabelName", entityLabelName.toUpperCase());
         model.addAttribute(entityName, t);
         addAtributes(model);
         return String.format("%s-detail", entityName);
@@ -76,7 +81,7 @@ public abstract class EntityListController<T, K extends Serializable> {
     public String create(Model model) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         model.addAttribute("rootEndpoint", rootEndpoint);
         model.addAttribute("entityName", entityName);
-        model.addAttribute("entityLabelName", entityLabelName);
+        model.addAttribute("entityLabelName", entityLabelName.toUpperCase());
         model.addAttribute(entityName, createNewEntity());
         addAtributes(model);
         return String.format("%s-detail", entityName);
@@ -99,8 +104,18 @@ public abstract class EntityListController<T, K extends Serializable> {
     @Getter
     @Setter
     @AllArgsConstructor
-    protected class SelectFormItem {
-        private K id;
+    public class Filter {
+        private String label;
+        private String path;
+        private List<FilterItem> items;
+    }
+
+    @Setter
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public class FilterItem {
         private String name;
+        private String value;
     }
 }

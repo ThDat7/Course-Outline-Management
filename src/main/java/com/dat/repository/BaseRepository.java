@@ -7,7 +7,7 @@ import java.util.Map;
 public interface BaseRepository<T, K extends Serializable> {
     List<T> getAll(Map<String, String> params);
 
-    Long count();
+    Long count(Map<String, String> params);
 
     boolean addOrUpdate(T t);
 

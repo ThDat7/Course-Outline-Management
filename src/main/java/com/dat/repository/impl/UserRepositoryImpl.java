@@ -1,6 +1,7 @@
 package com.dat.repository.impl;
 
 import com.dat.pojo.User;
+import com.dat.pojo.UserRole;
 import com.dat.pojo.UserStatus;
 import com.dat.repository.UserRepository;
 import org.hibernate.Session;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.ArrayList;
@@ -34,17 +36,27 @@ public class UserRepositoryImpl
     }
 
     @Override
-    protected List<Predicate> filterByParams(Map<String, String> params, CriteriaBuilder b, Root<User> root) {
+    protected List<Predicate> filterByParams(Map<String, String> params, CriteriaBuilder b, Root root) {
         List<Predicate> predicates = new ArrayList<>();
 
         String kw = params.get("kw");
-        if (kw != null && !kw.isEmpty())
-            predicates.add(b.like(root.get("username"), String.format("%%%s%%", kw)));
+        if (kw != null && !kw.isEmpty()) {
+            Expression<String> fullNameExpression = b.concat(b.concat(root.get("lastName"), " "), root.get("firstName"));
+            predicates.add(b.like(fullNameExpression, String.format("%%%s%%", kw)));
+        }
 
         String userStatusString = params.get("userStatus");
         if (userStatusString != null && !userStatusString.isEmpty()) {
             UserStatus userStatus = UserStatus.valueOf(userStatusString);
             predicates.add(b.equal(root.get("status"), userStatus));
+        }
+
+        if (params.containsKey("role")) {
+            predicates.add(b.equal(root.get("role"), UserRole.valueOf(params.get("role"))));
+        }
+
+        if (params.containsKey("status")) {
+            predicates.add(b.equal(root.get("status"), UserStatus.valueOf(params.get("status"))));
         }
 
         return predicates;

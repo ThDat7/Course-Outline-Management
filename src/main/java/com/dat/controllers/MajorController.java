@@ -57,6 +57,15 @@ public class MajorController
     }
 
     @Override
+    protected List<Filter> getFilters() {
+        Filter facultyFilter = new Filter("Khoa", "faculty",
+                facultyService.getAll().stream()
+                        .map(f -> new FilterItem(f.getName(), f.getId().toString()))
+                        .collect(Collectors.toList()));
+        return List.of(facultyFilter);
+    }
+
+    @Override
     protected void addAtributes(Model model) {
         Map facultySelectItems = facultyService.getAll(null).stream()
                 .collect(Collectors.toMap(Faculty::getId, Faculty::getName));
@@ -69,7 +78,7 @@ public class MajorController
                     .getEducationPrograms().stream()
                     .map(ep -> ep.getId())
                     .collect(Collectors.toList());
-        
+
         Map allCourses = courseService.getAll().stream()
                 .collect(Collectors.toMap(Course::getId, Course::getName));
 

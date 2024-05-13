@@ -38,7 +38,7 @@ public abstract class BaseRepositoryImpl<T, K extends Serializable> implements B
 
     protected abstract K getId(T t);
 
-    abstract protected List<Predicate> filterByParams(Map<String, String> params, CriteriaBuilder b, Root<User> root);
+    abstract protected List<Predicate> filterByParams(Map<String, String> params, CriteriaBuilder b, Root root);
 
     public List<T> getAll(Map<String, String> params) {
         Session s = factory.getObject().getCurrentSession();
@@ -69,11 +69,21 @@ public abstract class BaseRepositoryImpl<T, K extends Serializable> implements B
         return query.getResultList();
     }
 
-    public Long count() {
+    public Long count(Map<String, String> params) {
         Session s = factory.getObject().getCurrentSession();
-        Query q = s.createQuery(String.format("SELECT COUNT(*) FROM %s", tClass.getSimpleName()));
 
-        return Long.parseLong(q.getSingleResult().toString());
+        CriteriaBuilder b = s.getCriteriaBuilder();
+        CriteriaQuery q = b.createQuery(tClass);
+        Root root = q.from(tClass);
+        q.select(b.count(root));
+
+        if (params != null && params.size() > 0) {
+            List<Predicate> predicates = filterByParams(params, b, root);
+            if (predicates != null && predicates.size() > 0)
+                q.where(predicates.toArray(Predicate[]::new));
+        }
+        Query query = s.createQuery(q);
+        return Long.parseLong(query.getSingleResult().toString());
     }
 
     public boolean addOrUpdate(T t) {

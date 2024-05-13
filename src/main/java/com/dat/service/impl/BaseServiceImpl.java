@@ -18,8 +18,8 @@ public abstract class BaseServiceImpl<T, K extends Serializable> implements Base
     }
 
     @Override
-    public Long count() {
-        return repository.count();
+    public Long count(Map<String, String> params) {
+        return repository.count(params);
     }
 
     @Override

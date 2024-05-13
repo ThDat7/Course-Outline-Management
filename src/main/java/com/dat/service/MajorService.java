@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface MajorService extends BaseService<Major, Integer> {
     boolean addOrUpdate(Major major, List<String> courses);
+
+    List<Major> getAll();
 }

@@ -4,6 +4,7 @@ import com.dat.pojo.Teacher;
 import com.dat.repository.BaseRepository;
 import com.dat.repository.TeacherRepository;
 import com.dat.service.TeacherService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,13 +13,14 @@ import java.util.List;
 public class TeacherServiceImpl
         extends BaseServiceImpl<Teacher, Integer>
         implements TeacherService {
+    @Autowired
     private TeacherRepository teacherRepository;
 
     public TeacherServiceImpl(BaseRepository<Teacher, Integer> repository) {
         super(repository);
     }
 
-    public List<Teacher> getALl() {
-        return null;
+    public List<Teacher> getAll() {
+        return teacherRepository.getAll();
     }
 }

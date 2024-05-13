@@ -6,6 +6,7 @@ import com.dat.pojo.CourseOutline;
 import com.dat.pojo.OutlineStatus;
 import com.dat.service.CourseOutlineService;
 import com.dat.service.CourseService;
+import com.dat.service.MajorService;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
@@ -31,8 +32,10 @@ public class CourseOutlineController
 
     private CourseService courseService;
 
+    private MajorService majorService;
+
     public CourseOutlineController(Environment env, CourseOutlineService courseOutlineService,
-                                   CourseService courseService) {
+                                   CourseService courseService, MajorService majorService) {
         super("courseOutline", "/course-outlines",
                 "Đề cương môn học",
                 List.of("id",
@@ -45,6 +48,7 @@ public class CourseOutlineController
         this.courseOutlineService = courseOutlineService;
         this.env = env;
         this.courseService = courseService;
+        this.majorService = majorService;
     }
 
     protected List<List> getRecords(Map<String, String> params) {
@@ -61,6 +65,31 @@ public class CourseOutlineController
                                 courseOutline.getAssignOutline().getTeacher().getUser().getFirstName())
                 ))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    protected List<Filter> getFilters() {
+        Filter statusFilter = new Filter("Trạng thái", "status",
+                List.of(new FilterItem(OutlineStatus.DOING.toString(), OutlineStatus.DOING.name()),
+                        new FilterItem(OutlineStatus.COMPLETED.toString(), OutlineStatus.COMPLETED.name())));
+
+        Filter courseFilter = new Filter("Môn học", "course",
+                courseService.getAll().stream()
+                        .map(c -> new FilterItem(c.getName(), c.getId().toString()))
+                        .collect(Collectors.toList()));
+
+        Filter majorFilter = new Filter("Ngành học", "major",
+                majorService.getAll().stream()
+                        .map(m -> new FilterItem(m.getName(), m.getId().toString()))
+                        .collect(Collectors.toList()));
+
+        List<FilterItem> yearFilterItem = new ArrayList();
+        for (int i = 2026; i > 2020; i--) {
+            yearFilterItem.add(new FilterItem(String.valueOf(i), String.valueOf(i)));
+        }
+
+        Filter yearFilter = new Filter("Năm học", "year", yearFilterItem);
+        return List.of(statusFilter, courseFilter, majorFilter, yearFilter);
     }
 
     @PostMapping
