@@ -3,6 +3,7 @@ package com.dat.controllers;
 import com.dat.pojo.User;
 import com.dat.pojo.UserRole;
 import com.dat.pojo.UserStatus;
+import com.dat.service.BaseService;
 import com.dat.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
@@ -11,88 +12,48 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @Controller
 @RequestMapping("/users")
 @PropertySource("classpath:configs.properties")
-public class UserController {
+public class UserController extends EntityListController<User, Integer> {
     @Autowired
     private UserService userService;
     @Autowired
     private Environment env;
 
-    @GetMapping("/")
-    public String list(Model model, @RequestParam Map<String, String> params) {
-        model.addAttribute("users", userService.getAll(params));
-
-        int pageSize = Integer.parseInt(env.getProperty("PAGE_SIZE"));
-        long count = userService.count();
-        model.addAttribute("counter", Math.ceil(count * 1.0 / pageSize));
-
-        return "users";
-    }
-
-    @GetMapping("/{id}")
-    public String detail(Model model, @PathVariable Integer id) {
-        model.addAttribute("roles", UserRole.values());
-        model.addAttribute("statuses", UserStatus.values());
-        User user = userService.getById(id);
-        model.addAttribute("user", user);
-        return "user-detail";
-    }
-
-    @GetMapping("/create")
-    public String create(Model model) {
-        model.addAttribute("roles", UserRole.values());
-        model.addAttribute("statuses", UserStatus.values());
-        model.addAttribute("user", new User());
-        return "user-detail";
+    public UserController(Environment env, UserService userService) {
+        super("user", "/users", "Người dùng",
+                List.of("id",
+                        "Tên",
+                        "Chức vụ",
+                        "Email"), env, userService);
+        this.env = env;
+        this.userService = userService;
     }
 
     @PostMapping
     public String add(@ModelAttribute User user) {
-        if (userService.addOrUpdate(user) == true)
-            return "redirect:/users/";
-
-        return "user-detail";
+        return super.add(user);
     }
 
-    @GetMapping("/delete/{id}")
-    public String delete(@PathVariable Integer id) {
-        userService.delete(id);
-        return "redirect:/users/";
+    @Override
+    protected List<List> getRecords(Map<String, String> params) {
+        List<User> users = userService.getAll(params);
+        return users.stream().map(user -> List.of(
+                        user.getId(),
+                        String.format("%s %s", user.getFirstName(), user.getLastName()),
+                        user.getRole().toString(),
+                        user.getEmail()))
+                .collect(java.util.stream.Collectors.toList());
+    }
+
+    protected void addAtributes(Model model) {
+        model.addAttribute("roles", UserRole.values());
+        model.addAttribute("statuses", UserStatus.values());
     }
 
 
-    @GetMapping("/pending/")
-    public String listPending(Model model, @RequestParam Map<String, String> params) {
-        model.addAttribute("users", userService.getUserPending(params));
-
-        int pageSize = Integer.parseInt(env.getProperty("PAGE_SIZE"));
-        long count = userService.count();
-        model.addAttribute("counter", Math.ceil(count * 1.0 / pageSize));
-
-        return "users-pending";
-    }
-
-    @GetMapping("/pending/{id}")
-    public String detailPending(Model model, @PathVariable Integer id) {
-        model.addAttribute("isPending", true);
-        return detail(model, id);
-    }
-
-    @GetMapping("/pending/reject/{id}")
-    public String rejectPending(@PathVariable Integer id) {
-        userService.rejectPending(id);
-        return "redirect:/users/pending/";
-    }
-
-    @PostMapping("/pending/")
-    public String updateAndAccept(@ModelAttribute(value = "user") User user) {
-        if (userService.updateAndAcceptUser(user) == true)
-            return "redirect:/users/pending/";
-
-        return "user-detail";
-    }
 }

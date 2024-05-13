@@ -44,7 +44,7 @@ public class UserRepositoryImpl
         String userStatusString = params.get("userStatus");
         if (userStatusString != null && !userStatusString.isEmpty()) {
             UserStatus userStatus = UserStatus.valueOf(userStatusString);
-            predicates.add(b.equal(root.get("userStatus"), userStatus));
+            predicates.add(b.equal(root.get("status"), userStatus));
         }
 
         return predicates;

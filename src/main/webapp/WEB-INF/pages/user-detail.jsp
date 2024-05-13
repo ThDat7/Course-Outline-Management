@@ -10,7 +10,15 @@
 
 <h1 class="text-center text-info mt-1">Chi tiết người dùng</h1>
 
-<c:url value="/users" var="action"/>
+<c:choose>
+    <c:when test="${isPending}">
+        <c:url value="/users/pending" var="action"/>
+    </c:when>
+    <c:otherwise>
+        <c:url value="/users" var="action"/>
+    </c:otherwise>
+</c:choose>
+
 <form:form method="post" action="${action}" modelAttribute="user" enctype="multipart/form-data">
     <form:errors path="*" element="div"/>
     <form:hidden path="id"/>
@@ -47,7 +55,16 @@
     </div>
     <div class="form-floating mb-3 mt-3">
         <form:select class="form-control" path="status" id="status">
-            <form:options items="${statuses}"/>
+            <c:forEach items="${statuses}" var="s">
+                <c:choose>
+                    <c:when test="${user.status == s}">
+                        <option value="${s}" selected>${s.toString()}</option>
+                    </c:when>
+                    <c:otherwise>
+                        <option value="${s}">${s.toString()}</option>
+                    </c:otherwise>
+                </c:choose>
+            </c:forEach>
         </form:select>
         <label for="status">Trạng thái</label>
     </div>

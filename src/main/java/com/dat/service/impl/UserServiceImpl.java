@@ -47,7 +47,7 @@ public class UserServiceImpl
 
     @Override
     public List<User> getUserPending(Map<String, String> params) {
-        params.replace("userStatus", "PENDING");
+        params.put("userStatus", "PENDING");
         return super.getAll(params);
     }
 

@@ -7,7 +7,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
 <section class="container">
-    <h1 class="text-center text-info mt-1">DANH SÁCH YÊU CẦU TÀI KHOẢN</h1
+    <h1 class="text-center text-info mt-1">DANH SÁCH YÊU CẦU TÀI KHOẢN</h1>
 
 
     <c:if test="${counter > 1}">
@@ -37,7 +37,7 @@
             <tr>
                 <td>${u.id}</td>
                 <td>${u.lastName} ${u.firstName}</td>
-                <td>${u.role}</td>
+                <td>${u.role.toString()}</td>
                 <td>${u.email}</td>
                 <td>
                     <a href="<c:url value='/users/pending/${u.id}'/>" class="btn btn-success">Chi tiết</a>
