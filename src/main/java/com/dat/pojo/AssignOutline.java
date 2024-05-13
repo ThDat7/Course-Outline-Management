@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  * @author DELL
@@ -37,9 +38,10 @@ public class AssignOutline {
     @OneToOne(mappedBy = "assignOutline", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private CourseOutline courseOutline;
 
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
     private Date assignDate;
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
     private Date deadlineDate;
-    private AssignStatus status;
 
     public AssignOutline(Integer id) {
         this.id = id;

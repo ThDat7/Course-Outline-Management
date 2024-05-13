@@ -38,4 +38,5 @@ public class CourseOutline {
             name = "assign_outline_id",
             referencedColumnName = "id")
     private AssignOutline assignOutline;
+    private OutlineStatus status;
 }

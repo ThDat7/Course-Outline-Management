@@ -38,13 +38,6 @@
     <label for="deadlineDate">Hạn chót</label>
 </div>
 
-<div class="form-floating mb-3 mt-3">
-    <form:select class="form-control" path="status" id="status">
-        <form:options items="${statuses}"/>
-    </form:select>
-    <label for="status">Trạng thái</label>
-</div>
-
 <script>
     $(document).ready(function () {
         $('.date').datepicker({format: 'dd/mm/yyyy'});

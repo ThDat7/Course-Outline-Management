@@ -93,7 +93,7 @@ public abstract class EntityListController<T, K extends Serializable> {
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable K id) {
         service.delete(id);
-        return String.format("redirect:/%ss/", entityName);
+        return String.format("redirect:/%s/", rootEndpoint);
     }
 
     @Getter

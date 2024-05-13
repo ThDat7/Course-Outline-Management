@@ -47,6 +47,13 @@
     <c:set var="schoolYear" value="${[schoolYears.get(0),schoolYears.get(1)]}"/>
 </c:if>
 
+<div class="form-floating mb-3 mt-3">
+    <form:select class="form-control" path="status" id="status">
+        <form:options items="${statuses}"/>
+    </form:select>
+    <label for="status">Trạng thái</label>
+</div>
+
 <select class="selectpicker schoolYears" name="schoolYears" data-live-search="true" multiple>
     <c:forEach var="i" begin="2010" end="2025">
         <c:set var="j" value="${2025-i+2010}"/>

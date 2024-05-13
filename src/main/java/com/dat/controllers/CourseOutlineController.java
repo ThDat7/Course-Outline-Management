@@ -3,6 +3,7 @@ package com.dat.controllers;
 
 import com.dat.pojo.Course;
 import com.dat.pojo.CourseOutline;
+import com.dat.pojo.OutlineStatus;
 import com.dat.service.CourseOutlineService;
 import com.dat.service.CourseService;
 import org.springframework.context.annotation.PropertySource;
@@ -54,7 +55,7 @@ public class CourseOutlineController
                         courseOutline.getCourseOutlineDetails().stream()
                                 .map(detail -> detail.getId().getSchoolYear().toString())
                                 .collect(Collectors.joining(", ")),
-                        courseOutline.getAssignOutline().getStatus(),
+                        courseOutline.getStatus().toString(),
                         String.format("%s %s",
                                 courseOutline.getAssignOutline().getTeacher().getUser().getLastName(),
                                 courseOutline.getAssignOutline().getTeacher().getUser().getFirstName())
@@ -91,5 +92,6 @@ public class CourseOutlineController
 
         model.addAttribute("courses", allCourses);
         model.addAttribute("schoolYears", schoolYears);
+        model.addAttribute("statuses", OutlineStatus.values());
     }
 }

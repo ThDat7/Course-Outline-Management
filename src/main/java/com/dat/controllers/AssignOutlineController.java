@@ -1,7 +1,6 @@
 package com.dat.controllers;
 
 import com.dat.pojo.AssignOutline;
-import com.dat.pojo.AssignStatus;
 import com.dat.pojo.Course;
 import com.dat.pojo.Teacher;
 import com.dat.service.AssignOutlineService;
@@ -14,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -27,23 +27,25 @@ public class AssignOutlineController extends EntityListController<AssignOutline,
     private AssignOutlineService assignOutlineService;
     private TeacherService teacherService;
     private CourseService courseService;
+    private SimpleDateFormat dateFormat;
 
     public AssignOutlineController(Environment env, AssignOutlineService assignOutlineService,
                                    TeacherService teacherService,
-                                   CourseService courseService) {
+                                   CourseService courseService, SimpleDateFormat dateFormat) {
         super("assignOutline", "/assign-outlines",
                 "Phân công đề cương",
                 List.of("id",
                         "Giáo viên",
                         "Môn học",
                         "Trạng thái",
-                        "Ngày hết hạn",
-                        "Ngày phân công"),
+                        "Ngày phân công",
+                        "Hạn chót"),
                 env, assignOutlineService);
         this.assignOutlineService = assignOutlineService;
         this.env = env;
         this.teacherService = teacherService;
         this.courseService = courseService;
+        this.dateFormat = dateFormat;
     }
 
     protected List<List> getRecords(Map<String, String> params) {
@@ -54,9 +56,10 @@ public class AssignOutlineController extends EntityListController<AssignOutline,
                                 assignOutline.getTeacher().getUser().getLastName(),
                                 assignOutline.getTeacher().getUser().getFirstName()),
                         assignOutline.getCourse().getName(),
-                        assignOutline.getStatus(),
-                        assignOutline.getDeadlineDate(),
-                        assignOutline.getAssignDate()))
+                        assignOutline.getCourseOutline() == null ? "Chưa tạo" :
+                                assignOutline.getCourseOutline().getStatus().toString(),
+                        dateFormat.format(assignOutline.getAssignDate()),
+                        dateFormat.format(assignOutline.getDeadlineDate())))
                 .collect(Collectors.toList());
     }
 
@@ -76,6 +79,5 @@ public class AssignOutlineController extends EntityListController<AssignOutline,
 
         model.addAttribute("teachers", teacherSelectItems);
         model.addAttribute("courses", courseSelectItems);
-        model.addAttribute("statuses", AssignStatus.values());
     }
 }

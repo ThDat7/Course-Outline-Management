@@ -47,3 +47,5 @@ mỗi năm học có thể có các khoa khác nhau
 
 ADMIN: DELETE METHOD SỬA SAU, HIỆN GET METHOD.
 TẠM THỜI EAGER CÁC RELATION ĐỂ VIEWS.
+
+TRẠNG THÁI NÊN LƯU Ở ĐỀ CƯƠNG, PHÂN CÔNG NẾU KHÔNG CÓ ĐỀ CƯƠNG THÌ TRẠNG THÁI LÀ CHƯA TẠO ĐỀ CƯƠNG

@@ -10,9 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 @Component
@@ -46,6 +44,7 @@ public class DataGenerator {
         s = factory.getObject().getCurrentSession();
 
         generateUser(5);
+        generateUserPending(5);
         generateFaculty(5);
         generateMajor(10);
         generateTeacher(3);
@@ -75,6 +74,22 @@ public class DataGenerator {
             user.setStatus(UserStatus.values()[faker.random().nextInt(UserStatus.values().length)]);
             user.setRole(UserRole.values()[faker.random().nextInt(UserRole.values().length)]);
             user.setImage(faker.internet().avatar());
+
+            userList.add(user);
+            s.save(user);
+        }
+    }
+
+    private void generateUserPending(int number) {
+        for (int i = 0; i < number; i++) {
+            User user = new User();
+            user.setFirstName(faker.name().firstName());
+            user.setLastName(faker.name().lastName());
+            user.setEmail(faker.internet().emailAddress());
+            user.setPhone(faker.phoneNumber().cellPhone());
+            user.setUsername(faker.name().username());
+            user.setStatus(UserStatus.PENDING);
+            user.setRole(UserRole.values()[faker.random().nextInt(UserRole.values().length)]);
 
             userList.add(user);
             s.save(user);
@@ -173,7 +188,6 @@ public class DataGenerator {
             AssignOutline assignOutline = new AssignOutline();
             assignOutline.setAssignDate(faker.date().past(10, TimeUnit.DAYS));
             assignOutline.setDeadlineDate(faker.date().future(10, 3, TimeUnit.DAYS));
-            assignOutline.setStatus(AssignStatus.values()[faker.random().nextInt(AssignStatus.values().length)]);
 
             Teacher teacherRandom = teacherList.get(faker.random().nextInt(teacherList.size()));
             assignOutline.setTeacher(teacherRandom);
@@ -189,6 +203,7 @@ public class DataGenerator {
         for (AssignOutline assignOutline : assignOutlineList) {
             CourseOutline courseOutline = new CourseOutline();
             courseOutline.setContent(faker.lorem().paragraph(1));
+            courseOutline.setStatus(OutlineStatus.values()[faker.random().nextInt(OutlineStatus.values().length)]);
 
             courseOutline.setAssignOutline(assignOutline);
 
