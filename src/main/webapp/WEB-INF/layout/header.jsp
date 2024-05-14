@@ -8,7 +8,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <c:set var="action" value=""/>
-<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark nav-pills">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">E-commerce Website</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
@@ -40,7 +40,19 @@
                 <li class="nav-item">
                     <a class="nav-link" href=<c:url value="/course-outlines/"/>>Quản lý Đề cương</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href=<c:url value="/assign-outlines/not-created/"/>>
+                        Các môn học chưa phân công
+                    </a>
+                </li>
             </ul>
         </div>
     </div>
 </nav>
+
+<script>
+    $(document).ready(function () {
+        $('li.nav-item.active').removeClass('active').removeAttr('aria-current');
+        $('a.nav-link[href="' + location.pathname + '"]').addClass('active').attr('aria-current', 'page');
+    });
+</script>

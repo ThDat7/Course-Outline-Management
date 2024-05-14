@@ -66,4 +66,10 @@
         <put-attribute cascade="true" name="form-field-content" value="/WEB-INF/pages/courseOutline-detail.jsp"/>
     </definition>
 
+    <definition name="assignOutlines-not-created" extends="baseLayout">
+        <put-attribute name="title" value="Các môn học chưa phân công"/>
+        <put-attribute name="content"
+                       value="/WEB-INF/pages/assignOutlines-not-created.jsp"/>
+    </definition>
+
 </tiles-definitions>

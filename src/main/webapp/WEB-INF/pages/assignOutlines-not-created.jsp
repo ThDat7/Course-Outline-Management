@@ -1,3 +1,4 @@
+<%@ page import="java.time.Year" %>
 <%--
     Document   : index
     Created on : Jul 7, 2023, 1:08:19 PM
@@ -7,9 +8,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
 
-<%--<c:forEach items="${pageContext.request.queryString}" var="param">--%>
-<%--    param: ${param}--%>
-<%--</c:forEach>--%>
+<% int currentYear = Year.now().getValue(); %>
+
 <c:set var="currentUrl" value="${requestScope['javax.servlet.forward.request_uri']}"></c:set>
 <c:set var="queryString" value="${pageContext.request.queryString}"></c:set>
 
@@ -35,6 +35,9 @@
                 <div class="row mb-3">
                     <c:forEach items="${filters}" var="filter">
                         <c:set var="selected" value="${pageContext.request.getParameter(filter.path)}"></c:set>
+                        <c:if test="${filter.path=='year' && selected==null}">
+                            <c:set var="selected" value='<%= currentYear %>'></c:set>
+                        </c:if>
                         <div class="col-md me-5">
                             <label for="${filter.path}" class="me-1">${filter.label}:</label>
                             <select class="selectpicker" data-live-search="true" name="${filter.path}"
@@ -64,8 +67,6 @@
         </form>
     </div>
 
-    <a href="<c:url value='${rootEndpoint}/create' />" class="btn btn-info">Thêm ${entityLabelName}</a>
-
 
     <c:if test="${counter > 1}">
         <ul class="pagination mt-1">
@@ -93,8 +94,9 @@
                     <td>${v}</td>
                 </c:forEach>
                 <td>
-                    <a href="<c:url value='${rootEndpoint}/${r.get(0)}'/>" class="btn btn-success">Cập nhật</a>
-                    <a href="<c:url value='${rootEndpoint}/delete/${r.get(0)}'/>" class="btn btn-danger">Xóa</a>
+                    <c:set var="id" value="${r[0]}"/>
+                    <a href="<c:url value='/assign-outlines/not-created/${id}'/>"
+                       class="btn btn-success">Phân công</a>
                 </td>
             </tr>
         </c:forEach>
@@ -131,3 +133,4 @@
         });
     });
 </script>
+

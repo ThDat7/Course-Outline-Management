@@ -57,6 +57,12 @@ public abstract class BaseRepositoryImpl<T, K extends Serializable> implements B
 
         Query query = s.createQuery(q);
 
+        filterPage(params, query);
+
+        return query.getResultList();
+    }
+
+    protected void filterPage(Map<String, String> params, Query query) {
         String page = "1";
         if (params != null && params.get("page") != null && !params.get("page").isEmpty())
             page = params.get("page");
@@ -65,8 +71,6 @@ public abstract class BaseRepositoryImpl<T, K extends Serializable> implements B
 
         query.setMaxResults(pageSize);
         query.setFirstResult((p - 1) * pageSize);
-
-        return query.getResultList();
     }
 
     public Long count(Map<String, String> params) {

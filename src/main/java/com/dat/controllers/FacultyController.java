@@ -42,7 +42,7 @@ public class FacultyController
     }
 
     @Override
-    protected List<EntityListController<Faculty, Integer>.Filter> getFilters() {
+    protected List<Filter> getFilters() {
         return List.of();
     }
 

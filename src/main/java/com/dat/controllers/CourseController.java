@@ -4,6 +4,7 @@ import com.dat.pojo.Course;
 import com.dat.pojo.Faculty;
 import com.dat.service.BaseService;
 import com.dat.service.CourseService;
+import com.dat.service.FacultyService;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
@@ -25,8 +26,9 @@ public class CourseController
 
     private Environment env;
     private CourseService courseService;
+    private FacultyService facultyService;
 
-    public CourseController(Environment env, CourseService courseService) {
+    public CourseController(Environment env, CourseService courseService, FacultyService facultyService) {
         super("course",
                 "/courses",
                 "Môn học",
@@ -34,6 +36,7 @@ public class CourseController
                 env, courseService);
         this.courseService = courseService;
         this.env = env;
+        this.facultyService = facultyService;
     }
 
     protected List<List> getRecords(Map<String, String> params) {
@@ -58,6 +61,11 @@ public class CourseController
                         new FilterItem("2", "2"),
                         new FilterItem("3", "3"),
                         new FilterItem("4", "4")));
+
+        Filter facultyFilter = new Filter("Khoa", "faculty",
+                facultyService.getAll().stream()
+                        .map(f -> new FilterItem(f.getName(), f.getId().toString()))
+                        .collect(Collectors.toList()));
 
         return List.of(creditsFilter);
     }
