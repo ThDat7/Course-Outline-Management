@@ -4,12 +4,14 @@ import com.dat.pojo.AssignOutline;
 import com.dat.pojo.OutlineStatus;
 import com.dat.pojo.User;
 import com.dat.repository.AssignOutlineRepository;
+import org.hibernate.Session;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
@@ -61,5 +63,14 @@ public class AssignOutlineRepositoryImpl
         }
 
         return predicates;
+    }
+
+    @Override
+    public List<AssignOutline> findByTeacherId(int teacherId) {
+        Session s = factory.getObject().openSession();
+        return s.createQuery("SELECT a FROM AssignOutline a " +
+                        "WHERE a.teacher.id = :teacherId", AssignOutline.class)
+                .setParameter("teacherId", teacherId)
+                .getResultList();
     }
 }

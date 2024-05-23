@@ -49,3 +49,8 @@ ADMIN: DELETE METHOD SỬA SAU, HIỆN GET METHOD.
 TẠM THỜI EAGER CÁC RELATION ĐỂ VIEWS.
 
 Check tối đa 1 đề cương 2 năm client và backend
+
+assign outline chưa tạo đề cương, detail hiện button tạo mới đề cương.
+Bên đề cương hidden input assign outline tương tự major detail có fac
+
+Đề cương đã biên soạn xong, nhưng chưa tới deadline, admin publish, thì chặn cho teacher không thể sửa nữa (query phía client sẽ filter published, hoặc thêm field)

@@ -40,6 +40,10 @@ public abstract class EntityListController<T, K extends Serializable> {
         this.entityClass = (Class<T>) genericSuperclass.getActualTypeArguments()[0];
     }
 
+    protected Boolean isCanCreate() {
+        return true;
+    }
+
     protected abstract List<List> getRecords(Map<String, String> params);
 
     protected abstract List<Filter> getFilters();
@@ -56,6 +60,7 @@ public abstract class EntityListController<T, K extends Serializable> {
         model.addAttribute("labels", labels);
         model.addAttribute("records", getRecords(params));
         model.addAttribute("filters", getFilters());
+        model.addAttribute("isCanCreate", isCanCreate());
 
         int pageSize = Integer.parseInt(env.getProperty("PAGE_SIZE"));
         long count = service.count(params);

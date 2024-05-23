@@ -5,14 +5,20 @@ package com.dat.configs;
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Properties;
 import javax.sql.DataSource;
 
+import com.dat.pojo.OutlineStatus;
+import org.apache.commons.beanutils.converters.DateConverter;
 import org.hibernate.cfg.AvailableSettings;
 
 import static org.hibernate.cfg.AvailableSettings.DIALECT;
 import static org.hibernate.cfg.AvailableSettings.SHOW_SQL;
 
+import org.modelmapper.Converter;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -73,5 +79,17 @@ public class HibernateConfig {
         transactionManager.setSessionFactory(
                 getSessionFactory().getObject());
         return transactionManager;
+    }
+
+    @Bean
+    public SimpleDateFormat simpleDateFormat() {
+        return new SimpleDateFormat("dd/MM/yyyy");
+    }
+
+    @Bean
+    public ModelMapper modelMapper() {
+        ModelMapper modelMapper = new ModelMapper();
+
+        return modelMapper;
     }
 }

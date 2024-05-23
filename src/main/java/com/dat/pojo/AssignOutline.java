@@ -4,7 +4,7 @@
  */
 package com.dat.pojo;
 
-import java.util.Date;
+
 import javax.persistence.*;
 
 import lombok.AllArgsConstructor;
@@ -12,6 +12,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
+
+import java.sql.Date;
 
 /**
  * @author DELL

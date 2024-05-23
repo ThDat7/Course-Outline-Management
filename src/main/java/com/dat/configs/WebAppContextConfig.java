@@ -82,11 +82,6 @@ public class WebAppContextConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    public SimpleDateFormat simpleDateFormat() {
-        return new SimpleDateFormat("dd/MM/yyyy");
-    }
-
-    @Bean
     public CommonsMultipartResolver multipartResolver() {
         CommonsMultipartResolver resolver
                 = new CommonsMultipartResolver();

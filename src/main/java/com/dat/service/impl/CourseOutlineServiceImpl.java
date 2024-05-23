@@ -5,6 +5,7 @@ import com.dat.repository.AssignOutlineRepository;
 import com.dat.repository.CourseAssessmentRepository;
 import com.dat.repository.CourseOutlineRepository;
 import com.dat.service.CourseOutlineService;
+import org.hibernate.Session;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -46,6 +47,34 @@ public class CourseOutlineServiceImpl
         return addOrUpdate(courseOutline);
     }
 
+    @Override
+    public boolean update(int id, CourseOutline courseOutline) {
+        CourseOutline oldCourseOutline = courseOutlineRepository.getById(id);
+        courseOutline.setId(id);
+        updateCourseAssessments(courseOutline,
+                oldCourseOutline,
+                courseOutline.getCourseAssessments().stream()
+                        .map(CourseAssessment::getType)
+                        .collect(Collectors.toList()),
+                courseOutline.getCourseAssessments().stream()
+                        .map(CourseAssessment::getMethod)
+                        .collect(Collectors.toList()),
+                courseOutline.getCourseAssessments().stream()
+                        .map(CourseAssessment::getTime)
+                        .collect(Collectors.toList()),
+                courseOutline.getCourseAssessments().stream()
+                        .map(CourseAssessment::getClos)
+                        .collect(Collectors.toList()),
+                courseOutline.getCourseAssessments().stream()
+                        .map(CourseAssessment::getWeightPercent)
+                        .collect(Collectors.toList()));
+
+        oldCourseOutline.setContent(courseOutline.getContent());
+        oldCourseOutline.setStatus(courseOutline.getStatus());
+
+        return courseOutlineRepository.addOrUpdate(oldCourseOutline);
+    }
+
     private void updateCourseAssessments(CourseOutline courseOutline,
                                          CourseOutline oldCourseOutline,
                                          List<String> types,
@@ -58,7 +87,7 @@ public class CourseOutlineServiceImpl
             courseOutline.getCourseAssessments().removeIf(ca -> !types.contains(ca.getType()));
         }
 
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < types.size(); i++) {
             if (types.get(i) == null || types.get(i).isEmpty())
                 continue;
             String type = types.get(i);
@@ -110,5 +139,9 @@ public class CourseOutlineServiceImpl
         courseOutline.setAssignOutline(oldCourseOutline.getAssignOutline());
         courseOutline.getAssignOutline().setCourse(newCourse);
         assignOutlineRepository.addOrUpdate(courseOutline.getAssignOutline());
+    }
+
+    public CourseOutline getOrCreateByAssignOutlineId(int assignOutlineId) {
+        return courseOutlineRepository.getOrCreateByAssignOutlineId(assignOutlineId);
     }
 }

@@ -51,6 +51,11 @@ public class CourseOutlineController
         this.majorService = majorService;
     }
 
+    @Override
+    protected Boolean isCanCreate() {
+        return false;
+    }
+
     protected List<List> getRecords(Map<String, String> params) {
         List<CourseOutline> courseOutlines = courseOutlineService.getAll(params);
         return courseOutlines.stream().map(courseOutline -> List.of(
@@ -71,7 +76,8 @@ public class CourseOutlineController
     protected List<Filter> getFilters() {
         Filter statusFilter = new Filter("Trạng thái", "status",
                 List.of(new FilterItem(OutlineStatus.DOING.toString(), OutlineStatus.DOING.name()),
-                        new FilterItem(OutlineStatus.COMPLETED.toString(), OutlineStatus.COMPLETED.name())));
+                        new FilterItem(OutlineStatus.COMPLETED.toString(), OutlineStatus.COMPLETED.name()),
+                        new FilterItem(OutlineStatus.PUBLISHED.toString(), OutlineStatus.PUBLISHED.name())));
 
         Filter courseFilter = new Filter("Môn học", "course",
                 courseService.getAll().stream()

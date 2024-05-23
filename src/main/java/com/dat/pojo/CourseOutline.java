@@ -26,6 +26,7 @@ public class CourseOutline {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @Column(columnDefinition = "TEXT")
     private String content;
     @OneToMany(mappedBy = "courseOutline", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<CourseOutlineDetail> courseOutlineDetails;

@@ -12,4 +12,8 @@ public interface CourseOutlineService extends BaseService<CourseOutline, Integer
                         List<String> closes,
                         List<Integer> weightPercents,
                         List<Integer> schoolYears);
+
+    boolean update(int id, CourseOutline courseOutline);
+
+    CourseOutline getOrCreateByAssignOutlineId(int assignOutlineId);
 }

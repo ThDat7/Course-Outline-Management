@@ -51,6 +51,11 @@ public class AssignOutlineController extends EntityListController<AssignOutline,
         this.facultyService = facultyService;
     }
 
+    @Override
+    protected Boolean isCanCreate() {
+        return false;
+    }
+
     protected List<List> getRecords(Map<String, String> params) {
         List<AssignOutline> assignOutlines = assignOutlineService.getAll(params);
         return assignOutlines.stream().map(assignOutline -> List.of(
@@ -72,7 +77,8 @@ public class AssignOutlineController extends EntityListController<AssignOutline,
         Filter statusFilter = new Filter("Trạng thái", "status",
                 List.of(new FilterItem("Chưa tạo", "NOT_CREATED"),
                         new FilterItem(OutlineStatus.DOING.toString(), OutlineStatus.DOING.name()),
-                        new FilterItem(OutlineStatus.COMPLETED.toString(), OutlineStatus.COMPLETED.name())));
+                        new FilterItem(OutlineStatus.COMPLETED.toString(), OutlineStatus.COMPLETED.name()),
+                        new FilterItem(OutlineStatus.PUBLISHED.toString(), OutlineStatus.PUBLISHED.name())));
         Filter teacherFilter = new Filter("Giáo viên", "teacher",
                 teacherService.getAll().stream()
                         .map(t -> new FilterItem(String.format("%s %s",

@@ -8,6 +8,7 @@ import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Date;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -186,8 +187,8 @@ public class DataGenerator {
     private void generateAssignOutline() {
         for (Course course : courseList) {
             AssignOutline assignOutline = new AssignOutline();
-            assignOutline.setAssignDate(faker.date().past(10, TimeUnit.DAYS));
-            assignOutline.setDeadlineDate(faker.date().future(10, 3, TimeUnit.DAYS));
+            assignOutline.setAssignDate(new Date(faker.date().past(10, TimeUnit.DAYS).getTime()));
+            assignOutline.setDeadlineDate(new Date(faker.date().future(10, 3, TimeUnit.DAYS).getTime()));
 
             Teacher teacherRandom = teacherList.get(faker.random().nextInt(teacherList.size()));
             assignOutline.setTeacher(teacherRandom);

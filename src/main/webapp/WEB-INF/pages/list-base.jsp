@@ -64,8 +64,9 @@
         </form>
     </div>
 
-    <a href="<c:url value='${rootEndpoint}/create' />" class="btn btn-info">Thêm ${entityLabelName}</a>
-
+    <c:if test="${isCanCreate == true}">
+        <a href="<c:url value='${rootEndpoint}/create' />" class="btn btn-info">Thêm ${entityLabelName}</a>
+    </c:if>
 
     <c:if test="${counter > 1}">
         <ul class="pagination mt-1">
