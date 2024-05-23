@@ -5,14 +5,23 @@
 package com.dat.controllers;
 
 import com.dat.dto.CourseOutlineDto;
+import com.dat.dto.CourseOutlineSearchDto;
+import com.dat.dto.EducationProgramSearchDto;
 import com.dat.pojo.CourseOutline;
+import com.dat.pojo.Major;
 import com.dat.pojo.OutlineStatus;
 import com.dat.service.CourseOutlineService;
+import com.dat.service.MajorService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.ws.rs.core.Response;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author DELL
@@ -23,6 +32,9 @@ import org.springframework.web.bind.annotation.*;
 public class ApiCourseOutlineController {
     @Autowired
     private CourseOutlineService courseOutlineService;
+
+    @Autowired
+    private MajorService majorService;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -38,6 +50,40 @@ public class ApiCourseOutlineController {
     public void update(@PathVariable("courseOutlineId") int id,
                        @RequestBody CourseOutlineDto courseOutlineDto) {
         courseOutlineService.update(id, dto2Entity(courseOutlineDto));
+    }
+
+    @GetMapping("/search-course-outlines")
+    public ResponseEntity<List<CourseOutlineSearchDto>> searchCourseOutline(@RequestParam Map<String, String> params) {
+        List<CourseOutline> cos = courseOutlineService.search(params);
+        return ResponseEntity.ok(courseOutlineEntity2Dto(cos));
+    }
+
+    @GetMapping("/search-education-programs")
+    public ResponseEntity<List<EducationProgramSearchDto>> searchEducationProgram(@RequestParam Map<String, String> params) {
+        List<Major> cos = majorService.searchEducationPrograms(params);
+        return ResponseEntity.ok(educationProgramEntity2Dto(cos));
+    }
+
+    private List<EducationProgramSearchDto> educationProgramEntity2Dto(List<Major> majors) {
+        return majors.stream()
+                .map(major -> {
+                    EducationProgramSearchDto majorDto = modelMapper.map(major, EducationProgramSearchDto.class);
+                    return majorDto;
+                })
+                .toList();
+    }
+
+    private List<CourseOutlineSearchDto> courseOutlineEntity2Dto(List<CourseOutline> courseOutlines) {
+        return courseOutlines.stream()
+                .map(co -> {
+                    CourseOutlineSearchDto coDto = modelMapper.map(co, CourseOutlineSearchDto.class);
+                    List<Integer> years = co.getCourseOutlineDetails().stream()
+                            .map(detail -> detail.getId().getSchoolYear())
+                            .collect(Collectors.toList());
+                    coDto.setYears(years);
+                    return coDto;
+                })
+                .toList();
     }
 
     private CourseOutlineDto entity2Dto(CourseOutline courseOutline) {

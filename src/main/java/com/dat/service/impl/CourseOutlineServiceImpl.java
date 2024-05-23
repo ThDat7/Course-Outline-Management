@@ -9,6 +9,7 @@ import org.hibernate.Session;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -45,6 +46,11 @@ public class CourseOutlineServiceImpl
         updateSchoolYears(courseOutline, oldCourseOutline, schoolYears);
 
         return addOrUpdate(courseOutline);
+    }
+
+    public List<CourseOutline> search(Map<String, String> params) {
+        params.replace("status", OutlineStatus.PUBLISHED.name());
+        return courseOutlineRepository.getAll(params);
     }
 
     @Override

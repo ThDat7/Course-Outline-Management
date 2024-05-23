@@ -3,6 +3,7 @@ package com.dat.service;
 import com.dat.pojo.CourseOutline;
 
 import java.util.List;
+import java.util.Map;
 
 public interface CourseOutlineService extends BaseService<CourseOutline, Integer> {
     boolean addOrUpdate(CourseOutline courseOutline,
@@ -16,4 +17,6 @@ public interface CourseOutlineService extends BaseService<CourseOutline, Integer
     boolean update(int id, CourseOutline courseOutline);
 
     CourseOutline getOrCreateByAssignOutlineId(int assignOutlineId);
+
+    List<CourseOutline> search(Map<String, String> params);
 }
