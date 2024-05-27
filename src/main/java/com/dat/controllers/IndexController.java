@@ -51,27 +51,27 @@ public class IndexController {
     @GetMapping("/test")
     @Transactional
     public String test() {
-        Session s = factory.getObject().getCurrentSession();
-
-        Faculty faculty = new Faculty();
-        faculty.setName("Khoa CNTT");
-        s.save(faculty);
-
-        Major major = new Major();
-        major.setName("Công nghệ thông tin");
-        major.setFaculty(faculty);
-        s.save(major);
-
-        Course course = new Course();
-        course.setName("Lập trình Java");
-        s.save(course);
-
-        EducationProgram educationProgram = new EducationProgram();
-        EducationProgramId id = new EducationProgramId();
-        educationProgram.setId(id);
-        educationProgram.setCourse(new Course(course.getId()));
-        major.setEducationPrograms(Set.of(educationProgram));
-        s.update(major);
+//        Session s = factory.getObject().getCurrentSession();
+//
+//        Faculty faculty = new Faculty();
+//        faculty.setName("Khoa CNTT");
+//        s.save(faculty);
+//
+//        Major major = new Major();
+//        major.setName("Công nghệ thông tin");
+//        major.setFaculty(faculty);
+//        s.save(major);
+//
+//        Course course = new Course();
+//        course.setName("Lập trình Java");
+//        s.save(course);
+//
+//        EducationProgram educationProgram = new EducationProgram();
+//        EducationProgramId id = new EducationProgramId();
+//        educationProgram.setId(id);
+//        educationProgram.setCourse(new Course(course.getId()));
+//        major.setEducationPrograms(Set.of(educationProgram));
+//        s.update(major);
 
         return null;
     }

@@ -30,10 +30,10 @@ public class Course {
     private String code;
     private Integer credits;
     @OneToMany(mappedBy = "course")
-    private Set<AssignOutline> assignOutlines;
+    private Set<CourseOutline> courseOutlines;
 
     @OneToMany(mappedBy = "course", fetch = FetchType.EAGER)
-    private Set<EducationProgram> educationPrograms;
+    private Set<EducationProgramCourse> educationProgramCourses;
 
     public Course(Integer id) {
         this.id = id;

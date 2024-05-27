@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "education_programs")
@@ -15,17 +17,16 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EducationProgram {
-    @EmbeddedId
-    private EducationProgramId id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
-    private int semester;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @MapsId("courseId")
-    private Course course;
-
+    private int schoolYear;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @MapsId("majorId")
+    @JoinColumn(name = "major_id")
     private Major major;
+
+    @OneToMany(mappedBy = "educationProgram", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<EducationProgramCourse> educationProgramCourses;
 }

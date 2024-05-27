@@ -1,4 +1,4 @@
-package com.dat.repository;
+package com.dat.service;
 
 import com.dat.dto.AssignOutlineDto;
 import com.dat.dto.DataWithCounterDto;
@@ -7,7 +7,9 @@ import com.dat.pojo.EducationProgram;
 import java.util.List;
 import java.util.Map;
 
-public interface EducationProgramRepository extends BaseRepository<EducationProgram, Integer> {
+public interface EducationProgramService extends BaseService<EducationProgram, Integer> {
+
+    boolean addOrUpdate(EducationProgram educationProgram, List<String> courses);
 
     DataWithCounterDto<AssignOutlineDto> getReuse(Map<String, String> params);
 

@@ -46,9 +46,9 @@ public class CourseController
                         course.getName(),
                         course.getCode(),
                         course.getCredits(),
-                        course.getEducationPrograms() != null ?
-                                course.getEducationPrograms().stream()
-                                        .map(ep -> ep.getMajor().getName())
+                        course.getEducationProgramCourses() != null ?
+                                course.getEducationProgramCourses().stream()
+                                        .map(ep -> ep.getEducationProgram().getMajor().getName())
                                         .collect(Collectors.joining(", "))
                                 : ""))
                 .collect(Collectors.toList());
@@ -67,7 +67,7 @@ public class CourseController
                         .map(f -> new FilterItem(f.getName(), f.getId().toString()))
                         .collect(Collectors.toList()));
 
-        return List.of(creditsFilter);
+        return List.of(creditsFilter, facultyFilter);
     }
 
     @PostMapping
@@ -76,7 +76,7 @@ public class CourseController
     }
 
     @Override
-    protected void addAtributes(Model model) {
+    public void addAtributes(Model model) {
 
     }
 }

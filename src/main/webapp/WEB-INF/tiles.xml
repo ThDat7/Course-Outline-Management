@@ -72,4 +72,30 @@
                        value="/WEB-INF/pages/assignOutlines-not-created.jsp"/>
     </definition>
 
+    <definition name="educationProgram-detail"
+                extends="baseLayout">
+        <put-attribute name="title" value="Quản trị"/>
+        <put-attribute name="content"
+                       value="/WEB-INF/pages/educationProgram-detail.jsp"/>
+    </definition>
+
+
+    <definition name="baseAssignOutline"
+                extends="baseLayout">
+        <put-attribute name="title" value="Quản trị"/>
+        <put-attribute name="content"
+                       value="/WEB-INF/pages/assign-outline/base.jsp"/>
+    </definition>
+
+    <definition name="assign-outline-reuse" extends="baseAssignOutline">
+        <put-attribute name="table" cascade="true"
+                       value="/WEB-INF/pages/assign-outline/reuse.jsp"/>
+    </definition>
+
+
+    <definition name="assign-outline-need-create" extends="baseAssignOutline">
+        <put-attribute name="table" cascade="true"
+                       value="/WEB-INF/pages/assign-outline/needCreate.jsp"/>
+    </definition>
+
 </tiles-definitions>

@@ -10,9 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Component
 @Transactional
@@ -29,7 +29,6 @@ public class DataGenerator {
         facultyList = new ArrayList<>();
         courseList = new ArrayList<>();
         courseOutlineList = new ArrayList<>();
-        assignOutlineList = new ArrayList<>();
     }
 
     private Session s;
@@ -39,7 +38,6 @@ public class DataGenerator {
     private final List<Faculty> facultyList;
     private final List<Course> courseList;
     private final List<CourseOutline> courseOutlineList;
-    private final List<AssignOutline> assignOutlineList;
 
     public void FakeData() {
         s = factory.getObject().getCurrentSession();
@@ -50,11 +48,9 @@ public class DataGenerator {
         generateMajor(10);
         generateTeacher(3);
         generateCourse(30);
-        generateEducationProgram();
-        generateAssignOutline();
         generateCourseOutline();
-        generateCourseOutlineDetail();
         generateCourseAssessment();
+        generateEducationProgram();
         generateComment();
     }
 
@@ -161,76 +157,68 @@ public class DataGenerator {
 
     private void generateEducationProgram() {
         for (Major major : majorList) {
+            for (int k = 0; k < 2; k++) {
+                EducationProgram ep = new EducationProgram();
+                ep.setSchoolYear(2023 + k);
+                ep.setMajor(major);
+                s.save(ep);
 
-            List<Course> available = new ArrayList<>(courseList);
-            for (int i = 1; i < 9; i++) {
-                for (int j = 0; j < 3; j++) {
-                    Course courseRandom = available.get(faker.random().nextInt(available.size()));
-                    if (courseRandom == null)
-                        break;
-                    available.remove(courseRandom);
+                List<Course> available = new ArrayList<>(courseList);
+                for (int i = 1; i < 12; i++) {
+                    for (int j = 0; j < 3; j++) {
+                        Course courseRandom = available.get(faker.random().nextInt(available.size()));
+                        if (courseRandom == null)
+                            break;
+                        available.remove(courseRandom);
 
-                    EducationProgramId id = new EducationProgramId();
+                        EducationProgramCourse epc = new EducationProgramCourse();
+                        epc.setSemester(i);
+                        epc.setCourse(courseRandom);
+                        epc.setEducationProgram(ep);
 
-                    EducationProgram educationProgram = new EducationProgram();
-                    educationProgram.setSemester(i);
-                    educationProgram.setMajor(major);
-                    educationProgram.setCourse(courseRandom);
-                    educationProgram.setId(id);
+                        Random rand = new Random();
+                        if (rand.nextInt() % 2 == 1) {
+                            List<CourseOutline> courseOutlineFilter =
+                                    courseOutlineList.stream()
+                                            .filter(co -> co.getCourse().getId() == courseRandom.getId()
+                                                    && co.getYearPublished() == ep.getSchoolYear())
+                                            .collect(Collectors.toList());
+                            if (courseOutlineFilter.size() > 0)
+                                epc.setCourseOutline(courseOutlineFilter.get(0));
+                        }
 
-                    s.save(educationProgram);
+                        s.save(epc);
+                    }
                 }
             }
         }
     }
 
-    private void generateAssignOutline() {
-        for (Course course : courseList) {
-            AssignOutline assignOutline = new AssignOutline();
-            assignOutline.setAssignDate(new Date(faker.date().past(10, TimeUnit.DAYS).getTime()));
-            assignOutline.setDeadlineDate(new Date(faker.date().future(10, 3, TimeUnit.DAYS).getTime()));
-
-            Teacher teacherRandom = teacherList.get(faker.random().nextInt(teacherList.size()));
-            assignOutline.setTeacher(teacherRandom);
-
-            assignOutline.setCourse(course);
-
-            assignOutlineList.add(assignOutline);
-            s.save(assignOutline);
-        }
-    }
-
     private void generateCourseOutline() {
-        for (AssignOutline assignOutline : assignOutlineList) {
-            CourseOutline courseOutline = new CourseOutline();
-            courseOutline.setContent(faker.lorem().paragraph(1));
-            courseOutline.setStatus(OutlineStatus.values()[faker.random().nextInt(OutlineStatus.values().length)]);
+        for (Course course : courseList) {
+            List<Integer> years = Arrays.asList(2021, 2022, 2023, 2024);
+            Collections.shuffle(years);
+            List<Integer> randomYears = years.subList(0, 2);
 
-            courseOutline.setAssignOutline(assignOutline);
+            for (int year : randomYears) {
+                CourseOutline courseOutline = new CourseOutline();
+                courseOutline.setContent(faker.lorem().paragraph(1));
+                courseOutline.setStatus(OutlineStatus.values()[faker.random().nextInt(OutlineStatus.values().length)]);
 
-            courseOutlineList.add(courseOutline);
-            s.save(courseOutline);
+                courseOutline.setCourse(course);
+
+                Teacher teacherRandom = teacherList.get(faker.random().nextInt(teacherList.size()));
+                courseOutline.setTeacher(teacherRandom);
+
+                courseOutline.setDeadlineDate(new Date(faker.date().future(10, 3, TimeUnit.DAYS).getTime()));
+
+                courseOutline.setYearPublished(year);
+
+                courseOutlineList.add(courseOutline);
+                s.save(courseOutline);
+            }
         }
 
-    }
-
-    private void generateCourseOutlineDetail() {
-        for (CourseOutline courseOutline : courseOutlineList) {
-            CourseOutlineDetail courseOutlineDetail = new CourseOutlineDetail();
-            CourseOutlineDetailId id = new CourseOutlineDetailId();
-            id.setSchoolYear(2023);
-            courseOutlineDetail.setId(id);
-            courseOutlineDetail.setCourseOutline(courseOutline);
-
-            CourseOutlineDetail courseOutlineDetail1 = new CourseOutlineDetail();
-            CourseOutlineDetailId id1 = new CourseOutlineDetailId();
-            id1.setSchoolYear(2022);
-            courseOutlineDetail1.setId(id1);
-            courseOutlineDetail1.setCourseOutline(courseOutline);
-
-            s.save(courseOutlineDetail);
-            s.save(courseOutlineDetail1);
-        }
     }
 
     private void generateCourseAssessment() {

@@ -1,10 +1,9 @@
 package com.dat.controllers;
 
+import com.dat.dto.DataWithCounterDto;
 import com.dat.pojo.*;
-import com.dat.service.AssignOutlineService;
-import com.dat.service.CourseService;
-import com.dat.service.FacultyService;
-import com.dat.service.TeacherService;
+import com.dat.service.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
@@ -20,155 +19,93 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping("/assign-outlines")
 @PropertySource("classpath:configs.properties")
-public class AssignOutlineController extends EntityListController<AssignOutline, Integer> {
+public class AssignOutlineController {
 
+    @Autowired
     private Environment env;
-    private AssignOutlineService assignOutlineService;
-    private TeacherService teacherService;
+
+    @Autowired
+    private EducationProgramService educationProgramService;
+
+    @Autowired
+    private EducationProgramCourseService educationProgramCourseService;
+
+    @Autowired
+    private MajorService majorService;
+
+    @Autowired
     private CourseService courseService;
-    private FacultyService facultyService;
 
-    private SimpleDateFormat dateFormat;
+    @Autowired
+    private CourseOutlineController courseOutlineController;
 
-    public AssignOutlineController(Environment env, AssignOutlineService assignOutlineService,
-                                   TeacherService teacherService,
-                                   CourseService courseService,
-                                   FacultyService facultyService, SimpleDateFormat dateFormat) {
-        super("assignOutline", "/assign-outlines",
-                "Phân công đề cương",
-                List.of("id",
-                        "Giáo viên",
-                        "Môn học",
-                        "Trạng thái",
-                        "Ngày phân công",
-                        "Hạn chót"),
-                env, assignOutlineService);
-        this.assignOutlineService = assignOutlineService;
-        this.env = env;
-        this.teacherService = teacherService;
-        this.courseService = courseService;
-        this.dateFormat = dateFormat;
-        this.facultyService = facultyService;
+    @GetMapping
+    public String index() {
+        return "redirect:/assign-outlines/re-use";
     }
 
-    @Override
-    protected Boolean isCanCreate() {
-        return false;
+    @GetMapping("/re-use")
+    public String getReuseOutline(Model model, @RequestParam Map<String, String> params) {
+        DataWithCounterDto assignOutline = educationProgramService.getReuse(params);
+        model.addAttribute("assignOutline", assignOutline.getData());
+        addAssignOutlineAttributes(model, assignOutline.getTotal());
+        return "assign-outline-reuse";
     }
 
-    protected List<List> getRecords(Map<String, String> params) {
-        List<AssignOutline> assignOutlines = assignOutlineService.getAll(params);
-        return assignOutlines.stream().map(assignOutline -> List.of(
-                        assignOutline.getId(),
-                        String.format("%s %s",
-                                assignOutline.getTeacher().getUser().getLastName(),
-                                assignOutline.getTeacher().getUser().getFirstName()),
-                        assignOutline.getCourse().getName(),
-                        assignOutline.getCourseOutline() == null ? "Chưa tạo" :
-                                assignOutline.getCourseOutline().getStatus().toString(),
-                        dateFormat.format(assignOutline.getAssignDate()),
-                        dateFormat.format(assignOutline.getDeadlineDate())))
-                .collect(Collectors.toList());
+    @GetMapping("/need-create")
+    public String getNeedCreateOutline(Model model, @RequestParam Map<String, String> params) {
+        DataWithCounterDto assignOutline = educationProgramService.getNeedCreate(params);
+        model.addAttribute("assignOutline", assignOutline.getData());
+        addAssignOutlineAttributes(model, assignOutline.getTotal());
+        return "assign-outline-need-create";
     }
 
-    @Override
-    protected List<Filter> getFilters() {
-        List<Filter> filters = new ArrayList<>();
-        Filter statusFilter = new Filter("Trạng thái", "status",
-                List.of(new FilterItem("Chưa tạo", "NOT_CREATED"),
-                        new FilterItem(OutlineStatus.DOING.toString(), OutlineStatus.DOING.name()),
-                        new FilterItem(OutlineStatus.COMPLETED.toString(), OutlineStatus.COMPLETED.name()),
-                        new FilterItem(OutlineStatus.PUBLISHED.toString(), OutlineStatus.PUBLISHED.name())));
-        Filter teacherFilter = new Filter("Giáo viên", "teacher",
-                teacherService.getAll().stream()
-                        .map(t -> new FilterItem(String.format("%s %s",
-                                t.getUser().getLastName(),
-                                t.getUser().getFirstName()), t.getId().toString()))
-                        .collect(Collectors.toList()));
+    private void addAssignOutlineAttributes(Model model, Long count) {
+        model.addAttribute("majors", majorService.getAll());
+        model.addAttribute("courses", courseService.getAll());
 
-        Filter courseFilter = new Filter("Môn học", "course",
-                courseService.getAll().stream()
-                        .map(c -> new FilterItem(c.getName(), c.getId().toString()))
-                        .collect(Collectors.toList()));
-        filters.add(statusFilter);
-        filters.add(teacherFilter);
-        filters.add(courseFilter);
-        return filters;
-    }
 
-    @PostMapping
-    public String add(AssignOutline ao) {
-        return super.add(ao);
-    }
-
-    @Override
-    protected void addAtributes(Model model) {
-        Map teacherSelectItems = teacherService.getAll().stream()
-                .collect(Collectors.toMap(Teacher::getId, t -> String.format("%s %s",
-                        t.getUser().getLastName(),
-                        t.getUser().getFirstName())));
-        Map courseSelectItems = courseService.getAll().stream()
-                .collect(Collectors.toMap(Course::getId, Course::getName));
-
-        model.addAttribute("teachers", teacherSelectItems);
-        model.addAttribute("courses", courseSelectItems);
-    }
-
-    @GetMapping("/not-created")
-    public String getNotAssign(Model model, @RequestParam Map<String, String> params) {
-
-        List<List> courses = courseService.getCourseNotCreatedAssign(params).stream()
-                .map(course -> List.of(
-                        course.getId(),
-                        course.getName(),
-                        course.getCode(),
-                        course.getCredits(),
-                        course.getEducationPrograms() != null ?
-                                course.getEducationPrograms().stream()
-                                        .map(ep -> ep.getMajor().getName())
-                                        .collect(Collectors.joining(", "))
-                                : ""))
-                .collect(Collectors.toList());
-
-        model.addAttribute("entityLabelName", "MÔN HỌC CHƯA PHÂN CÔNG");
-        model.addAttribute("labels", List.of("id", "Tên", "Mã môn", "Số tín chỉ", "Ngành"));
-        model.addAttribute("records", courses);
-        model.addAttribute("filters", getNotCreatedFilter());
-//
         int pageSize = Integer.parseInt(env.getProperty("PAGE_SIZE"));
-        long count = courseService.countCourseNotCreatedAssign(params);
         model.addAttribute("counter", Math.ceil(count * 1.0 / pageSize));
-        return "assignOutlines-not-created";
     }
 
-    @GetMapping("/not-created/{courseId}")
-    public String createNotAssign(Model model, @PathVariable int courseId) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        String forwardEndpoint = super.create(model);
-        AssignOutline assignOutline = (AssignOutline) model.getAttribute("assignOutline");
-        assignOutline.setCourse(courseService.getById(courseId));
-        model.addAttribute("assignOutline", assignOutline);
-        return forwardEndpoint;
+
+    @GetMapping("/create/{id}")
+    public String getCreateOutline(Model model, @PathVariable("id") int epcId) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        EducationProgramCourse epc = educationProgramCourseService.getById(epcId);
+        CourseOutline co = new CourseOutline();
+        co.setCourse(epc.getCourse());
+        co.setStatus(OutlineStatus.DOING);
+
+        String view = courseOutlineController.create(model);
+        model.addAttribute("rootEndpoint", "/assign-outlines/create/" + epcId);
+        model.addAttribute("courseOutline", co);
+
+        return view;
     }
 
-    private List<Filter> getNotCreatedFilter() {
-        Filter creditsFilter = new Filter("Số tín chỉ", "credits",
-                List.of(new FilterItem("1", "1"),
-                        new FilterItem("2", "2"),
-                        new FilterItem("3", "3"),
-                        new FilterItem("4", "4")));
-
-        Filter facultyFilter = new Filter("Khoa", "faculty",
-                facultyService.getAll().stream()
-                        .map(f -> new FilterItem(f.getName(), f.getId().toString()))
-                        .collect(Collectors.toList()));
-
-        int currentYear = Year.now().getValue();
-        List<FilterItem> yearFilterItems = new ArrayList<>();
-        for (int i = currentYear + 5; i >= 2015; i--)
-            yearFilterItems.add(new FilterItem(String.valueOf(i), String.valueOf(i)));
-        Filter yearFilter = new Filter("Năm học", "year", yearFilterItems);
-
-        return List.of(creditsFilter, facultyFilter, yearFilter);
+    @PostMapping("/create/{id}")
+    public String create(Model model, @PathVariable("id") int epcId,
+                         @ModelAttribute CourseOutline courseOutline,
+                         @RequestParam(value = "type", required = false) List<String> type,
+                         @RequestParam(value = "method", required = false) List<String> method,
+                         @RequestParam(value = "time", required = false) List<String> time,
+                         @RequestParam(value = "clos", required = false) List<String> clos,
+                         @RequestParam(value = "weightPercent", required = false) List<Integer> weightPercent,
+                         @RequestParam(value = "schoolYears", required = false) List<Integer> schoolYears) {
+        educationProgramCourseService.associateOutline(epcId, courseOutline, type, method, time, clos, weightPercent, schoolYears);
+        return "redirect:/assign-outlines/re-use";
     }
 
+    @GetMapping("/re-use/{epc_id}/{co_id}")
+    public String reuseOutline(Model model, @PathVariable("epc_id") int epcId, @PathVariable("co_id") int coId) {
+        educationProgramCourseService.reuseOutline(epcId, coId);
+        return "redirect:/assign-outlines/re-use";
+    }
+
+    @GetMapping("/re-use-all/{year}")
+    public String reuseAllOutline(@PathVariable("year") int year) {
+        educationProgramService.reuseAll(year);
+        return "redirect:/assign-outlines/re-use";
+    }
 }

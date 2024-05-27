@@ -4,6 +4,7 @@
  */
 package com.dat.pojo;
 
+import java.sql.Date;
 import java.util.Set;
 import javax.persistence.*;
 
@@ -11,6 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  * @author DELL
@@ -28,16 +30,27 @@ public class CourseOutline {
     private Integer id;
     @Column(columnDefinition = "TEXT")
     private String content;
-    @OneToMany(mappedBy = "courseOutline", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<CourseOutlineDetail> courseOutlineDetails;
+
+    private int yearPublished;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "course_id", nullable = false)
+    private Course course;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "teacher_id", nullable = false)
+    private Teacher teacher;
+
+    @Column(name = "status", length = 15, columnDefinition = "varchar(15) default 'DOING'")
+    @Enumerated(EnumType.STRING)
+    private OutlineStatus status;
+
     @OneToMany(mappedBy = "courseOutline", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<CourseAssessment> courseAssessments;
+
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    private Date deadlineDate;
+
     @OneToMany(mappedBy = "courseOutline")
     private Set<Comment> comments;
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
-    @JoinColumn(
-            name = "assign_outline_id",
-            referencedColumnName = "id")
-    private AssignOutline assignOutline;
-    private OutlineStatus status;
 }

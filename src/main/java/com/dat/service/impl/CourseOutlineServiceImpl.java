@@ -1,13 +1,12 @@
 package com.dat.service.impl;
 
 import com.dat.pojo.*;
-import com.dat.repository.AssignOutlineRepository;
 import com.dat.repository.CourseAssessmentRepository;
 import com.dat.repository.CourseOutlineRepository;
 import com.dat.service.CourseOutlineService;
-import org.hibernate.Session;
 import org.springframework.stereotype.Service;
 
+import java.time.Year;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -19,31 +18,28 @@ public class CourseOutlineServiceImpl
 
     private CourseOutlineRepository courseOutlineRepository;
     private CourseAssessmentRepository courseAssessmentRepository;
-    private AssignOutlineRepository assignOutlineRepository;
 
 
     public CourseOutlineServiceImpl(CourseOutlineRepository courseOutlineRepository,
-                                    CourseAssessmentRepository courseAssessmentRepository,
-                                    AssignOutlineRepository assignOutlineRepository) {
+                                    CourseAssessmentRepository courseAssessmentRepository) {
         super(courseOutlineRepository);
         this.courseOutlineRepository = courseOutlineRepository;
         this.courseAssessmentRepository = courseAssessmentRepository;
-        this.assignOutlineRepository = assignOutlineRepository;
     }
 
     @Override
     public boolean addOrUpdate(CourseOutline courseOutline, List<String> types, List<String> methods, List<String> times, List<String> closes, List<Integer> weightPercents, List<Integer> schoolYears) {
-        if (types == null)
+        if (types == null || types.size() == 0)
             return addOrUpdate(courseOutline);
 
-        CourseOutline oldCourseOutline = courseOutlineRepository.getById(courseOutline.getId());
+        CourseOutline oldCourseOutline = null;
+        if (courseOutline.getId() != null)
+            oldCourseOutline = courseOutlineRepository.getById(courseOutline.getId());
+        else courseOutline.setYearPublished(Year.now().getValue());
 
-        updateCourse(courseOutline, oldCourseOutline);
         updateCourseAssessments(courseOutline,
                 oldCourseOutline,
                 types, methods, times, closes, weightPercents);
-
-        updateSchoolYears(courseOutline, oldCourseOutline, schoolYears);
 
         return addOrUpdate(courseOutline);
     }
@@ -117,37 +113,19 @@ public class CourseOutlineServiceImpl
         }
     }
 
-    private void updateSchoolYears(CourseOutline courseOutline,
-                                   CourseOutline oldCourseOutline,
-                                   List<Integer> schoolYears) {
 
-        if (oldCourseOutline != null) {
-            courseOutline.setCourseOutlineDetails(oldCourseOutline.getCourseOutlineDetails());
-            courseOutline.getCourseOutlineDetails().removeIf(detail -> !schoolYears.contains(detail.getId().getSchoolYear()));
-        }
-
-        for (int year : schoolYears) {
-
-            if (courseOutline.getCourseOutlineDetails().stream().anyMatch(detail -> detail.getId().getSchoolYear() == year))
-                continue;
-
-            CourseOutlineDetail detail = new CourseOutlineDetail();
-            detail.setCourseOutline(courseOutline);
-            detail.setId(new CourseOutlineDetailId(courseOutline.getId(), year));
-
-            courseOutline.getCourseOutlineDetails().add(detail);
-        }
+    @Override
+    public List<CourseOutline> getReuse(Map<String, String> params) {
+        return null;
     }
 
-    private void updateCourse(CourseOutline courseOutline,
-                              CourseOutline oldCourseOutline) {
-        Course newCourse = courseOutline.getAssignOutline().getCourse();
-        courseOutline.setAssignOutline(oldCourseOutline.getAssignOutline());
-        courseOutline.getAssignOutline().setCourse(newCourse);
-        assignOutlineRepository.addOrUpdate(courseOutline.getAssignOutline());
+    @Override
+    public List<CourseOutline> getNeedCreate(Map<String, String> params) {
+        return null;
     }
 
-    public CourseOutline getOrCreateByAssignOutlineId(int assignOutlineId) {
-        return courseOutlineRepository.getOrCreateByAssignOutlineId(assignOutlineId);
+    @Override
+    public List<CourseOutline> getPending(Map<String, String> params) {
+        return null;
     }
 }

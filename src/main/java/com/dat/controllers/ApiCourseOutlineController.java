@@ -39,9 +39,9 @@ public class ApiCourseOutlineController {
     @Autowired
     private ModelMapper modelMapper;
 
-    @GetMapping("/{assign-id}")
-    public ResponseEntity<CourseOutlineDto> get(@PathVariable("assign-id") int assignid) {
-        CourseOutline courseOutline = courseOutlineService.getOrCreateByAssignOutlineId(assignid);
+    @GetMapping("/{id}")
+    public ResponseEntity<CourseOutlineDto> get(@PathVariable("id") int id) {
+        CourseOutline courseOutline = courseOutlineService.getById(id);
         return ResponseEntity.ok(entity2Dto(courseOutline));
     }
 
@@ -77,10 +77,6 @@ public class ApiCourseOutlineController {
         return courseOutlines.stream()
                 .map(co -> {
                     CourseOutlineSearchDto coDto = modelMapper.map(co, CourseOutlineSearchDto.class);
-                    List<Integer> years = co.getCourseOutlineDetails().stream()
-                            .map(detail -> detail.getId().getSchoolYear())
-                            .collect(Collectors.toList());
-                    coDto.setYears(years);
                     return coDto;
                 })
                 .toList();

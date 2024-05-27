@@ -65,7 +65,7 @@ public class UserController extends EntityListController<User, Integer> {
         return List.of(roleFilter, statusFilter);
     }
 
-    protected void addAtributes(Model model) {
+    public void addAtributes(Model model) {
         model.addAttribute("roles", UserRole.values());
         model.addAttribute("statuses", UserStatus.values());
     }

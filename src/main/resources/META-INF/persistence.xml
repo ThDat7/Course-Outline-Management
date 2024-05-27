@@ -10,9 +10,9 @@
         <class>com.dat.pojo.Major</class>
         <class>com.dat.pojo.Course</class>
         <class>com.dat.pojo.CourseOutline</class>
-        <class>com.dat.pojo.CourseOutlineDetail</class>
         <class>com.dat.pojo.CourseAssessment</class>
-        <class>com.dat.pojo.AssignOutline</class>
+        <class>com.dat.pojo.EducationProgram</class>
+        <class>com.dat.pojo.EducationProgramCourse</class>
         <class>com.dat.pojo.Comment</class>
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
         <properties>

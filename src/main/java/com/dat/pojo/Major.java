@@ -32,7 +32,7 @@ public class Major {
     @JoinColumn(name = "faculty_id", nullable = false)
     private Faculty faculty;
 
-    @OneToMany(mappedBy = "major", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "major", fetch = FetchType.EAGER)
     private Set<EducationProgram> educationPrograms;
 
     public Major(Integer id) {

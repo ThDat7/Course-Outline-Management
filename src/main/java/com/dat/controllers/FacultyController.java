@@ -52,7 +52,7 @@ public class FacultyController
     }
 
     @Override
-    protected void addAtributes(Model model) {
+    public void addAtributes(Model model) {
 
     }
 }

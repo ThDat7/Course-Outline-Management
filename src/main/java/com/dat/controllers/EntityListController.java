@@ -69,7 +69,7 @@ public abstract class EntityListController<T, K extends Serializable> {
         return "list-base";
     }
 
-    protected abstract void addAtributes(Model model);
+    public abstract void addAtributes(Model model);
 
     @GetMapping("/{id}")
     public String detail(Model model, @PathVariable K id) {

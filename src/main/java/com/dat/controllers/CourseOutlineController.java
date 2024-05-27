@@ -4,9 +4,11 @@ package com.dat.controllers;
 import com.dat.pojo.Course;
 import com.dat.pojo.CourseOutline;
 import com.dat.pojo.OutlineStatus;
+import com.dat.pojo.Teacher;
 import com.dat.service.CourseOutlineService;
 import com.dat.service.CourseService;
 import com.dat.service.MajorService;
+import com.dat.service.TeacherService;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
@@ -34,13 +36,16 @@ public class CourseOutlineController
 
     private MajorService majorService;
 
+    private TeacherService teacherService;
+
     public CourseOutlineController(Environment env, CourseOutlineService courseOutlineService,
-                                   CourseService courseService, MajorService majorService) {
+                                   CourseService courseService, MajorService majorService,
+                                   TeacherService teacherService) {
         super("courseOutline", "/course-outlines",
                 "Đề cương môn học",
                 List.of("id",
                         "Tên môn học",
-                        "Năm học",
+                        "Năm học tạo",
                         "Trạng thái",
                         "Giáo viên biên soạn"
                 ),
@@ -49,6 +54,7 @@ public class CourseOutlineController
         this.env = env;
         this.courseService = courseService;
         this.majorService = majorService;
+        this.teacherService = teacherService;
     }
 
     @Override
@@ -60,14 +66,12 @@ public class CourseOutlineController
         List<CourseOutline> courseOutlines = courseOutlineService.getAll(params);
         return courseOutlines.stream().map(courseOutline -> List.of(
                         courseOutline.getId(),
-                        courseOutline.getAssignOutline().getCourse().getName(),
-                        courseOutline.getCourseOutlineDetails().stream()
-                                .map(detail -> detail.getId().getSchoolYear().toString())
-                                .collect(Collectors.joining(", ")),
+                        courseOutline.getCourse().getName(),
+                        courseOutline.getYearPublished(),
                         courseOutline.getStatus().toString(),
                         String.format("%s %s",
-                                courseOutline.getAssignOutline().getTeacher().getUser().getLastName(),
-                                courseOutline.getAssignOutline().getTeacher().getUser().getFirstName())
+                                courseOutline.getTeacher().getUser().getLastName(),
+                                courseOutline.getTeacher().getUser().getFirstName())
                 ))
                 .collect(Collectors.toList());
     }
@@ -94,18 +98,18 @@ public class CourseOutlineController
             yearFilterItem.add(new FilterItem(String.valueOf(i), String.valueOf(i)));
         }
 
-        Filter yearFilter = new Filter("Năm học", "year", yearFilterItem);
+        Filter yearFilter = new Filter("Năm học tạo", "year", yearFilterItem);
         return List.of(statusFilter, courseFilter, majorFilter, yearFilter);
     }
 
     @PostMapping
     public String add(@ModelAttribute CourseOutline courseOutline,
-                      @RequestParam("type") List<String> type,
-                      @RequestParam("method") List<String> method,
-                      @RequestParam("time") List<String> time,
-                      @RequestParam("clos") List<String> clos,
-                      @RequestParam("weightPercent") List<Integer> weightPercent,
-                      @RequestParam("schoolYears") List<Integer> schoolYears) {
+                      @RequestParam(value = "type", required = false) List<String> type,
+                      @RequestParam(value = "method", required = false) List<String> method,
+                      @RequestParam(value = "time", required = false) List<String> time,
+                      @RequestParam(value = "clos", required = false) List<String> clos,
+                      @RequestParam(value = "weightPercent", required = false) List<Integer> weightPercent,
+                      @RequestParam(value = "schoolYears", required = false) List<Integer> schoolYears) {
         if (courseOutlineService.addOrUpdate(courseOutline, type, method, time, clos, weightPercent, schoolYears))
             return "redirect:/course-outlines/";
 
@@ -113,20 +117,15 @@ public class CourseOutlineController
     }
 
     @Override
-    protected void addAtributes(Model model) {
+    public void addAtributes(Model model) {
         Map allCourses = courseService.getAll().stream()
                 .collect(Collectors.toMap(Course::getId, Course::getName));
-        List<Integer> schoolYears = new ArrayList<>();
-        if (((CourseOutline) model.getAttribute("courseOutline"))
-                .getCourseOutlineDetails() != null) {
-            schoolYears = ((CourseOutline) model.getAttribute("courseOutline"))
-                    .getCourseOutlineDetails().stream()
-                    .map(detail -> detail.getId().getSchoolYear())
-                    .collect(Collectors.toList());
-        }
+        Map teachers = teacherService.getAll().stream()
+                .collect(Collectors.toMap(Teacher::getId, t -> String.format("%s %s",
+                        t.getUser().getLastName(), t.getUser().getFirstName())));
 
         model.addAttribute("courses", allCourses);
-        model.addAttribute("schoolYears", schoolYears);
+        model.addAttribute("teachers", teachers);
         model.addAttribute("statuses", OutlineStatus.values());
     }
 }

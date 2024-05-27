@@ -85,3 +85,22 @@ $(".delete-education-program").click((e) => {
 
     $(".courses-content div.selected").remove()
 })
+
+$(".remove-course-outline").click((e) => {
+    e.preventDefault()
+    if ($(".courses-content div.selected").length !== 1)
+        return
+
+    let educationProgramId = location.pathname.split('/').slice(-1)
+    let context = location.pathname.split('/')[1]
+    let courseId = $(".courses-content div.selected").data("id")
+    $.ajax({
+        type: 'GET',
+        url: `/${context}/api/education-programs/remove-outline/${educationProgramId}/${courseId}`,
+        success: function () {
+            let courseName = $(".courses-content div.selected a").text()
+            if (courseName)
+                $(".courses-content div.selected").html(courseName)
+        }
+    });
+})

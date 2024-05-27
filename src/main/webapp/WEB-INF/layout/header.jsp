@@ -35,15 +35,13 @@
                     <a class="nav-link" href=<c:url value="/courses/"/>>Quản lý Môn học</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" href=<c:url value="/education-programs/"/>>Quản lý Chương trình đào tạo</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href=<c:url value="/assign-outlines/"/>>Quản lý Phân công biên soạn</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href=<c:url value="/course-outlines/"/>>Quản lý Đề cương</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href=<c:url value="/assign-outlines/not-created/"/>>
-                        Các môn học chưa phân công
-                    </a>
                 </li>
             </ul>
         </div>
@@ -52,7 +50,13 @@
 
 <script>
     $(document).ready(function () {
-        $('li.nav-item.active').removeClass('active').removeAttr('aria-current');
-        $('a.nav-link[href="' + location.pathname + '"]').addClass('active').attr('aria-current', 'page');
+        $('a.nav-link').each(function () {
+            let isActive = location.href.includes($(this).attr('href'))
+            if (isActive) {
+                $('li.nav-item.active').removeClass('active').removeAttr('aria-current');
+                $(this).addClass('active').attr('aria-current', 'page');
+            }
+        })
+
     });
 </script>

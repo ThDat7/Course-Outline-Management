@@ -28,11 +28,8 @@ public class MajorController
     private MajorService majorService;
     private FacultyService facultyService;
 
-    private CourseService courseService;
-
     public MajorController(Environment env, MajorService majorService,
-                           FacultyService facultyService,
-                           CourseService courseService) {
+                           FacultyService facultyService) {
         super("major", "/majors",
                 "Ngành học",
                 List.of("id",
@@ -43,7 +40,6 @@ public class MajorController
         this.majorService = majorService;
         this.facultyService = facultyService;
         this.env = env;
-        this.courseService = courseService;
     }
 
     protected List<List> getRecords(Map<String, String> params) {
@@ -66,33 +62,16 @@ public class MajorController
     }
 
     @Override
-    protected void addAtributes(Model model) {
+    public void addAtributes(Model model) {
         Map facultySelectItems = facultyService.getAll(null).stream()
                 .collect(Collectors.toMap(Faculty::getId, Faculty::getName));
 
-        List relationCoursesId = null;
-        if (((Major) model.getAttribute("major"))
-                .getEducationPrograms() != null)
-
-            relationCoursesId = ((Major) model.getAttribute("major"))
-                    .getEducationPrograms().stream()
-                    .map(ep -> ep.getId())
-                    .collect(Collectors.toList());
-
-        Map allCourses = courseService.getAll().stream()
-                .collect(Collectors.toMap(Course::getId, Course::getName));
-
 
         model.addAttribute("faculties", facultySelectItems);
-        model.addAttribute("relationCoursesId", relationCoursesId);
-        model.addAttribute("allCourses", allCourses);
     }
 
     @PostMapping()
-    public String add(@ModelAttribute("major") Major major, @RequestParam(name = "courses", required = false) List<String> courses) {
-        if (majorService.addOrUpdate(major, courses))
-            return "redirect:/majors/";
-
-        return "major-detail";
+    public String add(@ModelAttribute("major") Major major) {
+        return super.add(major);
     }
 }

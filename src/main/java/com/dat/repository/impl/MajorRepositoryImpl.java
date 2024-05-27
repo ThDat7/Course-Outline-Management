@@ -25,8 +25,6 @@ import java.util.Map;
 public class MajorRepositoryImpl
         extends BaseRepositoryImpl<Major, Integer>
         implements MajorRepository {
-    @Autowired
-    protected LocalSessionFactoryBean factory;
 
     public MajorRepositoryImpl(LocalSessionFactoryBean factory, Environment env) {
         super(factory, env);

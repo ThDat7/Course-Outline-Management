@@ -6,11 +6,19 @@
 
 <form:hidden path="id"/>
 <jsp:include page="../utils/form-select.jsp">
-    <jsp:param name="field" value="assignOutline.course"/>
+    <jsp:param name="field" value="course"/>
     <jsp:param name="items" value="${courses}"/>
     <jsp:param name="relationId"
-               value="${courseOutline.assignOutline != null ? courseOutline.assignOutline.course.id : ''}"/>
+               value="${courseOutline.course.id}"/>
     <jsp:param name="label" value="Môn học"/>
+</jsp:include>
+
+<jsp:include page="../utils/form-select.jsp">
+    <jsp:param name="field" value="teacher"/>
+    <jsp:param name="items" value="${teachers}"/>
+    <jsp:param name="relationId"
+               value="${courseOutline.teacher.id}"/>
+    <jsp:param name="label" value="Giáo viên"/>
 </jsp:include>
 
 <div class="form-floating mb-3 mt-3">
@@ -38,37 +46,9 @@
 </c:forEach>
 <%--#######################################--%>
 
-<c:set var="schoolYear" value="${[0,0]}"/>
-
-<c:if test="${schoolYears.size() == 1}">
-    <c:set var="schoolYear" value="${[schoolYears.get(0),0]}"/>
-</c:if>
-<c:if test="${schoolYears.size() == 2}">
-    <c:set var="schoolYear" value="${[schoolYears.get(0),schoolYears.get(1)]}"/>
-</c:if>
-
 <div class="form-floating mb-3 mt-3">
     <form:select class="form-control" path="status" id="status">
         <form:options items="${statuses}"/>
     </form:select>
     <label for="status">Trạng thái</label>
 </div>
-
-<select class="selectpicker schoolYears" name="schoolYears" data-live-search="true" multiple>
-    <c:forEach var="i" begin="2010" end="2025">
-        <c:set var="j" value="${2025-i+2010}"/>
-
-        <c:choose>
-            <c:when test="${j == schoolYear[0]}">
-                <option value="${j}" selected>${j}</option>
-            </c:when>
-            <c:when test="${j == schoolYear[1]}">
-                <option value="${j}" selected>${j}</option>
-            </c:when>
-            <c:otherwise>
-                <option value="${j}">${j}</option>
-            </c:otherwise>
-        </c:choose>
-
-    </c:forEach>
-</select>

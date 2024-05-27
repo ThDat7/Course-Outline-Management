@@ -16,7 +16,11 @@ public interface CourseOutlineService extends BaseService<CourseOutline, Integer
 
     boolean update(int id, CourseOutline courseOutline);
 
-    CourseOutline getOrCreateByAssignOutlineId(int assignOutlineId);
-
     List<CourseOutline> search(Map<String, String> params);
+
+    List<CourseOutline> getReuse(Map<String, String> params);
+
+    List<CourseOutline> getNeedCreate(Map<String, String> params);
+
+    List<CourseOutline> getPending(Map<String, String> params);
 }

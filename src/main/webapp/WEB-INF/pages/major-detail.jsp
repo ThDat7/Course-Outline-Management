@@ -26,60 +26,8 @@
         <jsp:param name="relationId" value="${major.faculty.id}"/>
         <jsp:param name="label" value="Khoa"/>
     </jsp:include>
-    
-    <%--####################### education program section #######################--%>
-
-    <div class="container education-programs">
-    <div class="row">
-        <c:forEach var="semester" begin="1" end="12">
-            <div class="col-4 border semester-${semester}">
-                <div class="d-flex justify-content-center border-bottom p-2">Học kỳ ${semester}</div>
-                <div class="ps-3 py-2 courses-content list-group list-group-numbered">
-                    <c:forEach var="ep" items="${major.educationPrograms}">
-                        <c:if test="${ep.semester == semester}">
-                            <div class="list-group-item" data-id="${ep.course.id}">${ep.course.name}</div>
-                        </c:if>
-                    </c:forEach>
-                </div>
-            </div>
-        </c:forEach>
-    </div>
-
-
-    <select class="selectpicker courseId" data-live-search="true" multiple>
-        <c:forEach var="courseId" items="${allCourses.keySet()}">
-            <option value="${courseId}" data-name="${allCourses.get(courseId)}">${allCourses.get(courseId)}</option>
-        </c:forEach>
-    </select>
-
-    <select class="selectpicker semester" data-live-search="true">
-        <c:forEach var="i" begin="1" end="12">
-            <option value="${i}">${i}</option>
-        </c:forEach>
-    </select>
-
-    <button class="add-education-program btn btn-success">Thêm</button>
-    <button class="delete-education-program btn btn-danger">Xóa</button>
-
-    <%--    <input name="courses" value="2">--%>
-    <div class="input-courses">
-        <c:forEach var="ep" items="${major.educationPrograms}">
-            <input name="courses" type="hidden" data-id="${ep.course.id}" value="${ep.semester}-${ep.course.id}">
-        </c:forEach>
-    </div>
-    <%--####################### education program section #######################--%>
 
     <div class="form-floating mt-1">
         <button class="btn btn-info" type="submit">Lưu</button>
     </div>
 </form:form>
-<script type="text/javascript" src="<c:url value="/js/major-detail.js"/>"></script>
-<style>
-    div.selected {
-        background-color: #454545;
-    }
-
-    .courses-content div:hover {
-        background-color: #454545;
-    }
-</style>

@@ -1,8 +1,6 @@
 package com.dat.repository.impl;
 
-import com.dat.pojo.AssignOutline;
-import com.dat.pojo.CourseOutline;
-import com.dat.pojo.OutlineStatus;
+import com.dat.pojo.*;
 import com.dat.repository.CourseOutlineRepository;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -13,9 +11,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.NoResultException;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -76,25 +73,5 @@ public class CourseOutlineRepositoryImpl
             e.printStackTrace();
             return false;
         }
-    }
-
-    @Override
-    public CourseOutline getOrCreateByAssignOutlineId(int assignOutlineId) {
-        Session s = factory.getObject().getCurrentSession();
-        CourseOutline co;
-        try {
-            co = s.createQuery("SELECT co FROM CourseOutline co " +
-                            "WHERE co.assignOutline.id = :assignOutlineId", CourseOutline.class)
-                    .setParameter("assignOutlineId", assignOutlineId)
-                    .getSingleResult();
-        } catch (NoResultException e) {
-            co = new CourseOutline();
-            co.setAssignOutline(s.get(AssignOutline.class, assignOutlineId));
-            co.setStatus(OutlineStatus.DOING);
-            co.setContent("");
-            s.save(co);
-        }
-
-        return co;
     }
 }

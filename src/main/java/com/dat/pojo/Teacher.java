@@ -43,7 +43,7 @@ public class Teacher {
     private Major major;
 
     @OneToMany(mappedBy = "teacher")
-    private List<AssignOutline> assignOutlines;
+    private List<CourseOutline> courseOutlines;
 
     public Teacher(Integer id) {
         this.id = id;
