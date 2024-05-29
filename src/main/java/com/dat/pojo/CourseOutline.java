@@ -52,7 +52,7 @@ public class CourseOutline {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date deadlineDate;
 
-    @OneToMany(mappedBy = "courseOutline")
+    @OneToMany(mappedBy = "courseOutline", cascade = CascadeType.ALL)
     private Set<Comment> comments;
 
     @OneToMany(mappedBy = "courseOutline")

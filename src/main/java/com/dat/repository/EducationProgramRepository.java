@@ -16,4 +16,8 @@ public interface EducationProgramRepository extends BaseRepository<EducationProg
     void reuseAll(int year);
 
     EducationProgram add(EducationProgram educationProgram);
+
+    int cloneByYear(int year, int byYear);
+
+    Long countByYear(int byYear);
 }

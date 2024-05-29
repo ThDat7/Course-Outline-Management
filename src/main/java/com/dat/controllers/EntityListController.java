@@ -95,15 +95,16 @@ public abstract class EntityListController<T, K extends Serializable> {
     //    @PostMapping
     public String add(@ModelAttribute T t) {
         if (service.addOrUpdate(t) == true)
-            return String.format("redirect:/%s/", rootEndpoint);
+            return String.format("redirect:%s/", rootEndpoint);
 
         return String.format("%s-detail", entityName);
     }
 
     @GetMapping("/delete/{id}")
-    public String delete(@PathVariable K id) {
+    public String delete(Model model, @PathVariable K id, @RequestParam Map<String, String> params) {
         service.delete(id);
-        return String.format("redirect:/%s/", rootEndpoint);
+        model.addAllAttributes(params);
+        return String.format("redirect:%s/", rootEndpoint);
     }
 
     @Getter

@@ -36,6 +36,37 @@ public class EducationProgramRepositoryImpl
     }
 
     @Override
+    public int cloneByYear(int year, int byYear) {
+        Session s = factory.getObject().getCurrentSession();
+
+        int recordAdded = s.createQuery("INSERT INTO EducationProgram (major, schoolYear) " +
+                        "SELECT major, :year FROM EducationProgram WHERE schoolYear = :byYear")
+                .setParameter("year", year)
+                .setParameter("byYear", byYear)
+                .executeUpdate();
+
+        s.createQuery("INSERT INTO EducationProgramCourse (educationProgram, course, semester) " +
+                        "SELECT newEp ,epc.course, epc.semester " +
+                        "FROM EducationProgramCourse epc " +
+                        "JOIN EducationProgram oldEp ON oldEp.schoolYear = :byYear " +
+                        "JOIN EducationProgram newEp ON newEp.schoolYear = :year AND newEp.major = oldEp.major " +
+                        "WHERE epc.educationProgram = oldEp")
+                .setParameter("year", year)
+                .setParameter("byYear", byYear)
+                .executeUpdate();
+
+        return recordAdded;
+    }
+
+    @Override
+    public Long countByYear(int year) {
+        Session s = factory.getObject().getCurrentSession();
+        return (Long) s.createQuery("SELECT COUNT(*) FROM EducationProgram ep WHERE ep.schoolYear = :year")
+                .setParameter("year", year)
+                .getSingleResult();
+    }
+
+    @Override
     protected Integer getId(EducationProgram educationProgram) {
         return educationProgram.getId();
     }
@@ -43,6 +74,13 @@ public class EducationProgramRepositoryImpl
     @Override
     protected List<Predicate> filterByParams(Map<String, String> params, CriteriaBuilder b, Root root) {
         List<Predicate> predicates = new ArrayList<>();
+
+        int year = Year.now().getValue();
+        if (params.containsKey("year"))
+            year = Integer.parseInt(params.get("year"));
+
+        predicates.add(b.equal(root.get("schoolYear"), year));
+
 
         if (params.containsKey("kw")) {
             predicates.add(b.like(root.join("major").get("name"), "%" + params.get("kw") + "%"));
@@ -53,8 +91,6 @@ public class EducationProgramRepositoryImpl
                     Integer.parseInt(params.get("major"))));
         }
 
-        if (params.containsKey("year"))
-            predicates.add(b.equal(root.get("schoolYear"), Integer.parseInt(params.get("year"))));
 
         return predicates;
     }

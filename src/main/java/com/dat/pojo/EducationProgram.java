@@ -11,7 +11,9 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name = "education_programs")
+@Table(name = "education_programs",
+        uniqueConstraints =
+        @UniqueConstraint(columnNames = {"major_id", "schoolYear"}))
 @Getter
 @Setter
 @AllArgsConstructor

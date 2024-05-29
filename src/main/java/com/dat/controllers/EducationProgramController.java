@@ -12,10 +12,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.Year;
 import java.util.ArrayList;
@@ -99,5 +96,26 @@ public class EducationProgramController
             return "redirect:/education-programs/";
 
         return "educationProgram-detail";
+    }
+
+    @Override
+    public String list(Model model, @RequestParam Map<String, String> params) {
+        super.list(model, params);
+        return "list-educationProgram";
+    }
+
+    @GetMapping("/clonebyyear")
+    public String cloneByYear(Model model,
+                              @RequestParam(name = "year") int year,
+                              @RequestParam(name = "ByYear") int byYear) {
+        try {
+            int recordCloned = educationProgramService.cloneByYear(year, byYear);
+            String success = String.format("Clone thành công %d chương trình đào tạo từ năm %d sang năm %d", recordCloned, byYear, year);
+            model.addAttribute("success", success);
+        } catch (Exception e) {
+            model.addAttribute("error", e.getMessage());
+        }
+        model.addAttribute("year", year);
+        return "redirect:/education-programs/";
     }
 }

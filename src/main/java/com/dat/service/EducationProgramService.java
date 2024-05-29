@@ -16,4 +16,6 @@ public interface EducationProgramService extends BaseService<EducationProgram, I
     DataWithCounterDto<AssignOutlineDto> getNeedCreate(Map<String, String> params);
 
     void reuseAll(int year);
+
+    int cloneByYear(int year, int byYear);
 }

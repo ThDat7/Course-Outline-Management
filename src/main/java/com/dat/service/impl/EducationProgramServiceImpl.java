@@ -82,4 +82,13 @@ public class EducationProgramServiceImpl
     public void reuseAll(int year) {
         educationProgramRepository.reuseAll(year);
     }
+
+    @Override
+    public int cloneByYear(int year, int byYear) {
+        Long countEducationProgram = educationProgramRepository.countByYear(year);
+        if (countEducationProgram > 0)
+            throw new RuntimeException("Yêu cầu chương trinh đào tạo năm " + year + " rỗng");
+
+        return educationProgramRepository.cloneByYear(year, byYear);
+    }
 }

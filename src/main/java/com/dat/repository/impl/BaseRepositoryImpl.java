@@ -47,7 +47,7 @@ public abstract class BaseRepositoryImpl<T, K extends Serializable> implements B
         Root root = q.from(tClass);
         q.select(root);
 
-        if (params != null && params.size() > 0) {
+        if (params != null) {
             List<Predicate> predicates = filterByParams(params, b, root);
             if (predicates != null && predicates.size() > 0)
                 q.where(predicates.toArray(Predicate[]::new));

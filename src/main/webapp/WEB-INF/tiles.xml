@@ -98,4 +98,11 @@
                        value="/WEB-INF/pages/assign-outline/needCreate.jsp"/>
     </definition>
 
+
+    <definition name="list-educationProgram" extends="baseLayout">
+        <put-attribute name="title" value="Quản trị"/>
+        <put-attribute name="content"
+                       value="/WEB-INF/pages/list-educationProgram.jsp"/>
+    </definition>
+
 </tiles-definitions>

@@ -52,3 +52,5 @@ Check tối đa 1 đề cương 2 năm client và backend
 
 Đề cương đã biên soạn xong, nhưng chưa tới deadline, adminpublish, thì chặn cho teacher không thể sửa nữa (query phía client sẽ filter published, hoặc thêm field)
 course outline khi đã select môn, sẽ hiện các giáo viên thuộc khoa đó có thể biên soạn
+
+delete course outline bị lỗi

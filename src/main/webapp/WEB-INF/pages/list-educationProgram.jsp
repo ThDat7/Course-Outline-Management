@@ -30,6 +30,19 @@
 
 <section class="container">
     <h1 class="text-center text-info mt-1">DANH SÁCH ${entityLabelName}</h1>
+
+    <c:if test="${pageContext.request.getParameter('error') != null}">
+        <div class="alert alert-danger" role="alert">
+                ${pageContext.request.getParameter('error')}
+        </div>
+    </c:if>
+
+    <c:if test="${pageContext.request.getParameter('success') != null}">
+        <div class="alert alert-success" role="alert">
+                ${pageContext.request.getParameter('success')}
+        </div>
+    </c:if>
+
     <div class="filters my-5">
         <form action class="filters-form container">
             <c:if test="${filters != null && filters.size() >0}">
@@ -69,10 +82,22 @@
             </div>
         </form>
     </div>
-
-    <c:if test="${isCanCreate == true}">
-        <a href="<c:url value='${rootEndpoint}/create' />" class="btn btn-info">Thêm ${entityLabelName}</a>
-    </c:if>
+    <div class="btn-group" role="group" aria-label="Basic example">
+        <c:if test="${isCanCreate == true}">
+            <a href="<c:url value='${rootEndpoint}/create' />" class="btn btn-info me-5">Thêm ${entityLabelName}</a>
+        </c:if>
+        <form action="<c:url value='${rootEndpoint}/clonebyyear'/>" method="get">
+            <c:set var="selectedYear" value="${pageContext.request.getParameter('year') != null ?
+                                            pageContext.request.getParameter('year') : Year.now().getValue()}"/>
+            <label for="ByYear">Số năm clone từ:</label>
+            <input id="ByYear" name="ByYear" value="${selectedYear - 1}"
+                   placeholder="Nhập số năm clone từ"/>
+            <input id="year" name="year" value="${selectedYear}" hidden/>
+            <button class="btn btn-success">
+                Clone từ các năm trước
+            </button>
+        </form>
+    </div>
 
     <c:if test="${counter > 1}">
         <ul class="pagination mt-1">
