@@ -8,8 +8,10 @@ import com.dat.repository.EducationProgramRepository;
 import com.dat.service.EducationProgramService;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,7 +31,13 @@ public class EducationProgramServiceImpl
 
     @Override
     public boolean addOrUpdate(EducationProgram educationProgram, List<String> courses) {
-        EducationProgram oldEp = educationProgramRepository.getById(educationProgram.getId());
+        EducationProgram oldEp = null;
+        if (educationProgram.getId() != null)
+            oldEp = educationProgramRepository.getById(educationProgram.getId());
+        else educationProgram.setEducationProgramCourses(new ArrayList<>());
+
+        if (courses == null) courses = new ArrayList<>();
+
         List<Integer> courseIds = courses.stream().map(e -> Integer.parseInt(e.split("-")[1])).collect(Collectors.toList());
 
         if (oldEp != null) {
@@ -46,10 +54,9 @@ public class EducationProgramServiceImpl
                 continue;
 
             EducationProgramCourse epc = new EducationProgramCourse();
-            epc.setEducationProgram(educationProgram);
             epc.setSemester(semester);
             epc.setCourse(new Course(courseId));
-            educationProgramCourseRepository.addOrUpdate(epc);
+            epc.setEducationProgram(educationProgram);
 
             educationProgram.getEducationProgramCourses().add(epc);
         }

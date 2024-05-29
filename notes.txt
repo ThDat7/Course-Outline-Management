@@ -50,13 +50,5 @@ TẠM THỜI EAGER CÁC RELATION ĐỂ VIEWS.
 
 Check tối đa 1 đề cương 2 năm client và backend
 
-assign outline chưa tạo đề cương, detail hiện button tạo mới đề cương.
-Bên đề cương hidden input assign outline tương tự major detail có fac
-
 Đề cương đã biên soạn xong, nhưng chưa tới deadline, adminpublish, thì chặn cho teacher không thể sửa nữa (query phía client sẽ filter published, hoặc thêm field)
-
-education program controller có thể hiện thêm tổng số môn của chương trình đào tạo đó.
-
 course outline khi đã select môn, sẽ hiện các giáo viên thuộc khoa đó có thể biên soạn
-
-get reuse va need-create phải sort cho hợp ní

@@ -82,11 +82,6 @@ public class HibernateConfig {
     }
 
     @Bean
-    public SimpleDateFormat simpleDateFormat() {
-        return new SimpleDateFormat("dd/MM/yyyy");
-    }
-
-    @Bean
     public ModelMapper modelMapper() {
         ModelMapper modelMapper = new ModelMapper();
 

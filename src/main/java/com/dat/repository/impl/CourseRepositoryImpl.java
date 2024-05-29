@@ -49,7 +49,8 @@ public class CourseRepositoryImpl
 
         if (params.containsKey("faculty"))
             predicates.add(b.equal(root
-                            .joinSet("educationPrograms")
+                            .joinSet("educationProgramCourses")
+                            .join("educationProgram")
                             .join("major")
                             .join("faculty")
                             .get("id"),
@@ -105,9 +106,9 @@ public class CourseRepositoryImpl
 
         subquery.select(subRoot.get("id"));
         Predicate p = b.equal(subRoot
-                .joinSet("assignOutlines")
+                .joinList("assignOutlines")
                 .join("courseOutline")
-                .joinSet("courseOutlineDetails")
+                .joinList("courseOutlineDetails")
                 .get("id").get("schoolYear"), year);
         subquery.where(p);
 

@@ -3,6 +3,7 @@
 <%@taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <form:hidden path="id"/>
 <jsp:include page="../utils/form-select.jsp">
@@ -52,3 +53,17 @@
     </form:select>
     <label for="status">Trạng thái</label>
 </div>
+
+
+<div class="form-floating mb-3 mt-3">
+    <input type="input" class="date form-control" id="deadlineDate" name="deadlineDate"
+           value="<fmt:formatDate value="${courseOutline.deadlineDate}" pattern="yyyy-MM-dd"/>"/>
+
+    <label for="deadlineDate">Hạn chót</label>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('.date').datepicker({format: 'yyyy-mm-dd'});
+    });
+</script>

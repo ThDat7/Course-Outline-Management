@@ -5,6 +5,7 @@
 package com.dat.pojo;
 
 import java.sql.Date;
+import java.util.List;
 import java.util.Set;
 import javax.persistence.*;
 
@@ -46,11 +47,14 @@ public class CourseOutline {
     private OutlineStatus status;
 
     @OneToMany(mappedBy = "courseOutline", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<CourseAssessment> courseAssessments;
+    private List<CourseAssessment> courseAssessments;
 
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date deadlineDate;
 
     @OneToMany(mappedBy = "courseOutline")
     private Set<Comment> comments;
+
+    @OneToMany(mappedBy = "courseOutline")
+    private Set<EducationProgramCourse> educationProgramCourses;
 }

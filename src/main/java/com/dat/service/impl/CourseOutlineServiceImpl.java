@@ -33,9 +33,10 @@ public class CourseOutlineServiceImpl
             return addOrUpdate(courseOutline);
 
         CourseOutline oldCourseOutline = null;
-        if (courseOutline.getId() != null)
+        if (courseOutline.getId() != null) {
             oldCourseOutline = courseOutlineRepository.getById(courseOutline.getId());
-        else courseOutline.setYearPublished(Year.now().getValue());
+            courseOutline.setYearPublished(oldCourseOutline.getYearPublished());
+        } else courseOutline.setYearPublished(Year.now().getValue());
 
         updateCourseAssessments(courseOutline,
                 oldCourseOutline,

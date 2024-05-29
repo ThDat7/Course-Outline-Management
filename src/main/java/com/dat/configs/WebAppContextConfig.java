@@ -57,9 +57,10 @@ public class WebAppContextConfig implements WebMvcConfigurer {
         registry.addFormatter(new FacultyFormatter());
         registry.addFormatter(new CourseFormatter());
         registry.addFormatter(new TeacherFormatter());
+        registry.addFormatter(new DateFormatter());
     }
 
-//    @Bean
+    //    @Bean
 //    public InternalResourceViewResolver internalResourceViewResolver() {
 //        InternalResourceViewResolver r = new InternalResourceViewResolver();
 //        r.setViewClass(JstlView.class);
@@ -68,7 +69,6 @@ public class WebAppContextConfig implements WebMvcConfigurer {
 //
 //        return r;
 //    }
-
     @Bean
     public Cloudinary cloudinary() {
         Cloudinary cloudinary
@@ -78,6 +78,12 @@ public class WebAppContextConfig implements WebMvcConfigurer {
                 "api_secret", this.env.getProperty("cloudinary.api_secret"),
                 "secure", true));
         return cloudinary;
+    }
+
+
+    @Bean
+    public SimpleDateFormat simpleDateFormat() {
+        return new SimpleDateFormat("yyyy-MM-dd");
     }
 
     @Bean

@@ -47,7 +47,7 @@ public class DataGenerator {
         generateFaculty(5);
         generateMajor(10);
         generateTeacher(3);
-        generateCourse(30);
+        generateCourse(50);
         generateCourseOutline();
         generateCourseAssessment();
         generateEducationProgram();
@@ -166,6 +166,9 @@ public class DataGenerator {
                 List<Course> available = new ArrayList<>(courseList);
                 for (int i = 1; i < 12; i++) {
                     for (int j = 0; j < 3; j++) {
+                        if (available.size() == 0)
+                            break;
+
                         Course courseRandom = available.get(faker.random().nextInt(available.size()));
                         if (courseRandom == null)
                             break;

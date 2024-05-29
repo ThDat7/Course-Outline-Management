@@ -28,5 +28,5 @@ public class EducationProgram {
     private Major major;
 
     @OneToMany(mappedBy = "educationProgram", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<EducationProgramCourse> educationProgramCourses;
+    private List<EducationProgramCourse> educationProgramCourses;
 }

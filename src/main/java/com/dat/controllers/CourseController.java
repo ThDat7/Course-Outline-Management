@@ -45,12 +45,13 @@ public class CourseController
                         course.getId(),
                         course.getName(),
                         course.getCode(),
-                        course.getCredits(),
-                        course.getEducationProgramCourses() != null ?
-                                course.getEducationProgramCourses().stream()
-                                        .map(ep -> ep.getEducationProgram().getMajor().getName())
-                                        .collect(Collectors.joining(", "))
-                                : ""))
+                        course.getCredits() != null ? course.getCredits().toString() : "",
+                        course.getEducationProgramCourses().stream()
+                                .map(epc -> epc != null ?
+                                        epc.getEducationProgram().getMajor().getName()
+                                        : "")
+                                .collect(Collectors.joining(", "))
+                ))
                 .collect(Collectors.toList());
     }
 

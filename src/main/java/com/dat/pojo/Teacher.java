@@ -4,7 +4,7 @@
  */
 package com.dat.pojo;
 
-import java.util.List;
+import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -43,7 +43,7 @@ public class Teacher {
     private Major major;
 
     @OneToMany(mappedBy = "teacher")
-    private List<CourseOutline> courseOutlines;
+    private Set<CourseOutline> courseOutlines;
 
     public Teacher(Integer id) {
         this.id = id;

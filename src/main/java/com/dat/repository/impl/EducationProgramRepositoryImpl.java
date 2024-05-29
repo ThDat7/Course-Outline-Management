@@ -29,6 +29,12 @@ public class EducationProgramRepositoryImpl
         super(factory, env);
     }
 
+    public EducationProgram add(EducationProgram educationProgram) {
+        Session s = factory.getObject().getCurrentSession();
+        s.save(educationProgram);
+        return educationProgram;
+    }
+
     @Override
     protected Integer getId(EducationProgram educationProgram) {
         return educationProgram.getId();
@@ -36,7 +42,21 @@ public class EducationProgramRepositoryImpl
 
     @Override
     protected List<Predicate> filterByParams(Map<String, String> params, CriteriaBuilder b, Root root) {
-        return null;
+        List<Predicate> predicates = new ArrayList<>();
+
+        if (params.containsKey("kw")) {
+            predicates.add(b.like(root.join("major").get("name"), "%" + params.get("kw") + "%"));
+        }
+
+        if (params.containsKey("major")) {
+            predicates.add(b.equal(root.join("major").get("id"),
+                    Integer.parseInt(params.get("major"))));
+        }
+
+        if (params.containsKey("year"))
+            predicates.add(b.equal(root.get("schoolYear"), Integer.parseInt(params.get("year"))));
+
+        return predicates;
     }
 
 
@@ -47,7 +67,7 @@ public class EducationProgramRepositoryImpl
         CriteriaQuery q = b.createQuery(AssignOutlineDto.class);
         Root educationProgramRoot = q.from(EducationProgram.class);
 
-        SetJoin<EducationProgram, EducationProgramCourse> epcJoin = educationProgramRoot.joinSet("educationProgramCourses");
+        ListJoin<EducationProgram, EducationProgramCourse> epcJoin = educationProgramRoot.joinList("educationProgramCourses");
         Join<EducationProgram, Major> majorJoin = educationProgramRoot.join("major");
         Join<EducationProgramCourse, Course> courseJoin = epcJoin.join("course");
         SetJoin<Course, CourseOutline> courseOutlineJoin = courseJoin.joinSet("courseOutlines");
@@ -67,7 +87,8 @@ public class EducationProgramRepositoryImpl
 
         long total = (long) s.createQuery(q.select(b.count(educationProgramRoot))).getSingleResult();
         q.multiselect(epcJoin.get("id"), courseOutlineJoin.get("id"), courseJoin.get("name"), majorJoin.get("name"), courseOutlineJoin.get("yearPublished"));
-
+        q.orderBy(List.of(b.asc(courseOutlineJoin.get("yearPublished")),
+                b.asc(majorJoin.get("name"))));
         Query query = s.createQuery(q);
 
         if (params.containsKey("page"))
@@ -84,7 +105,7 @@ public class EducationProgramRepositoryImpl
         CriteriaQuery q = b.createQuery(AssignOutlineDto.class);
         Root educationProgramRoot = q.from(EducationProgram.class);
 
-        SetJoin<EducationProgram, EducationProgramCourse> epcJoin = educationProgramRoot.joinSet("educationProgramCourses");
+        ListJoin<EducationProgram, EducationProgramCourse> epcJoin = educationProgramRoot.joinList("educationProgramCourses");
         Join<EducationProgram, Major> majorJoin = educationProgramRoot.join("major");
         Join<EducationProgramCourse, Course> courseJoin = epcJoin.join("course");
 
@@ -112,6 +133,7 @@ public class EducationProgramRepositoryImpl
 
         long total = (long) s.createQuery(q.select(b.count(epcJoin))).getSingleResult();
         q.multiselect(epcJoin.get("id"), courseJoin.get("name"), majorJoin.get("name"));
+        q.orderBy(b.asc(majorJoin.get("name")));
 
         Query query = s.createQuery(q);
 

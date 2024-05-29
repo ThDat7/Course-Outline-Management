@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.Year;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -56,13 +58,26 @@ public class EducationProgramController
                         ep.getId(),
                         ep.getMajor().getName(),
                         ep.getSchoolYear(),
-                        ""))
+                        ep.getEducationProgramCourses().size()))
                 .collect(Collectors.toList());
     }
 
     @Override
     protected List<EntityListController<EducationProgram, Integer>.Filter> getFilters() {
-        return null;
+        Filter majorFilter = new Filter("Ngành", "major",
+                majorService.getAll().stream()
+                        .map(m -> new FilterItem(m.getName(), m.getId().toString()))
+                        .collect(Collectors.toList()));
+
+        List<FilterItem> yearFilterItems = new ArrayList<>();
+
+        for (int i = Year.now().getValue() + 5; i > 2010; i--)
+            yearFilterItems.add(new FilterItem(String.valueOf(i), String.valueOf(i)));
+
+        Filter yearFilter = new Filter("Năm học", "year",
+                yearFilterItems);
+
+        return List.of(majorFilter, yearFilter);
     }
 
     @Override

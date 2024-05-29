@@ -16,7 +16,7 @@
         </button>
         <div class="collapse navbar-collapse" id="collapsibleNavbar">
             <ul class="navbar-nav me-auto">
-                <li class="nav-item">
+                <li class="nav-item home">
                     <a class="nav-link" href=<c:url value='/'/>>Trang chủ</a>
                 </li>
                 <li class="nav-item">
@@ -50,13 +50,29 @@
 
 <script>
     $(document).ready(function () {
+        let exactMath = false;
+        let homeUrl = $('li.nav-item.home a').attr('href');
         $('a.nav-link').each(function () {
-            let isActive = location.href.includes($(this).attr('href'))
-            if (isActive) {
+            let navHref = $(this).attr('href')
+
+            if (location.pathname === navHref) {
                 $('li.nav-item.active').removeClass('active').removeAttr('aria-current');
                 $(this).addClass('active').attr('aria-current', 'page');
+                exactMath = true
             }
         })
+
+        if (!exactMath) {
+            $('a.nav-link').each(function () {
+                if ($(this).attr('href') === homeUrl) return;
+
+                let isActive = location.pathname.startsWith($(this).attr('href'));
+                if (isActive) {
+                    $('li.nav-item.active').removeClass('active').removeAttr('aria-current');
+                    $(this).addClass('active').attr('aria-current', 'page');
+                }
+            })
+        }
 
     });
 </script>

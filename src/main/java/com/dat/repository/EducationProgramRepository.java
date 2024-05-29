@@ -14,4 +14,6 @@ public interface EducationProgramRepository extends BaseRepository<EducationProg
     DataWithCounterDto<AssignOutlineDto> getNeedCreate(Map<String, String> params);
 
     void reuseAll(int year);
+
+    EducationProgram add(EducationProgram educationProgram);
 }

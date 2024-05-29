@@ -38,24 +38,22 @@ public class CourseOutlineRepositoryImpl
         List<Predicate> predicates = new ArrayList<>();
 
         if (params.containsKey("kw"))
-            predicates.add(b.like(root.get("assignOutline").get("course").get("name"), "%" + params.get("kw") + "%"));
+            predicates.add(b.like(root.get("course").get("name"), "%" + params.get("kw") + "%"));
 
         if (params.containsKey("status"))
             predicates.add(b.equal(root.get("status"), OutlineStatus.valueOf(params.get("status"))));
 
         if (params.containsKey("course"))
-            predicates.add(b.equal(root.get("assignOutline").get("course").get("id"), Integer.parseInt(params.get("course"))));
+            predicates.add(b.equal(root.get("course").get("id"), Integer.parseInt(params.get("course"))));
 
         if (params.containsKey("major"))
-            predicates.add(b.equal(root.join("assignOutline")
-                    .join("course")
-                    .joinSet("educationPrograms")
-                    .join("major"), Integer.parseInt(params.get("major"))));
+            predicates.add(b.equal(root
+                    .joinSet("educationProgramCourses")
+                    .join("educationProgram")
+                    .join("major").get("id"), Integer.parseInt(params.get("major"))));
 
         if (params.containsKey("year"))
-            predicates.add(b.equal(root
-                    .joinSet("courseOutlineDetails")
-                    .get("id").get("schoolYear"), Integer.parseInt(params.get("year"))));
+            predicates.add(b.equal(root.get("yearPublished"), Integer.parseInt(params.get("year"))));
 
         return predicates;
     }
