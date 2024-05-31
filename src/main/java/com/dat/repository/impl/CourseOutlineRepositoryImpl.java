@@ -72,4 +72,16 @@ public class CourseOutlineRepositoryImpl
             return false;
         }
     }
+
+    @Override
+    protected void joinRelationGetById(Root root) {
+        root.fetch("teacher", JoinType.LEFT).fetch("user", JoinType.LEFT);
+        root.fetch("course", JoinType.LEFT);
+        root.fetch("courseAssessments", JoinType.LEFT);
+    }
+
+    @Override
+    protected void joinRelationGetAll(Root root) {
+        root.fetch("teacher", JoinType.LEFT).fetch("user", JoinType.LEFT);
+    }
 }

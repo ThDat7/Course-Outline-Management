@@ -63,7 +63,7 @@ public class MajorController
 
     @Override
     public void addAtributes(Model model) {
-        Map facultySelectItems = facultyService.getAll(null).stream()
+        Map facultySelectItems = facultyService.getAll().stream()
                 .collect(Collectors.toMap(Faculty::getId, Faculty::getName));
 
 

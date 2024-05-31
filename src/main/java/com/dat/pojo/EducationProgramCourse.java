@@ -22,16 +22,16 @@ public class EducationProgramCourse {
 
     private int semester;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "course_id")
     private Course course;
 
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "education_program_id")
     private EducationProgram educationProgram;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "course_outline_id")
     private CourseOutline courseOutline;
 }

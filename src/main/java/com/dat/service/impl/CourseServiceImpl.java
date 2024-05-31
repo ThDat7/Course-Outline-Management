@@ -23,15 +23,4 @@ public class CourseServiceImpl
     public List<Course> getAll() {
         return courseRepository.getAll();
     }
-
-    @Override
-    public List<Course> getCourseNotCreatedAssign(Map<String, String> params) {
-        return courseRepository.getCourseNotCreatedAssign(params);
-    }
-
-    @Override
-    public Long countCourseNotCreatedAssign(Map<String, String> params) {
-        return courseRepository.countCourseNotCreatedAssign(params);
-    }
-
 }

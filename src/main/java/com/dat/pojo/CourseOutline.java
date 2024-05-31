@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
 import org.springframework.format.annotation.DateTimeFormat;
 
 /**
@@ -34,11 +35,11 @@ public class CourseOutline {
 
     private int yearPublished;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "course_id", nullable = false)
     private Course course;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "teacher_id", nullable = false)
     private Teacher teacher;
 
@@ -46,7 +47,7 @@ public class CourseOutline {
     @Enumerated(EnumType.STRING)
     private OutlineStatus status;
 
-    @OneToMany(mappedBy = "courseOutline", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "courseOutline", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CourseAssessment> courseAssessments;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")

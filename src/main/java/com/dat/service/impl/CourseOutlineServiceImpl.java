@@ -113,20 +113,4 @@ public class CourseOutlineServiceImpl
             courseAssessmentRepository.saveOrUpdate(ca);
         }
     }
-
-
-    @Override
-    public List<CourseOutline> getReuse(Map<String, String> params) {
-        return null;
-    }
-
-    @Override
-    public List<CourseOutline> getNeedCreate(Map<String, String> params) {
-        return null;
-    }
-
-    @Override
-    public List<CourseOutline> getPending(Map<String, String> params) {
-        return null;
-    }
 }

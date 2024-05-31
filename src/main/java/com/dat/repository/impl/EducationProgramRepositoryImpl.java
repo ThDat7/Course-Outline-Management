@@ -95,6 +95,21 @@ public class EducationProgramRepositoryImpl
         return predicates;
     }
 
+    @Override
+    protected void joinRelationGetById(Root root) {
+        root.fetch("major", JoinType.LEFT);
+        Fetch epcFetch = root.fetch("educationProgramCourses", JoinType.LEFT);
+        epcFetch.fetch("course", JoinType.LEFT);
+        epcFetch.fetch("courseOutline", JoinType.LEFT);
+    }
+
+    @Override
+    protected void joinRelationGetAll(Root root) {
+        root.fetch("major", JoinType.LEFT);
+        root.fetch("educationProgramCourses", JoinType.LEFT)
+                .fetch("course", JoinType.LEFT);
+    }
+
 
     @Override
     public DataWithCounterDto<AssignOutlineDto> getReuse(Map<String, String> params) {

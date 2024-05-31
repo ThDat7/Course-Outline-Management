@@ -28,11 +28,11 @@ public class Major {
     private Integer id;
     private String name;
     private String alias;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "faculty_id", nullable = false)
     private Faculty faculty;
 
-    @OneToMany(mappedBy = "major", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "major")
     private Set<EducationProgram> educationPrograms;
 
     public Major(Integer id) {

@@ -7,8 +7,4 @@ import java.util.Map;
 
 public interface CourseRepository extends BaseRepository<Course, Integer> {
     List<Course> getAll();
-
-    Long countCourseNotCreatedAssign(Map<String, String> params);
-
-    List<Course> getCourseNotCreatedAssign(Map<String, String> params);
 }

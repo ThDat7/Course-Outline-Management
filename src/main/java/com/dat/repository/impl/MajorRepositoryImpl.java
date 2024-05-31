@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.ArrayList;
@@ -47,6 +48,16 @@ public class MajorRepositoryImpl
         }
 
         return predicates;
+    }
+
+    @Override
+    protected void joinRelationGetById(Root root) {
+        root.fetch("faculty", JoinType.LEFT);
+    }
+
+    @Override
+    protected void joinRelationGetAll(Root root) {
+        root.fetch("faculty", JoinType.LEFT);
     }
 
     public List<Major> getAll() {

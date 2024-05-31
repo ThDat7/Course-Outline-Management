@@ -44,6 +44,16 @@ public class FacultyRepositoryImpl
     }
 
     @Override
+    protected void joinRelationGetById(Root root) {
+
+    }
+
+    @Override
+    protected void joinRelationGetAll(Root root) {
+
+    }
+
+    @Override
     public List<Faculty> getAll() {
         Session s = factory.getObject().openSession();
         return s.createQuery("SELECT f FROM Faculty f", Faculty.class).list();

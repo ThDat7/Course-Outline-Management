@@ -39,6 +39,16 @@ public class TeacherRepositoryImpl
     }
 
     @Override
+    protected void joinRelationGetById(Root root) {
+
+    }
+
+    @Override
+    protected void joinRelationGetAll(Root root) {
+
+    }
+
+    @Override
     public List<Teacher> getAll() {
         Session s = factory.getObject().openSession();
         return s.createQuery("SELECT t FROM Teacher t", Teacher.class).list();

@@ -45,6 +45,8 @@ public abstract class BaseRepositoryImpl<T, K extends Serializable> implements B
         CriteriaBuilder b = s.getCriteriaBuilder();
         CriteriaQuery q = b.createQuery(tClass);
         Root root = q.from(tClass);
+
+        joinRelationGetAll(root);
         q.select(root);
 
         if (params != null) {
@@ -106,7 +108,16 @@ public abstract class BaseRepositoryImpl<T, K extends Serializable> implements B
 
     public T getById(K id) {
         Session s = factory.getObject().getCurrentSession();
-        return s.get(tClass, id);
+
+        CriteriaBuilder b = s.getCriteriaBuilder();
+        CriteriaQuery q = b.createQuery(tClass);
+        Root root = q.from(tClass);
+        joinRelationGetById(root);
+
+        q.select(root).where(b.equal(root.get("id"), id));
+        Query query = s.createQuery(q);
+
+        return (T) query.getSingleResult();
     }
 
     public void delete(K id) {
@@ -115,4 +126,8 @@ public abstract class BaseRepositoryImpl<T, K extends Serializable> implements B
         if (a != null)
             s.delete(a);
     }
+
+    protected abstract void joinRelationGetById(Root root);
+
+    protected abstract void joinRelationGetAll(Root root);
 }

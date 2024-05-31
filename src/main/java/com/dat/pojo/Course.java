@@ -32,7 +32,7 @@ public class Course {
     @OneToMany(mappedBy = "course")
     private Set<CourseOutline> courseOutlines;
 
-    @OneToMany(mappedBy = "course", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "course")
     private Set<EducationProgramCourse> educationProgramCourses;
 
     public Course(Integer id) {

@@ -54,3 +54,4 @@ Check tối đa 1 đề cương 2 năm client và backend
 course outline khi đã select môn, sẽ hiện các giáo viên thuộc khoa đó có thể biên soạn
 
 delete course outline bị lỗi
+null constraint khi delete

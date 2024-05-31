@@ -63,6 +63,16 @@ public class UserRepositoryImpl
     }
 
     @Override
+    protected void joinRelationGetById(Root root) {
+
+    }
+
+    @Override
+    protected void joinRelationGetAll(Root root) {
+
+    }
+
+    @Override
     public void updateStatus(Integer id, UserStatus status) {
         Session s = factory.getObject().getCurrentSession();
         User u = s.get(User.class, id);

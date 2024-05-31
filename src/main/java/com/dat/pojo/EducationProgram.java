@@ -25,10 +25,10 @@ public class EducationProgram {
 
     private int schoolYear;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne()
     @JoinColumn(name = "major_id")
     private Major major;
 
-    @OneToMany(mappedBy = "educationProgram", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "educationProgram", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<EducationProgramCourse> educationProgramCourses;
 }
