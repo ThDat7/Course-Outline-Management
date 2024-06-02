@@ -1,5 +1,6 @@
 package com.dat.controllers;
 
+import com.dat.dto.CourseOutlineDto;
 import com.dat.dto.DataWithCounterDto;
 import com.dat.pojo.*;
 import com.dat.service.*;
@@ -82,19 +83,6 @@ public class AssignOutlineController {
         model.addAttribute("courseOutline", co);
 
         return view;
-    }
-
-    @PostMapping("/create/{id}")
-    public String create(Model model, @PathVariable("id") int epcId,
-                         @ModelAttribute CourseOutline courseOutline,
-                         @RequestParam(value = "type", required = false) List<String> type,
-                         @RequestParam(value = "method", required = false) List<String> method,
-                         @RequestParam(value = "time", required = false) List<String> time,
-                         @RequestParam(value = "clos", required = false) List<String> clos,
-                         @RequestParam(value = "weightPercent", required = false) List<Integer> weightPercent,
-                         @RequestParam(value = "schoolYears", required = false) List<Integer> schoolYears) {
-        educationProgramCourseService.associateOutline(epcId, courseOutline, type, method, time, clos, weightPercent, schoolYears);
-        return "redirect:/assign-outlines/re-use";
     }
 
     @GetMapping("/re-use/{epc_id}/{co_id}")

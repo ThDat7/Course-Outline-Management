@@ -6,13 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface CourseOutlineService extends BaseService<CourseOutline, Integer> {
-    boolean addOrUpdate(CourseOutline courseOutline,
-                        List<String> types,
-                        List<String> methods,
-                        List<String> times,
-                        List<String> closes,
-                        List<Integer> weightPercents,
-                        List<Integer> schoolYears);
+    boolean addOrUpdate(CourseOutline courseOutline);
 
     boolean update(int id, CourseOutline courseOutline);
 

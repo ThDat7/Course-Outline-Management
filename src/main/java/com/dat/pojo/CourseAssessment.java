@@ -4,20 +4,18 @@
  */
 package com.dat.pojo;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
+import java.util.List;
 
 /**
- *
  * @author DELL
  */
 @Entity
@@ -32,10 +30,11 @@ public class CourseAssessment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String type;
-    private String method;
-    private String time;
-    private String clos;
-    private Integer weightPercent;
+
+    @OneToMany(mappedBy = "courseAssessment", cascade = CascadeType.ALL, orphanRemoval = true)
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private List<AssessmentMethod> assessmentMethods;
+
     @ManyToOne
     @JoinColumn(name = "course_outline_id", nullable = false)
     private CourseOutline courseOutline;

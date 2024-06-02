@@ -13,10 +13,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -100,20 +97,6 @@ public class CourseOutlineController
 
         Filter yearFilter = new Filter("Năm học tạo", "year", yearFilterItem);
         return List.of(statusFilter, courseFilter, majorFilter, yearFilter);
-    }
-
-    @PostMapping
-    public String add(@ModelAttribute CourseOutline courseOutline,
-                      @RequestParam(value = "type", required = false) List<String> type,
-                      @RequestParam(value = "method", required = false) List<String> method,
-                      @RequestParam(value = "time", required = false) List<String> time,
-                      @RequestParam(value = "clos", required = false) List<String> clos,
-                      @RequestParam(value = "weightPercent", required = false) List<Integer> weightPercent,
-                      @RequestParam(value = "schoolYears", required = false) List<Integer> schoolYears) {
-        if (courseOutlineService.addOrUpdate(courseOutline, type, method, time, clos, weightPercent, schoolYears))
-            return "redirect:/course-outlines/";
-
-        return "courseOutline-detail";
     }
 
     @Override

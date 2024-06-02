@@ -55,3 +55,5 @@ course outline khi đã select môn, sẽ hiện các giáo viên thuộc khoa �
 
 delete course outline bị lỗi
 null constraint khi delete
+
+check các quyền khi update course

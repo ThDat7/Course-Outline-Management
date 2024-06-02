@@ -1,9 +1,12 @@
+<%@ page import="com.dat.pojo.CourseOutline" %>
+<%@ page import="java.util.stream.Collectors" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
 <%@taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<script type="text/javascript" src="<c:url value="/js/course-outline-detail.js"/>"></script>
 
 <form:hidden path="id"/>
 <jsp:include page="../utils/form-select.jsp">
@@ -29,22 +32,28 @@
 </div>
 
 <%--#######################################--%>
-<c:set var="countCurrentAssessment" value="0"/>
-
-<c:forEach var="assessment" items="${courseOutline.courseAssessments}">
-    <c:set var="countCurrentAssessment" value="${countCurrentAssessment + 1}"/>
-    <jsp:include page="../utils/course-assessment-item.jsp">
-        <jsp:param name="type" value="${assessment.type}"/>
-        <jsp:param name="method" value="${assessment.method}"/>
-        <jsp:param name="time" value="${assessment.time}"/>
-        <jsp:param name="clos" value="${assessment.clos}"/>
-        <jsp:param name="weightPercent" value="${assessment.weightPercent}"/>
-    </jsp:include>
-</c:forEach>
-
-<c:forEach begin="${countCurrentAssessment + 1}" end="4">
-    <jsp:include page="../utils/course-assessment-item.jsp"/>
-</c:forEach>
+<table class="table table-bordered mt-3" id="assessmentTable">
+    <thead>
+    <tr>
+        <th>Thành phần đánh giá</th>
+        <th>Bài đánh giá</th>
+        <th>Thời điểm</th>
+        <th>CDR môn học</th>
+        <th>Tỷ lệ %</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>
+            <button class="btn btn-primary addAssessmentComponent">
+                Thêm thành phần đánh giá
+            </button>
+        </td>
+        <td colspan="5"></td>
+    </tr>
+    </tbody>
+</table>
 <%--#######################################--%>
 
 <div class="form-floating mb-3 mt-3">
@@ -63,7 +72,19 @@
 </div>
 
 <script>
-    $(document).ready(function () {
-        $('.date').datepicker({format: 'yyyy-mm-dd'});
-    });
+    let type = 0;
+    let method = 0;
+    <c:forEach items="${courseOutline.courseAssessments}" var="assessment">
+    addAssessmentComponent(new Event(''));
+    $("tr").eq(type + 2).find(".component-input").val("${assessment.type}");
+    <c:forEach items="${assessment.assessmentMethods}" var="method">
+    addAssessmentMethod(new Event(''), type);
+    $('#method-' + method + ' .method-input').val("${method.method}");
+    $('#method-' + method + ' .time-input').val("${method.time}");
+    $('#method-' + method + ' .clo-input').val("${method.clos}");
+    $('#method-' + method + ' .weight-input').val("${method.weightPercent}");
+    method++;
+    </c:forEach>
+    type++;
+    </c:forEach>
 </script>

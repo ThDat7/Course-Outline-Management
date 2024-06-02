@@ -226,32 +226,54 @@ public class DataGenerator {
 
     private void generateCourseAssessment() {
         for (CourseOutline courseOutline : courseOutlineList) {
-            CourseAssessment assessment = new CourseAssessment();
-            assessment.setType("Quá trình");
-            assessment.setMethod("Tham gia học trên lớp");
-            assessment.setTime("Suốt khóa học");
-            assessment.setClos("CLO1, CLO2, CLO3");
-            assessment.setWeightPercent(30);
-            assessment.setCourseOutline(courseOutline);
-            s.save(assessment);
+            CourseAssessment a1 = new CourseAssessment();
+            a1.setType("Đánh giá quá trình");
+            a1.setAssessmentMethods(List.of(
+                    new AssessmentMethod(null,
+                            "Tham gia học trên lớp",
+                            "Suốt khóa học",
+                            "CLO1, CLO2, CLO3",
+                            10,
+                            a1),
+                    new AssessmentMethod(null,
+                            "Làm bài tập lms",
+                            "Suốt khóa học",
+                            "CLO1, CLO2, CLO3",
+                            10,
+                            a1)));
+            a1.setCourseOutline(courseOutline);
 
-            assessment = new CourseAssessment();
-            assessment.setType("Giữa kỳ");
-            assessment.setMethod("Bài kiểm tra tự luận");
-            assessment.setTime("Buổi học cuối");
-            assessment.setClos("CLO1, CLO3");
-            assessment.setWeightPercent(20);
-            assessment.setCourseOutline(courseOutline);
-            s.save(assessment);
+            CourseAssessment a2 = new CourseAssessment();
+            a2.setType("Đánh giá giữa kỳ");
+            a2.setAssessmentMethods(List.of(
+                    new AssessmentMethod(null,
+                            "Thuyết trình nhóm",
+                            "Buổi học cuối",
+                            "CLO1, CLO3",
+                            10,
+                            a2),
+                    new AssessmentMethod(null,
+                            "Bài kiểm tra trắc nghiệm giữa kỳ",
+                            "Buổi học cuối",
+                            "CLO1, CLO3",
+                            20,
+                            a2)));
+            a2.setCourseOutline(courseOutline);
 
-            assessment = new CourseAssessment();
-            assessment.setType("Cuối kỳ");
-            assessment.setMethod("Bài kiểm tra tự luận");
-            assessment.setTime("Thi tập trung");
-            assessment.setClos("CLO1, CLO3");
-            assessment.setWeightPercent(50);
-            assessment.setCourseOutline(courseOutline);
-            s.save(assessment);
+            CourseAssessment a3 = new CourseAssessment();
+            a3.setType("Đánh giá cuối kỳ");
+            a3.setAssessmentMethods(List.of(
+                    new AssessmentMethod(null,
+                            "Thi cuối kỳ tự luận",
+                            "Sau khi kết thúc môn học - Thi tập trung theo lịch",
+                            "CLO1, CLO2",
+                            50,
+                            a3)));
+            a3.setCourseOutline(courseOutline);
+
+            s.save(a1);
+            s.save(a2);
+            s.save(a3);
         }
     }
 

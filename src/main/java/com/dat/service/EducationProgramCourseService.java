@@ -13,7 +13,5 @@ public interface EducationProgramCourseService {
 
     void removeOutline(int epId, int courseId);
 
-    void associateOutline(int epcId, CourseOutline courseOutline,
-                          List<String> type, List<String> method, List<String> time,
-                          List<String> clos, List<Integer> weightPercent, List<Integer> schoolYears);
+    void associateOutline(int epcId, CourseOutline courseOutline);
 }

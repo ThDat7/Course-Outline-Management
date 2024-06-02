@@ -4,6 +4,7 @@
  */
 package com.dat.controllers;
 
+import com.dat.dto.CourseOutlineAdminDto;
 import com.dat.dto.CourseOutlineDto;
 import com.dat.dto.CourseOutlineSearchDto;
 import com.dat.dto.EducationProgramSearchDto;
@@ -16,6 +17,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.ws.rs.core.Response;
@@ -64,6 +66,23 @@ public class ApiCourseOutlineController {
         return ResponseEntity.ok(educationProgramEntity2Dto(cos));
     }
 
+    @PostMapping
+    public void add(@RequestBody CourseOutlineAdminDto coDto) {
+        CourseOutline co = dto2Entity(coDto);
+
+        if (!courseOutlineService.addOrUpdate(dto2Entity(coDto)))
+            throw new RuntimeException("Add course outline failed");
+    }
+
+    @GetMapping
+    public ResponseEntity demo() {
+        CourseOutline co = courseOutlineService.getById(2);
+        return ResponseEntity.ok(
+                modelMapper.map(co,
+                        CourseOutlineAdminDto.class));
+
+    }
+
     private List<EducationProgramSearchDto> educationProgramEntity2Dto(List<Major> majors) {
         return majors.stream()
                 .map(major -> {
@@ -92,5 +111,9 @@ public class ApiCourseOutlineController {
 
     private CourseOutline dto2Entity(CourseOutlineDto courseOutlineDto) {
         return modelMapper.map(courseOutlineDto, CourseOutline.class);
+    }
+
+    private CourseOutline dto2Entity(CourseOutlineAdminDto coDto) {
+        return modelMapper.map(coDto, CourseOutline.class);
     }
 }

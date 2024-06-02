@@ -7,6 +7,7 @@ import com.dat.service.CourseOutlineService;
 import org.springframework.stereotype.Service;
 
 import java.time.Year;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -28,21 +29,18 @@ public class CourseOutlineServiceImpl
     }
 
     @Override
-    public boolean addOrUpdate(CourseOutline courseOutline, List<String> types, List<String> methods, List<String> times, List<String> closes, List<Integer> weightPercents, List<Integer> schoolYears) {
-        if (types == null || types.size() == 0)
-            return addOrUpdate(courseOutline);
-
+    public boolean addOrUpdate(CourseOutline courseOutline) {
         CourseOutline oldCourseOutline = null;
         if (courseOutline.getId() != null) {
             oldCourseOutline = courseOutlineRepository.getById(courseOutline.getId());
             courseOutline.setYearPublished(oldCourseOutline.getYearPublished());
         } else courseOutline.setYearPublished(Year.now().getValue());
 
-        updateCourseAssessments(courseOutline,
-                oldCourseOutline,
-                types, methods, times, closes, weightPercents);
+        courseOutline.setCourseAssessments(
+                updateCourseAssessments(courseOutline.getCourseAssessments(),
+                        oldCourseOutline));
 
-        return addOrUpdate(courseOutline);
+        return courseOutlineRepository.addOrUpdate(courseOutline);
     }
 
     public List<CourseOutline> search(Map<String, String> params) {
@@ -52,65 +50,78 @@ public class CourseOutlineServiceImpl
 
     @Override
     public boolean update(int id, CourseOutline courseOutline) {
-        CourseOutline oldCourseOutline = courseOutlineRepository.getById(id);
+        if (courseOutline.getStatus() == OutlineStatus.PUBLISHED)
+            throw new RuntimeException("Cannot update a published course outline");
+
         courseOutline.setId(id);
-        updateCourseAssessments(courseOutline,
-                oldCourseOutline,
-                courseOutline.getCourseAssessments().stream()
-                        .map(CourseAssessment::getType)
-                        .collect(Collectors.toList()),
-                courseOutline.getCourseAssessments().stream()
-                        .map(CourseAssessment::getMethod)
-                        .collect(Collectors.toList()),
-                courseOutline.getCourseAssessments().stream()
-                        .map(CourseAssessment::getTime)
-                        .collect(Collectors.toList()),
-                courseOutline.getCourseAssessments().stream()
-                        .map(CourseAssessment::getClos)
-                        .collect(Collectors.toList()),
-                courseOutline.getCourseAssessments().stream()
-                        .map(CourseAssessment::getWeightPercent)
-                        .collect(Collectors.toList()));
+        CourseOutline oldCourseOutline = courseOutlineRepository.getById(id);
+        courseOutline.setYearPublished(oldCourseOutline.getYearPublished());
+        courseOutline.setTeacher(oldCourseOutline.getTeacher());
+        courseOutline.setCourse(oldCourseOutline.getCourse());
+        courseOutline.setDeadlineDate(oldCourseOutline.getDeadlineDate());
 
-        oldCourseOutline.setContent(courseOutline.getContent());
-        oldCourseOutline.setStatus(courseOutline.getStatus());
+        courseOutline.setCourseAssessments(
+                updateCourseAssessments(courseOutline.getCourseAssessments(),
+                        oldCourseOutline));
 
-        return courseOutlineRepository.addOrUpdate(oldCourseOutline);
+        return courseOutlineRepository.addOrUpdate(courseOutline);
     }
 
-    private void updateCourseAssessments(CourseOutline courseOutline,
-                                         CourseOutline oldCourseOutline,
-                                         List<String> types,
-                                         List<String> methods,
-                                         List<String> times,
-                                         List<String> closes,
-                                         List<Integer> weightPercents) {
-        if (oldCourseOutline != null) {
-            courseOutline.setCourseAssessments(oldCourseOutline.getCourseAssessments());
-            courseOutline.getCourseAssessments().removeIf(ca -> !types.contains(ca.getType()));
-        }
+    private List<CourseAssessment> updateCourseAssessments(List<CourseAssessment> newCA,
+                                                           CourseOutline oldCo) {
+        List<CourseAssessment> oldCA = oldCo.getCourseAssessments();
+        int oldSize = oldCA.size();
+        int newSize = newCA.size();
 
-        for (int i = 0; i < types.size(); i++) {
-            if (types.get(i) == null || types.get(i).isEmpty())
-                continue;
-            String type = types.get(i);
+        for (int i = 0; i < oldSize - newSize; i++)
+            oldCA.remove(0);
+
+        for (int i = 0; i < newSize - oldSize; i++) {
             CourseAssessment ca = new CourseAssessment();
-
-            CourseAssessment oldAssessment = courseOutline.getCourseAssessments().stream()
-                    .filter(co -> co.getType().equals(type))
-                    .findFirst().orElse(null);
-            if (oldAssessment != null)
-                ca = oldAssessment;
-            else courseOutline.getCourseAssessments().add(ca);
-// 3 case => new khong co old delete, old khong co new add, old co new update
-
-            ca.setType(type);
-            ca.setClos(closes.get(i));
-            ca.setMethod(methods.get(i));
-            ca.setTime(times.get(i));
-            ca.setWeightPercent(weightPercents.get(i));
-            ca.setCourseOutline(courseOutline);
-            courseAssessmentRepository.saveOrUpdate(ca);
+            ca.setAssessmentMethods(new ArrayList<>());
+            ca.setCourseOutline(oldCo);
+            oldCA.add(ca);
         }
+
+        for (int i = 0; i < newSize; i++) {
+            CourseAssessment newCourseAssessment = newCA.get(i);
+            CourseAssessment oldCourseAssessment = oldCA.get(i);
+
+            oldCourseAssessment.setType(newCourseAssessment.getType());
+            oldCourseAssessment.setAssessmentMethods(
+                    updateAssessmentMethods(newCourseAssessment.getAssessmentMethods(),
+                            oldCourseAssessment));
+        }
+
+        return oldCA;
+
+    }
+
+    private List<AssessmentMethod> updateAssessmentMethods(List<AssessmentMethod> newAM, CourseAssessment oldAssessment) {
+        List<AssessmentMethod> oldAM = oldAssessment.getAssessmentMethods();
+
+        int oldSize = oldAM.size();
+        int newSize = newAM.size();
+
+        for (int i = 0; i < oldSize - newSize; i++)
+            oldAM.remove(0);
+
+        for (int i = 0; i < newSize - oldSize; i++) {
+            AssessmentMethod am = new AssessmentMethod();
+            am.setCourseAssessment(oldAssessment);
+            oldAM.add(am);
+        }
+
+        for (int i = 0; i < newSize; i++) {
+            AssessmentMethod newAssessmentMethod = newAM.get(i);
+            AssessmentMethod oldAssessmentMethod = oldAM.get(i);
+
+            oldAssessmentMethod.setMethod(newAssessmentMethod.getMethod());
+            oldAssessmentMethod.setTime(newAssessmentMethod.getTime());
+            oldAssessmentMethod.setClos(newAssessmentMethod.getClos());
+            oldAssessmentMethod.setWeightPercent(newAssessmentMethod.getWeightPercent());
+        }
+
+        return oldAM;
     }
 }
