@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.NoResultException;
+import javax.persistence.Query;
 import javax.persistence.criteria.*;
 import java.time.Year;
 import java.util.ArrayList;
@@ -83,5 +84,41 @@ public class CourseOutlineRepositoryImpl
     @Override
     protected void joinRelationGetAll(Root root) {
         root.fetch("teacher", JoinType.LEFT).fetch("user", JoinType.LEFT);
+    }
+
+    @Override
+    public List<CourseOutline> getByTeacherId(int teacherId, Map<String, String> params) {
+        Session s = factory.getObject().getCurrentSession();
+        CriteriaBuilder b = s.getCriteriaBuilder();
+        CriteriaQuery<CourseOutline> q = b.createQuery(CourseOutline.class);
+        Root<CourseOutline> root = q.from(CourseOutline.class);
+
+        joinRelationGetById(root);
+        q.select(root);
+        Predicate pStatus = b.equal(root.get("status"), OutlineStatus.DOING);
+        Predicate pTeacher = b.equal(root.get("teacher").get("id"), teacherId);
+        q.where(b.and(pStatus, pTeacher));
+
+        Query query = s.createQuery(q);
+        filterPage(params, query);
+
+        return query.getResultList();
+    }
+
+    @Override
+    public long countByTeacherId(int teacherId, Map<String, String> params) {
+        Session s = factory.getObject().getCurrentSession();
+
+        CriteriaBuilder b = s.getCriteriaBuilder();
+        CriteriaQuery q = b.createQuery(CourseOutline.class);
+        Root root = q.from(CourseOutline.class);
+        q.select(b.count(root));
+
+        Predicate pStatus = b.equal(root.get("status"), OutlineStatus.DOING);
+        Predicate pTeacher = b.equal(root.get("teacher").get("id"), teacherId);
+        q.where(b.and(pStatus, pTeacher));
+
+        Query query = s.createQuery(q);
+        return Long.parseLong(query.getSingleResult().toString());
     }
 }

@@ -49,6 +49,19 @@ public class CourseOutlineServiceImpl
     }
 
     @Override
+    public List<CourseOutline> getByCurrentTeacher(Map<String, String> params) {
+        int currentTeacherId = 1;
+
+        return courseOutlineRepository.getByTeacherId(currentTeacherId, params);
+    }
+
+    @Override
+    public long countByCurrentTeacher(Map<String, String> params) {
+        int currentTeacherId = 1;
+        return courseOutlineRepository.countByTeacherId(currentTeacherId, params);
+    }
+
+    @Override
     public boolean update(int id, CourseOutline courseOutline) {
         if (courseOutline.getStatus() == OutlineStatus.PUBLISHED)
             throw new RuntimeException("Cannot update a published course outline");

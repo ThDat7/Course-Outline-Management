@@ -11,4 +11,8 @@ public interface CourseOutlineService extends BaseService<CourseOutline, Integer
     boolean update(int id, CourseOutline courseOutline);
 
     List<CourseOutline> search(Map<String, String> params);
+
+    List<CourseOutline> getByCurrentTeacher(Map<String, String> params);
+
+    long countByCurrentTeacher(Map<String, String> params);
 }

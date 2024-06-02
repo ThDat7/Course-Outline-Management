@@ -4,10 +4,7 @@
  */
 package com.dat.controllers;
 
-import com.dat.dto.CourseOutlineAdminDto;
-import com.dat.dto.CourseOutlineDto;
-import com.dat.dto.CourseOutlineSearchDto;
-import com.dat.dto.EducationProgramSearchDto;
+import com.dat.dto.*;
 import com.dat.pojo.CourseOutline;
 import com.dat.pojo.Major;
 import com.dat.pojo.OutlineStatus;
@@ -40,6 +37,13 @@ public class ApiCourseOutlineController {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @GetMapping("")
+    public ResponseEntity<DataWithCounterDto<CourseOutlineDto>> getAll(@RequestParam Map<String, String> params) {
+        List<CourseOutline> courseOutlines = courseOutlineService.getByCurrentTeacher(params);
+        long total = courseOutlineService.countByCurrentTeacher(params);
+        return ResponseEntity.ok(new DataWithCounterDto<>(entity2Dto(courseOutlines), total));
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<CourseOutlineDto> get(@PathVariable("id") int id) {
@@ -74,15 +78,6 @@ public class ApiCourseOutlineController {
             throw new RuntimeException("Add course outline failed");
     }
 
-    @GetMapping
-    public ResponseEntity demo() {
-        CourseOutline co = courseOutlineService.getById(2);
-        return ResponseEntity.ok(
-                modelMapper.map(co,
-                        CourseOutlineAdminDto.class));
-
-    }
-
     private List<EducationProgramSearchDto> educationProgramEntity2Dto(List<Major> majors) {
         return majors.stream()
                 .map(major -> {
@@ -115,5 +110,12 @@ public class ApiCourseOutlineController {
 
     private CourseOutline dto2Entity(CourseOutlineAdminDto coDto) {
         return modelMapper.map(coDto, CourseOutline.class);
+    }
+
+
+    private List<CourseOutlineDto> entity2Dto(List<CourseOutline> courseOutlines) {
+        return courseOutlines.stream()
+                .map(co -> modelMapper.map(co, CourseOutlineDto.class))
+                .toList();
     }
 }

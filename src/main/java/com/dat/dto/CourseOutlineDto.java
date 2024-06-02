@@ -16,6 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 public class CourseOutlineDto {
     private int id;
+    private String courseName;
     private String content;
     private List<CourseAssessmentDto> courseAssessments = new ArrayList<>();
     private String status;
