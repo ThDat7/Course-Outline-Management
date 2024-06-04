@@ -44,4 +44,14 @@ public class EducationProgramCourseRepositoryImpl implements EducationProgramCou
                 .setParameter("courseId", courseId)
                 .getSingleResult();
     }
+
+    @Override
+    public EducationProgram getView(int id) {
+        Session s = factory.getObject().getCurrentSession();
+        return s.createQuery("SELECT ep FROM EducationProgram ep " +
+                        "LEFT JOIN FETCH ep.educationProgramCourses " +
+                        "WHERE ep.id = :id", EducationProgram.class)
+                .setParameter("id", id)
+                .getSingleResult();
+    }
 }

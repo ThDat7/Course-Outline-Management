@@ -31,10 +31,6 @@ import java.util.stream.Collectors;
 public class ApiCourseOutlineController {
     @Autowired
     private CourseOutlineService courseOutlineService;
-
-    @Autowired
-    private MajorService majorService;
-
     @Autowired
     private ModelMapper modelMapper;
 
@@ -51,23 +47,17 @@ public class ApiCourseOutlineController {
         return ResponseEntity.ok(entity2Dto(courseOutline));
     }
 
+    @GetMapping("/view/{id}")
+    public ResponseEntity<CourseOutlineViewDto> getView(@PathVariable("id") int id) {
+        CourseOutline courseOutline = courseOutlineService.getView(id);
+        return ResponseEntity.ok(entity2COVDto(courseOutline));
+    }
+
     @PostMapping("/{courseOutlineId}")
     @ResponseStatus(HttpStatus.OK)
     public void update(@PathVariable("courseOutlineId") int id,
                        @RequestBody CourseOutlineDto courseOutlineDto) {
         courseOutlineService.update(id, dto2Entity(courseOutlineDto));
-    }
-
-    @GetMapping("/search-course-outlines")
-    public ResponseEntity<List<CourseOutlineSearchDto>> searchCourseOutline(@RequestParam Map<String, String> params) {
-        List<CourseOutline> cos = courseOutlineService.search(params);
-        return ResponseEntity.ok(courseOutlineEntity2Dto(cos));
-    }
-
-    @GetMapping("/search-education-programs")
-    public ResponseEntity<List<EducationProgramSearchDto>> searchEducationProgram(@RequestParam Map<String, String> params) {
-        List<Major> cos = majorService.searchEducationPrograms(params);
-        return ResponseEntity.ok(educationProgramEntity2Dto(cos));
     }
 
     @PostMapping
@@ -76,24 +66,6 @@ public class ApiCourseOutlineController {
 
         if (!courseOutlineService.addOrUpdate(dto2Entity(coDto)))
             throw new RuntimeException("Add course outline failed");
-    }
-
-    private List<EducationProgramSearchDto> educationProgramEntity2Dto(List<Major> majors) {
-        return majors.stream()
-                .map(major -> {
-                    EducationProgramSearchDto majorDto = modelMapper.map(major, EducationProgramSearchDto.class);
-                    return majorDto;
-                })
-                .toList();
-    }
-
-    private List<CourseOutlineSearchDto> courseOutlineEntity2Dto(List<CourseOutline> courseOutlines) {
-        return courseOutlines.stream()
-                .map(co -> {
-                    CourseOutlineSearchDto coDto = modelMapper.map(co, CourseOutlineSearchDto.class);
-                    return coDto;
-                })
-                .toList();
     }
 
     private CourseOutlineDto entity2Dto(CourseOutline courseOutline) {
@@ -117,5 +89,25 @@ public class ApiCourseOutlineController {
         return courseOutlines.stream()
                 .map(co -> modelMapper.map(co, CourseOutlineDto.class))
                 .toList();
+    }
+
+    private CourseOutlineViewDto entity2COVDto(CourseOutline courseOutline) {
+        CourseOutlineViewDto covDto = modelMapper.map(courseOutline, CourseOutlineViewDto.class);
+        covDto.setTeacherName(String.format("%s %s",
+                courseOutline.getTeacher().getUser().getLastName(),
+                courseOutline.getTeacher().getUser().getFirstName()));
+        covDto.setYears(courseOutline.getEducationProgramCourses().stream()
+                .map(epc -> epc.getEducationProgram().getSchoolYear())
+                .collect(Collectors.toList()));
+        covDto.setComments(courseOutline.getComments().stream()
+                .map(c -> {
+                    CommentDto cDto = modelMapper.map(c, CommentDto.class);
+                    cDto.setUserFullName(String.format("%s %s",
+                            c.getUser().getLastName(),
+                            c.getUser().getFirstName()));
+                    return cDto;
+                })
+                .collect(Collectors.toList()));
+        return covDto;
     }
 }

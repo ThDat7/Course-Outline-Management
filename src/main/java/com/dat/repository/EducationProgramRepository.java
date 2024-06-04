@@ -20,4 +20,6 @@ public interface EducationProgramRepository extends BaseRepository<EducationProg
     int cloneByYear(int year, int byYear);
 
     Long countByYear(int byYear);
+
+    DataWithCounterDto<EducationProgram> searchApi(Map<String, String> params);
 }

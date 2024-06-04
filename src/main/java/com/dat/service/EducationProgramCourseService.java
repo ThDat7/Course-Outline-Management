@@ -1,6 +1,7 @@
 package com.dat.service;
 
 import com.dat.pojo.CourseOutline;
+import com.dat.pojo.EducationProgram;
 import com.dat.pojo.EducationProgramCourse;
 
 import java.util.List;
@@ -14,4 +15,6 @@ public interface EducationProgramCourseService {
     void removeOutline(int epId, int courseId);
 
     void associateOutline(int epcId, CourseOutline courseOutline);
+
+    EducationProgram getView(int id);
 }

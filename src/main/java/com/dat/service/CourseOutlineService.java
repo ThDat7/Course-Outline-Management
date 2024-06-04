@@ -1,5 +1,6 @@
 package com.dat.service;
 
+import com.dat.dto.DataWithCounterDto;
 import com.dat.pojo.CourseOutline;
 
 import java.util.List;
@@ -10,9 +11,11 @@ public interface CourseOutlineService extends BaseService<CourseOutline, Integer
 
     boolean update(int id, CourseOutline courseOutline);
 
-    List<CourseOutline> search(Map<String, String> params);
+    DataWithCounterDto<CourseOutline> searchApi(Map<String, String> params);
 
     List<CourseOutline> getByCurrentTeacher(Map<String, String> params);
 
     long countByCurrentTeacher(Map<String, String> params);
+
+    CourseOutline getView(int id);
 }

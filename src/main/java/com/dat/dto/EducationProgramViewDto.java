@@ -5,12 +5,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
-@Setter
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
-public class EducationProgramSearchDto {
-    private int id;
+@Getter
+@Setter
+public class EducationProgramViewDto {
+    private Integer id;
     private String majorName;
-    private int schoolYear;
+    private Integer schoolYear;
+    private List<EducationProgramCourseDto> educationProgramCourses;
 }

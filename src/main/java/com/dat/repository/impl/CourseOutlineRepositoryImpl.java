@@ -1,5 +1,6 @@
 package com.dat.repository.impl;
 
+import com.dat.dto.DataWithCounterDto;
 import com.dat.pojo.*;
 import com.dat.repository.CourseOutlineRepository;
 import org.hibernate.HibernateException;
@@ -91,7 +92,7 @@ public class CourseOutlineRepositoryImpl
         Session s = factory.getObject().getCurrentSession();
         CriteriaBuilder b = s.getCriteriaBuilder();
         CriteriaQuery<CourseOutline> q = b.createQuery(CourseOutline.class);
-        Root<CourseOutline> root = q.from(CourseOutline.class);
+        Root root = q.from(CourseOutline.class);
 
         joinRelationGetById(root);
         q.select(root);
@@ -121,4 +122,79 @@ public class CourseOutlineRepositoryImpl
         Query query = s.createQuery(q);
         return Long.parseLong(query.getSingleResult().toString());
     }
+
+    @Override
+    public DataWithCounterDto<CourseOutline> searchApi(Map<String, String> params) {
+        Session s = factory.getObject().getCurrentSession();
+        CriteriaBuilder b = s.getCriteriaBuilder();
+        CriteriaQuery q = b.createQuery(CourseOutline.class);
+        Root root = q.from(CourseOutline.class);
+
+        CriteriaQuery countCQ = b.createQuery(CourseOutline.class);
+        Root countRoot = countCQ.from(CourseOutline.class);
+        countCQ.where(searchApiFilter(params, b, countRoot).toArray(new Predicate[0]));
+        long total = (long) s.createQuery(countCQ.select(b.count(countRoot))).getSingleResult();
+
+        joinRelationSearchApi(root);
+        q.where(searchApiFilter(params, b, root).toArray(new Predicate[0]));
+        q.select(root);
+        Query query = s.createQuery(q);
+        int pageSize = env.getProperty("API_SEARCH_PAGE_SIZE", Integer.class);
+        int page = 1;
+
+        if (params.containsKey("page"))
+            page = Integer.parseInt(params.get("page"));
+
+        query.setMaxResults(pageSize);
+        query.setFirstResult((page - 1) * pageSize);
+        List<CourseOutline> data = query.getResultList();
+
+        return new DataWithCounterDto(data, total);
+    }
+
+    private void joinRelationSearchApi(Root root) {
+        root.fetch("educationProgramCourses", JoinType.LEFT)
+                .fetch("educationProgram", JoinType.LEFT)
+                .fetch("major", JoinType.LEFT);
+    }
+
+    private List<Predicate> searchApiFilter(Map<String, String> params, CriteriaBuilder b, Root root) {
+        List<Predicate> predicates = new ArrayList<>();
+
+        if (!params.containsKey("kw"))
+            throw new IllegalArgumentException("Missing kw parameter");
+
+        String kw = params.get("kw");
+        Expression<String> fullNameExpression = b.concat(b.concat(root.get("teacher").get("user").get("lastName"), " "),
+                root.get("teacher").get("user").get("firstName"));
+
+        predicates.add(b.equal(root.get("status"), OutlineStatus.PUBLISHED));
+
+        predicates.add(b.or(b.like(root.join("course", JoinType.LEFT).get("name"), "%" + kw + "%"),
+                b.like(fullNameExpression, String.format("%%%s%%", kw))));
+
+
+        if (params.containsKey("year"))
+            predicates.add(b.equal(root.joinSet("educationProgramCourses")
+                    .join("educationProgram").get("schoolYear"), Integer.parseInt(params.get("year"))));
+
+        if (params.containsKey("credits"))
+            predicates.add(b.equal(root.get("course").get("credits"), Integer.parseInt(params.get("credits"))));
+
+        return predicates;
+    }
+
+    @Override
+    public CourseOutline getView(int id) {
+        Session s = factory.getObject().getCurrentSession();
+        CourseOutline co = s.createQuery("SELECT c FROM CourseOutline c " +
+                        "LEFT JOIN FETCH c.comments WHERE c.id = :id", CourseOutline.class)
+                .setParameter("id", id)
+                .getSingleResult();
+        co.getEducationProgramCourses().size();
+        co.getCourseAssessments().size();
+        return co;
+    }
+
+
 }

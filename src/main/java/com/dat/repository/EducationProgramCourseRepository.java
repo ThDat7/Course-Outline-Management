@@ -13,4 +13,6 @@ public interface EducationProgramCourseRepository {
     EducationProgramCourse getById(int id);
 
     EducationProgramCourse getByEpIdAndCourseId(int epId, int courseId);
+
+    EducationProgram getView(int id);
 }

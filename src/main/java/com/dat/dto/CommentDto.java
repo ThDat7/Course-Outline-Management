@@ -5,12 +5,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class EducationProgramSearchDto {
+@Getter
+@Setter
+public class CommentDto {
     private int id;
-    private String majorName;
-    private int schoolYear;
+    private int userId;
+    private String userFullName;
+    private String cmt;
+    private String time;
 }

@@ -1,6 +1,7 @@
 package com.dat.service.impl;
 
 import com.dat.pojo.CourseOutline;
+import com.dat.pojo.EducationProgram;
 import com.dat.pojo.EducationProgramCourse;
 import com.dat.pojo.OutlineStatus;
 import com.dat.repository.CourseOutlineRepository;
@@ -54,5 +55,10 @@ public class EducationProgramCourseServiceImpl implements EducationProgramCourse
 
         educationProgramCourseRepository.addOrUpdate(epc);
         courseOutlineService.addOrUpdate(courseOutline);
+    }
+
+    @Override
+    public EducationProgram getView(int id) {
+        return educationProgramCourseRepository.getView(id);
     }
 }

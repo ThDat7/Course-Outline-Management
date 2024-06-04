@@ -58,4 +58,8 @@ public class CourseOutline {
 
     @OneToMany(mappedBy = "courseOutline")
     private Set<EducationProgramCourse> educationProgramCourses;
+
+    public CourseOutline(int id) {
+        this.id = id;
+    }
 }

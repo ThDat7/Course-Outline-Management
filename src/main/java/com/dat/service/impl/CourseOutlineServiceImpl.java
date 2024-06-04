@@ -1,9 +1,11 @@
 package com.dat.service.impl;
 
+import com.dat.dto.DataWithCounterDto;
 import com.dat.pojo.*;
 import com.dat.repository.CourseAssessmentRepository;
 import com.dat.repository.CourseOutlineRepository;
 import com.dat.service.CourseOutlineService;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.time.Year;
@@ -43,9 +45,8 @@ public class CourseOutlineServiceImpl
         return courseOutlineRepository.addOrUpdate(courseOutline);
     }
 
-    public List<CourseOutline> search(Map<String, String> params) {
-        params.replace("status", OutlineStatus.PUBLISHED.name());
-        return courseOutlineRepository.getAll(params);
+    public DataWithCounterDto<CourseOutline> searchApi(Map<String, String> params) {
+        return courseOutlineRepository.searchApi(params);
     }
 
     @Override
@@ -59,6 +60,11 @@ public class CourseOutlineServiceImpl
     public long countByCurrentTeacher(Map<String, String> params) {
         int currentTeacherId = 1;
         return courseOutlineRepository.countByTeacherId(currentTeacherId, params);
+    }
+
+    @Override
+    public CourseOutline getView(int id) {
+        return courseOutlineRepository.getView(id);
     }
 
     @Override

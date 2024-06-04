@@ -67,6 +67,48 @@ public class EducationProgramRepositoryImpl
     }
 
     @Override
+    public DataWithCounterDto<EducationProgram> searchApi(Map<String, String> params) {
+        Session s = factory.getObject().getCurrentSession();
+        CriteriaBuilder b = s.getCriteriaBuilder();
+        CriteriaQuery q = b.createQuery(EducationProgram.class);
+        Root<EducationProgram> root = q.from(EducationProgram.class);
+        q.where(searchApiFilter(params, b, root).toArray(new Predicate[0]));
+
+        long total = (long) s.createQuery(q.select(b.count(root))).getSingleResult();
+
+        q.select(root);
+        Query query = s.createQuery(q);
+        int pageSize = env.getProperty("API_SEARCH_PAGE_SIZE", Integer.class);
+        int page = 1;
+
+        if (params.containsKey("page"))
+            page = Integer.parseInt(params.get("page"));
+
+        query.setMaxResults(pageSize);
+        query.setFirstResult((page - 1) * pageSize);
+        List<EducationProgram> data = query.getResultList();
+
+        return new DataWithCounterDto(data, total);
+    }
+
+    private List<Predicate> searchApiFilter(Map<String, String> params, CriteriaBuilder b, Root root) {
+        List<Predicate> predicates = new ArrayList<>();
+
+        if (!params.containsKey("kw"))
+            throw new IllegalArgumentException("Missing kw parameter");
+        String kw = params.get("kw");
+        predicates.add(b.like(root.get("major").get("name"), "%" + kw + "%"));
+
+
+        if (params.containsKey("year"))
+            predicates.add(b.equal(root.get("schoolYear"), Integer.parseInt(params.get("year"))));
+        if (params.containsKey("major"))
+            predicates.add(b.equal(root.get("major").get("id"), Integer.parseInt(params.get("major"))));
+
+        return predicates;
+    }
+
+    @Override
     protected Integer getId(EducationProgram educationProgram) {
         return educationProgram.getId();
     }

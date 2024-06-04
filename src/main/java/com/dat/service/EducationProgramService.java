@@ -18,4 +18,6 @@ public interface EducationProgramService extends BaseService<EducationProgram, I
     void reuseAll(int year);
 
     int cloneByYear(int year, int byYear);
+
+    DataWithCounterDto<EducationProgram> searchApi(Map<String, String> params);
 }

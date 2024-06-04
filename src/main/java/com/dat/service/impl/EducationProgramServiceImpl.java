@@ -6,6 +6,7 @@ import com.dat.pojo.*;
 import com.dat.repository.EducationProgramCourseRepository;
 import com.dat.repository.EducationProgramRepository;
 import com.dat.service.EducationProgramService;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -90,5 +91,10 @@ public class EducationProgramServiceImpl
             throw new RuntimeException("Yêu cầu chương trinh đào tạo năm " + year + " rỗng");
 
         return educationProgramRepository.cloneByYear(year, byYear);
+    }
+
+    @Override
+    public DataWithCounterDto<EducationProgram> searchApi(Map<String, String> params) {
+        return educationProgramRepository.searchApi(params);
     }
 }
