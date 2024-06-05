@@ -5,6 +5,7 @@ import com.github.javafaker.Faker;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +19,8 @@ import java.util.stream.Collectors;
 @Transactional
 public class DataGenerator {
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     @Autowired
     private LocalSessionFactoryBean factory;
 
@@ -60,6 +63,39 @@ public class DataGenerator {
     private final Faker faker = new Faker();
 
     private void generateUser(int number) {
+        User user1 = new User();
+        user1.setUsername("admin");
+        user1.setPassword(passwordEncoder.encode("123"));
+        user1.setRole(UserRole.ADMIN);
+        user1.setStatus(UserStatus.ENABLED);
+        user1.setFirstName(faker.name().firstName());
+        user1.setLastName(faker.name().lastName());
+        user1.setEmail(faker.internet().emailAddress());
+        s.save(user1);
+        userList.add(user1);
+
+        User user2 = new User();
+        user2.setUsername("teacher");
+        user2.setPassword(passwordEncoder.encode("123"));
+        user2.setRole(UserRole.TEACHER);
+        user2.setStatus(UserStatus.ENABLED);
+        user2.setFirstName(faker.name().firstName());
+        user2.setLastName(faker.name().lastName());
+        user2.setEmail(faker.internet().emailAddress());
+        s.save(user2);
+        userList.add(user2);
+
+        User user3 = new User();
+        user3.setUsername("student");
+        user3.setPassword(passwordEncoder.encode("123"));
+        user3.setRole(UserRole.STUDENT);
+        user3.setStatus(UserStatus.ENABLED);
+        user3.setFirstName(faker.name().firstName());
+        user3.setLastName(faker.name().lastName());
+        user3.setEmail(faker.internet().emailAddress());
+        userList.add(user3);
+        s.save(user3);
+
         for (int i = 0; i < number; i++) {
             User user = new User();
             user.setFirstName(faker.name().firstName());
@@ -67,7 +103,7 @@ public class DataGenerator {
             user.setEmail(faker.internet().emailAddress());
             user.setPhone(faker.phoneNumber().cellPhone());
             user.setUsername(faker.name().username());
-            user.setPassword(faker.internet().password());
+            user.setPassword(passwordEncoder.encode("123"));
             user.setStatus(UserStatus.values()[faker.random().nextInt(UserStatus.values().length)]);
             user.setRole(UserRole.values()[faker.random().nextInt(UserRole.values().length)]);
             user.setImage(faker.internet().avatar());

@@ -82,4 +82,12 @@ public class UserRepositoryImpl
         u.setStatus(status);
         s.update(u);
     }
+
+    @Override
+    public User findByUsername(String username) {
+        Session s = factory.getObject().getCurrentSession();
+        return s.createQuery("SELECT u FROM User u where u.username = :username", User.class)
+                .setParameter("username", username)
+                .uniqueResult();
+    }
 }

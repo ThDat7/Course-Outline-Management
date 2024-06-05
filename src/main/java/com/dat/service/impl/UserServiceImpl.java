@@ -7,6 +7,9 @@ import com.dat.pojo.UserStatus;
 import com.dat.repository.UserRepository;
 import com.dat.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -15,10 +18,13 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@Service
+@Service("userDetailsService")
 public class UserServiceImpl
         extends BaseServiceImpl<User, Integer>
         implements UserService {
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Autowired
     private UserRepository userRepository;
 
@@ -62,5 +68,11 @@ public class UserServiceImpl
         userRepository.updateStatus(id, UserStatus.DISABLED);
     }
 
-
+    @Override
+    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
+        User user = userRepository.findByUsername(s);
+        if (user == null)
+            throw new UsernameNotFoundException("User not found");
+        return new com.dat.configs.UserDetails(user);
+    }
 }
