@@ -57,3 +57,5 @@ delete course outline bị lỗi
 null constraint khi delete
 
 check các quyền khi update course
+
+teacher client update course outline kiểm tra course assessment đủ 100% không

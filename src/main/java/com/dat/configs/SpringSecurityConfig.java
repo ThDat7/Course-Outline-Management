@@ -57,38 +57,44 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests()
                 // Admin endpoints
-                .antMatchers("/").hasAuthority("ADMIN")
-                .antMatchers("/users/**").hasAuthority("ADMIN")
-                .antMatchers("/majors/**").hasAuthority("ADMIN")
-                .antMatchers("/faculties/**").hasAuthority("ADMIN")
-                .antMatchers("/education-programs/**").hasAuthority("ADMIN")
-                .antMatchers("/course-outlines/**").hasAuthority("ADMIN")
-                .antMatchers("/courses/**").hasAuthority("ADMIN")
-                .antMatchers("/assign-outlines/**").hasAuthority("ADMIN")
-                .antMatchers("/api/education-programs/remove-outline/**").hasAuthority("ADMIN")
-                .antMatchers(HttpMethod.POST,"/api/course-outlines/").hasAuthority("ADMIN")
-                .antMatchers("/api/assign-outlines/create/**").hasAuthority("ADMIN")
-
-                // Teacher endpoints
-                .antMatchers(HttpMethod.GET,"/api/course-outlines/").hasAuthority("TEACHER")
-                .antMatchers("/api/course-outlines/*").hasAuthority("TEACHER")
-
-                // authenticated endpoints
-                .antMatchers("/api/search/**").authenticated()
-                .antMatchers("/api/comments/**").authenticated()
-                .antMatchers("/api/course-outlines/view/**").authenticated()
-                .antMatchers("/api/education-programs/view/**").authenticated()
-
-                // Common endpoints
-                .antMatchers("/login", "/logout").permitAll()
-                .antMatchers("/api/login", "/api/registry").permitAll()
-
-                // Generate data endpoint
-                .antMatchers("/data").permitAll()
-
-                // Any other requests need authentication
-                .anyRequest().authenticated();
-                //        .anyRequest().permitAll();
+//                .antMatchers("/").hasAuthority("ADMIN")
+//                .antMatchers("/users/**").hasAuthority("ADMIN")
+//                .antMatchers("/majors/**").hasAuthority("ADMIN")
+//                .antMatchers("/faculties/**").hasAuthority("ADMIN")
+//                .antMatchers("/education-programs/**").hasAuthority("ADMIN")
+//                .antMatchers("/course-outlines/**").hasAuthority("ADMIN")
+//                .antMatchers("/courses/**").hasAuthority("ADMIN")
+//                .antMatchers("/assign-outlines/**").hasAuthority("ADMIN")
+//                .antMatchers("/api/education-programs/remove-outline/**").hasAuthority("ADMIN")
+//                .antMatchers(HttpMethod.POST, "/api/course-outlines/").hasAuthority("ADMIN")
+//                .antMatchers("/api/assign-outlines/create/**").hasAuthority("ADMIN")
+//
+//                // Teacher endpoints
+//                .antMatchers("/api/profile/teacher").hasAuthority("TEACHER")
+//                .antMatchers("/api/profile/additional-info/teacher").hasAuthority("TEACHER")
+//                .antMatchers(HttpMethod.GET, "/api/course-outlines/").hasAuthority("TEACHER")
+//                .antMatchers("/api/course-outlines/*").hasAuthority("TEACHER")
+//
+//                // Student endpoints
+//                .antMatchers("/api/profile/student").hasAuthority("STUDENT")
+//                .antMatchers("/api/profile/additional-info/student").hasAuthority("STUDENT")
+//
+//                // authenticated endpoints
+//                .antMatchers("/api/search/**").authenticated()
+//                .antMatchers("/api/comments/**").authenticated()
+//                .antMatchers("/api/course-outlines/view/**").authenticated()
+//                .antMatchers("/api/education-programs/view/**").authenticated()
+//
+//                // Common endpoints
+//                .antMatchers("/login", "/logout").permitAll()
+//                .antMatchers("/api/login", "/api/registry").permitAll()
+//
+//                // Generate data endpoint
+//                .antMatchers("/data").permitAll()
+//
+//                // Any other requests need authentication
+//                .anyRequest().authenticated();
+                .anyRequest().permitAll();
 
         http.csrf().disable();
     }

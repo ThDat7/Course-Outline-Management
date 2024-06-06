@@ -56,6 +56,10 @@ public class UserDetails implements org.springframework.security.core.userdetail
         return user.getStatus();
     }
 
+    public User getUser() {
+        return user;
+    }
+
     public UserDetails(User user) {
         this.user = user;
     }

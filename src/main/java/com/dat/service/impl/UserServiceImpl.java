@@ -2,15 +2,18 @@ package com.dat.service.impl;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
-import com.dat.pojo.User;
-import com.dat.pojo.UserStatus;
+import com.dat.pojo.*;
+import com.dat.repository.TeacherRepository;
 import com.dat.repository.UserRepository;
 import com.dat.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -39,14 +42,14 @@ public class UserServiceImpl
 
     @Override
     public boolean addOrUpdate(User u) {
-        if (u.getFile() != null && u.getFile().getSize() > 0) {
-            try {
-                Map res = this.cloudinary.uploader().upload(u.getFile().getBytes(), ObjectUtils.asMap("resource_type", "auto"));
-                u.setImage(res.get("secure_url").toString());
-            } catch (IOException ex) {
-                Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
+//        if (u.getFile() != null && u.getFile().getSize() > 0) {
+//            try {
+//                Map res = this.cloudinary.uploader().upload(u.getFile().getBytes(), ObjectUtils.asMap("resource_type", "auto"));
+//                u.setImage(res.get("secure_url").toString());
+//            } catch (IOException ex) {
+//                Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+//        }
 
         return super.addOrUpdate(u);
     }
@@ -74,5 +77,39 @@ public class UserServiceImpl
         if (user == null)
             throw new UsernameNotFoundException("User not found");
         return new com.dat.configs.UserDetails(user);
+    }
+
+    public User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getPrincipal().equals("anonymousUser"))
+            throw new RuntimeException("Unauthenticated user!");
+        return ((com.dat.configs.UserDetails) authentication.getPrincipal()).getUser();
+    }
+
+    public void updateCurrentUserInfo(User user, MultipartFile avatar) {
+        Integer currentUserId = 3;
+
+        User oldUser = userRepository.getById(currentUserId);
+        oldUser.setFirstName(user.getFirstName());
+        oldUser.setLastName(user.getLastName());
+        oldUser.setEmail(user.getEmail());
+        oldUser.setPhone(user.getPhone());
+        oldUser.setUsername(user.getUsername());
+        if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+            oldUser.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
+        try {
+            uploadAvatar(oldUser, avatar);
+        } catch (IOException ex) {
+            Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        userRepository.addOrUpdate(oldUser);
+    }
+
+    public void uploadAvatar(User user, MultipartFile avatar) throws IOException {
+        if (avatar != null && avatar.getSize() > 0) {
+            Map res = this.cloudinary.uploader().upload(avatar.getBytes(), ObjectUtils.asMap("resource_type", "auto"));
+            user.setImage(res.get("secure_url").toString());
+        }
     }
 }

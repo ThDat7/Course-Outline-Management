@@ -3,6 +3,7 @@ package com.dat.repository.impl;
 import com.dat.pojo.Course;
 import com.dat.pojo.Teacher;
 import com.dat.pojo.User;
+import com.dat.pojo.UserStatus;
 import com.dat.repository.TeacherRepository;
 import org.hibernate.Session;
 import org.springframework.context.annotation.PropertySource;
@@ -52,5 +53,23 @@ public class TeacherRepositoryImpl
     public List<Teacher> getAll() {
         Session s = factory.getObject().openSession();
         return s.createQuery("SELECT t FROM Teacher t", Teacher.class).list();
+    }
+
+    @Override
+    public Teacher getByUserId(int userId) {
+        Session s = factory.getObject().getCurrentSession();
+        return s.createQuery("SELECT t FROM Teacher t WHERE t.user.id = :userId", Teacher.class)
+                .setParameter("userId", userId)
+                .getSingleResult();
+    }
+
+    @Override
+    public Teacher getByUserIdAndUserStatus(Integer id, UserStatus status) {
+        Session s = factory.getObject().getCurrentSession();
+        return s.createQuery("SELECT t FROM Teacher t WHERE t.user.id = :id " +
+                        "AND t.user.status = :status", Teacher.class)
+                .setParameter("id", id)
+                .setParameter("status", status)
+                .getSingleResult();
     }
 }

@@ -10,7 +10,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @author DELL
@@ -35,9 +34,6 @@ public class User {
     private UserStatus status;
     private UserRole role;
     private String image;
-
-    @Transient
-    private MultipartFile file;
 
     public User(Integer id) {
         this.id = id;

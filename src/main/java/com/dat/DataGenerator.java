@@ -45,10 +45,10 @@ public class DataGenerator {
     public void FakeData() {
         s = factory.getObject().getCurrentSession();
 
-        generateUser(5);
-        generateUserPending(5);
         generateFaculty(5);
         generateMajor(10);
+        generateUser(5);
+        generateUserPending(5);
         generateTeacher(3);
         generateCourse(50);
         generateCourseOutline();
@@ -84,6 +84,10 @@ public class DataGenerator {
         user2.setEmail(faker.internet().emailAddress());
         s.save(user2);
         userList.add(user2);
+        Teacher teacher = new Teacher();
+        teacher.setUser(user2);
+        teacher.setMajor(new Major(1));
+        s.save(teacher);
 
         User user3 = new User();
         user3.setUsername("student");
@@ -95,6 +99,10 @@ public class DataGenerator {
         user3.setEmail(faker.internet().emailAddress());
         userList.add(user3);
         s.save(user3);
+        Student student = new Student();
+        student.setUser(user3);
+        student.setMajor(new Major(1));
+        s.save(student);
 
         for (int i = 0; i < number; i++) {
             User user = new User();
