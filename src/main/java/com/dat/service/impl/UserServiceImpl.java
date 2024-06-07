@@ -86,6 +86,20 @@ public class UserServiceImpl
         return ((com.dat.configs.UserDetails) authentication.getPrincipal()).getUser();
     }
 
+    @Override
+    public User getByUserName(String username) {
+        return userRepository.findByUsername(username);
+    }
+
+    @Override
+    public boolean authenticate(String username, String password) {
+        User user = userRepository.findByUsername(username);
+        if (user == null)
+            throw new UsernameNotFoundException("User not found");
+
+        return passwordEncoder.matches(password, user.getPassword());
+    }
+
     public void updateCurrentUserInfo(User user, MultipartFile avatar) {
         Integer currentUserId = 3;
 

@@ -23,4 +23,8 @@ public interface UserService
     void uploadAvatar(User user, MultipartFile avatar) throws IOException;
 
     User getCurrentUser();
+
+    User getByUserName(String username);
+
+    boolean authenticate(String username, String password);
 }
