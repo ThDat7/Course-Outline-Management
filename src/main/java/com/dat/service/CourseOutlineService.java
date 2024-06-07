@@ -18,4 +18,6 @@ public interface CourseOutlineService extends BaseService<CourseOutline, Integer
     long countByCurrentTeacher(Map<String, String> params);
 
     CourseOutline getView(int id);
+
+    CourseOutline getByCurrentTeacherAndId(int id);
 }

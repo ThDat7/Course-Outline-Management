@@ -46,17 +46,17 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Student getProfile() {
-        Integer userId = 3;
+        Integer currentUserId = userService.getCurrentUser().getId();
 
-        Student student = studentRepository.getByUserId(userId);
+        Student student = studentRepository.getByUserId(currentUserId);
         student.getUser().setPassword("");
         return student;
     }
 
     @Override
     public void additionalStudentInfo(MultipartFile avatar) {
-        int currentId = 3;
-        User oldUser = userRepository.getById(currentId);
+        Integer currentUserId = userService.getCurrentUser().getId();
+        User oldUser = userRepository.getById(currentUserId);
         try {
             userService.uploadAvatar(oldUser, avatar);
             oldUser.setStatus(UserStatus.ENABLED);
@@ -68,7 +68,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public void updateProfile(Student student, MultipartFile avatar) {
-        Integer currentUserId = 3;
+        Integer currentUserId = userService.getCurrentUser().getId();
 
         Student oldStudent = studentRepository.getByUserId(currentUserId);
 

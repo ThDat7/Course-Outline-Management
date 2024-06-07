@@ -9,7 +9,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class UserLoginDto {
-    private String username;
-    private String password;
+public class UserLoginResponseDto {
+    private String token;
+    private String fullName;
+    private String role;
+    private String avatar;
 }

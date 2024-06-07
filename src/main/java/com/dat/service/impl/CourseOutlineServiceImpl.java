@@ -5,6 +5,7 @@ import com.dat.pojo.*;
 import com.dat.repository.CourseAssessmentRepository;
 import com.dat.repository.CourseOutlineRepository;
 import com.dat.service.CourseOutlineService;
+import com.dat.service.UserService;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
@@ -21,13 +22,16 @@ public class CourseOutlineServiceImpl
 
     private CourseOutlineRepository courseOutlineRepository;
     private CourseAssessmentRepository courseAssessmentRepository;
+    private UserService userService;
 
 
     public CourseOutlineServiceImpl(CourseOutlineRepository courseOutlineRepository,
-                                    CourseAssessmentRepository courseAssessmentRepository) {
+                                    CourseAssessmentRepository courseAssessmentRepository,
+                                    UserService userService) {
         super(courseOutlineRepository);
         this.courseOutlineRepository = courseOutlineRepository;
         this.courseAssessmentRepository = courseAssessmentRepository;
+        this.userService = userService;
     }
 
     @Override
@@ -51,15 +55,15 @@ public class CourseOutlineServiceImpl
 
     @Override
     public List<CourseOutline> getByCurrentTeacher(Map<String, String> params) {
-        int currentTeacherId = 1;
+        int currentUserId = userService.getCurrentUser().getId();
 
-        return courseOutlineRepository.getByTeacherId(currentTeacherId, params);
+        return courseOutlineRepository.getByUserIdCompile(currentUserId, params);
     }
 
     @Override
     public long countByCurrentTeacher(Map<String, String> params) {
-        int currentTeacherId = 1;
-        return courseOutlineRepository.countByTeacherId(currentTeacherId, params);
+        int currentUserId = userService.getCurrentUser().getId();
+        return courseOutlineRepository.countByTeacherId(currentUserId, params);
     }
 
     @Override
@@ -68,7 +72,20 @@ public class CourseOutlineServiceImpl
     }
 
     @Override
+    public CourseOutline getByCurrentTeacherAndId(int id) {
+        int currentUserId = userService.getCurrentUser().getId();
+
+        return courseOutlineRepository.getByUserIdCompileAndId(currentUserId, id);
+    }
+
+    @Override
     public boolean update(int id, CourseOutline courseOutline) {
+        int currentUserId = userService.getCurrentUser().getId();
+        Boolean isCanCompile = courseOutlineRepository
+                .existByUserIdCompileAndStatus(id, currentUserId, OutlineStatus.DOING);
+        if (!isCanCompile)
+            throw new RuntimeException("You can't compile this course outline or it's published");
+
         if (courseOutline.getStatus() == OutlineStatus.PUBLISHED)
             throw new RuntimeException("Cannot update a published course outline");
 

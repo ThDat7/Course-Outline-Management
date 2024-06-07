@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalTime;
+import java.util.Optional;
 
 @Repository
 @Transactional
@@ -35,5 +36,11 @@ public class CommentRepositoryImpl implements CommentRepository {
                     .setParameter("courseOutlineId", courseOutlineId)
                     .executeUpdate();
         }
+    }
+
+    @Override
+    public Comment findById(Integer id) {
+        Session s = factory.getObject().getCurrentSession();
+        return s.get(Comment.class, id);
     }
 }

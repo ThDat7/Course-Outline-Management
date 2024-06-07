@@ -129,6 +129,7 @@ public class DataGenerator {
             user.setEmail(faker.internet().emailAddress());
             user.setPhone(faker.phoneNumber().cellPhone());
             user.setUsername(faker.name().username());
+            user.setPassword(passwordEncoder.encode("123"));
             user.setStatus(UserStatus.PENDING);
             user.setRole(UserRole.values()[faker.random().nextInt(UserRole.values().length)]);
 

@@ -1,7 +1,9 @@
 package com.dat.controllers;
 
 import com.dat.components.JwtService;
-import com.dat.dto.UserLoginDto;
+import com.dat.dto.UserLoginRequestDto;
+import com.dat.dto.UserLoginResponseDto;
+import com.dat.pojo.User;
 import com.dat.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,11 +23,21 @@ public class ApiLoginController {
     private JwtService jwtService;
 
     @RequestMapping
-    public ResponseEntity<String> login(@RequestBody UserLoginDto userLoginDto) {
-        if (userService.authenticate(userLoginDto.getUsername(), userLoginDto.getPassword())) {
-            String token = this.jwtService.generateTokenLogin(userLoginDto.getUsername());
-            return ResponseEntity.ok(token);
+    public ResponseEntity<UserLoginResponseDto> login(@RequestBody UserLoginRequestDto userLoginRequestDto) {
+        if (userService.authenticate(userLoginRequestDto.getUsername(), userLoginRequestDto.getPassword())) {
+            String token = this.jwtService.generateTokenLogin(userLoginRequestDto.getUsername());
+            User user = userService.getByUserName(userLoginRequestDto.getUsername());
+            return ResponseEntity.ok(convertToDto(token, user));
         }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Bad credentials");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+    }
+
+    private UserLoginResponseDto convertToDto(String token, User user) {
+        UserLoginResponseDto ulrd = new UserLoginResponseDto();
+        ulrd.setToken(token);
+        ulrd.setFullName(String.format("%s %s", user.getLastName(), user.getFirstName()));
+        ulrd.setRole(user.getRole().name());
+        ulrd.setAvatar(user.getImage());
+        return ulrd;
     }
 }

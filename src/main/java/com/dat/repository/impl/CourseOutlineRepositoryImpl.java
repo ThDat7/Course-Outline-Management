@@ -88,7 +88,7 @@ public class CourseOutlineRepositoryImpl
     }
 
     @Override
-    public List<CourseOutline> getByTeacherId(int teacherId, Map<String, String> params) {
+    public List<CourseOutline> getByUserIdCompile(int userId, Map<String, String> params) {
         Session s = factory.getObject().getCurrentSession();
         CriteriaBuilder b = s.getCriteriaBuilder();
         CriteriaQuery<CourseOutline> q = b.createQuery(CourseOutline.class);
@@ -97,7 +97,7 @@ public class CourseOutlineRepositoryImpl
         joinRelationGetById(root);
         q.select(root);
         Predicate pStatus = b.equal(root.get("status"), OutlineStatus.DOING);
-        Predicate pTeacher = b.equal(root.get("teacher").get("id"), teacherId);
+        Predicate pTeacher = b.equal(root.get("teacher").get("user").get("id"), userId);
         q.where(b.and(pStatus, pTeacher));
 
         Query query = s.createQuery(q);
@@ -107,7 +107,7 @@ public class CourseOutlineRepositoryImpl
     }
 
     @Override
-    public long countByTeacherId(int teacherId, Map<String, String> params) {
+    public long countByTeacherId(int userId, Map<String, String> params) {
         Session s = factory.getObject().getCurrentSession();
 
         CriteriaBuilder b = s.getCriteriaBuilder();
@@ -116,7 +116,7 @@ public class CourseOutlineRepositoryImpl
         q.select(b.count(root));
 
         Predicate pStatus = b.equal(root.get("status"), OutlineStatus.DOING);
-        Predicate pTeacher = b.equal(root.get("teacher").get("id"), teacherId);
+        Predicate pTeacher = b.equal(root.get("teacher").get("user").get("id"), userId);
         q.where(b.and(pStatus, pTeacher));
 
         Query query = s.createQuery(q);
@@ -194,6 +194,32 @@ public class CourseOutlineRepositoryImpl
         co.getEducationProgramCourses().size();
         co.getCourseAssessments().size();
         return co;
+    }
+
+    @Override
+    public Boolean existByUserIdCompileAndStatus(int id, int currentUserId, OutlineStatus doing) {
+        Session s = factory.getObject().getCurrentSession();
+        return (Long) s.createQuery("SELECT COUNT(*) FROM CourseOutline c " +
+                "WHERE c.id = :id AND c.teacher.user.id = :userId AND c.status = :status")
+                .setParameter("id", id)
+                .setParameter("userId", currentUserId)
+                .setParameter("status", doing)
+                .uniqueResult() > 0;
+    }
+
+    @Override
+    public CourseOutline getByUserIdCompileAndId(int currentUserId, int id) {
+        Session s = factory.getObject().getCurrentSession();
+        CriteriaBuilder b = s.getCriteriaBuilder();
+        CriteriaQuery q = b.createQuery(CourseOutline.class);
+        Root root = q.from(CourseOutline.class);
+
+        root.fetch("courseAssessments", JoinType.LEFT);
+        q.where(b.and(b.equal(root.get("id"), id),
+                b.equal(root.get("teacher").get("user").get("id"), currentUserId)));
+        q.select(root);
+        Query query = s.createQuery(q);
+        return  (CourseOutline) query.getSingleResult();
     }
 
 

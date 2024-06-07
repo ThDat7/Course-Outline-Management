@@ -61,17 +61,17 @@ public class TeacherServiceImpl
 
     @Override
     public Teacher getProfile() {
-        Integer userId = 2;
+        Integer currentUserId = userService.getCurrentUser().getId();
 
-        Teacher teacher = teacherRepository.getByUserId(userId);
+        Teacher teacher = teacherRepository.getByUserId(currentUserId);
         teacher.getUser().setPassword("");
         return teacher;
     }
 
     @Override
     public void additionalInfo(Teacher teacher, MultipartFile avatar) {
-        int currentId = 2;
-        Teacher oldTeacher = teacherRepository.getByUserIdAndUserStatus(currentId, UserStatus.NEED_INFO);
+        Integer currentUserId = userService.getCurrentUser().getId();
+        Teacher oldTeacher = teacherRepository.getByUserIdAndUserStatus(currentUserId, UserStatus.NEED_INFO);
         teacher.getUser().setStatus(UserStatus.ENABLED);
         teacherRepository.addOrUpdate(teacher);
         userService.updateCurrentUserInfo(teacher.getUser(), avatar);

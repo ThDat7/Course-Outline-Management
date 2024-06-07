@@ -16,7 +16,7 @@ public class JwtService {
 
     public static final String SECRET_KEY = "THIS_IS_A_SECRET_KEY_12345678900000000";
     public static final byte[] SHARED_SECRET_KEY = SECRET_KEY.getBytes();
-    public static final int EXPIRE_TIME = 86400000;
+    public static final int EXPIRE_TIME = 60 * 60 * 1000;
 
     public String generateTokenLogin(String username) {
         String token = null;
@@ -63,6 +63,9 @@ public class JwtService {
         try {
             JWTClaimsSet claims = getClaimsFromToken(token);
             username = claims.getStringClaim("username");
+
+        } catch (NullPointerException e) {
+            System.err.println(e.getMessage());
         } catch (ParseException e) {
             System.err.println(e.getMessage());
         }

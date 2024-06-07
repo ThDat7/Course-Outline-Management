@@ -43,7 +43,7 @@ public class ApiCourseOutlineController {
 
     @GetMapping("/{id}")
     public ResponseEntity<CourseOutlineDto> get(@PathVariable("id") int id) {
-        CourseOutline courseOutline = courseOutlineService.getById(id);
+        CourseOutline courseOutline = courseOutlineService.getByCurrentTeacherAndId(id);
         return ResponseEntity.ok(entity2Dto(courseOutline));
     }
 
