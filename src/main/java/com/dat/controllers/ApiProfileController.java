@@ -41,20 +41,16 @@ public class ApiProfileController {
     }
 
     @PostMapping("/teacher")
-    public void updateTeacherProfile(@RequestBody TeacherInfoDto teacherInfoDto) {
+    public void updateTeacherProfile(@ModelAttribute TeacherInfoDto teacherInfoDto) {
         teacherService.updateProfile(teacherInfoDto2Entity(teacherInfoDto), teacherInfoDto.getAvatar());
     }
 
     @PostMapping("/student")
-    public void updateStudentProfile(@RequestBody StudentInfoDto studentInfoDto,
-                                     @RequestParam MultipartFile avatar) {
-        studentService.updateProfile(studentInfoDto2Entity(studentInfoDto), avatar);
+    public void updateStudentProfile(@ModelAttribute StudentInfoDto studentInfoDto) {
+        studentService.updateProfile(studentInfoDto2Entity(studentInfoDto), studentInfoDto.getAvatar());
     }
 
-    @PostMapping(path = "/additional-info/teacher", consumes = {
-            MediaType.APPLICATION_JSON_VALUE,
-            MediaType.MULTIPART_FORM_DATA_VALUE
-    })
+    @PostMapping("/additional-info/teacher")
     public void additionalInfoTeacher(@ModelAttribute TeacherInfoDto teacherInfoDto) {
         teacherService.additionalInfo(teacherInfoDto2Entity(teacherInfoDto), teacherInfoDto.getAvatar());
     }
@@ -73,6 +69,7 @@ public class ApiProfileController {
     private StudentInfoDto entity2StudentInfoDto(Student student) {
         StudentInfoDto userDto = modelMapper.map(student.getUser(), StudentInfoDto.class);
         userDto.setStudentCode(student.getStudentCode());
+        userDto.setSchoolYear(student.getSchoolYear());
         return userDto;
     }
 

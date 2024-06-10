@@ -5,6 +5,7 @@ import com.cloudinary.utils.ObjectUtils;
 import com.dat.pojo.*;
 import com.dat.repository.BaseRepository;
 import com.dat.repository.TeacherRepository;
+import com.dat.repository.UserRepository;
 import com.dat.service.TeacherService;
 import com.dat.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,8 @@ public class TeacherServiceImpl
     private PasswordEncoder passwordEncoder;
     @Autowired
     private UserService userService;
+    @Autowired
+    private UserRepository userRepository;
 
     public TeacherServiceImpl(BaseRepository<Teacher, Integer> repository) {
         super(repository);
@@ -41,20 +44,21 @@ public class TeacherServiceImpl
 
     @Override
     public void teacherRegister(Teacher teacher, Integer majorId, MultipartFile avatar) {
-        if (avatar != null && avatar.getSize() > 0) {
-            try {
-                Map res = this.cloudinary.uploader().upload(avatar.getBytes(), ObjectUtils.asMap("resource_type", "auto"));
-                teacher.setId(null);
-                teacher.getUser().setImage(res.get("secure_url").toString());
-                teacher.getUser().setId(null);
-                teacher.getUser().setPassword(passwordEncoder.encode(teacher.getUser().getPassword()));
-                teacher.getUser().setStatus(UserStatus.PENDING);
-                teacher.getUser().setRole(UserRole.TEACHER);
-                teacher.setMajor(new Major(majorId));
-                teacherRepository.addOrUpdate(teacher);
-            } catch (IOException ex) {
-                Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        if (avatar == null || avatar.getSize() == 0)
+            throw new RuntimeException("Avatar is required");
+
+        try {
+            Map res = this.cloudinary.uploader().upload(avatar.getBytes(), ObjectUtils.asMap("resource_type", "auto"));
+            teacher.setId(null);
+            teacher.getUser().setImage(res.get("secure_url").toString());
+            teacher.getUser().setId(null);
+            teacher.getUser().setPassword(passwordEncoder.encode(teacher.getUser().getPassword()));
+            teacher.getUser().setStatus(UserStatus.PENDING);
+            teacher.getUser().setRole(UserRole.TEACHER);
+            teacher.setMajor(new Major(majorId));
+            teacherRepository.addOrUpdate(teacher);
+        } catch (IOException ex) {
+            Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -71,7 +75,10 @@ public class TeacherServiceImpl
     @Override
     public void additionalInfo(Teacher teacher, MultipartFile avatar) {
         Integer currentUserId = userService.getCurrentUser().getId();
-        Teacher oldTeacher = teacherRepository.getByUserIdAndUserStatus(currentUserId, UserStatus.NEED_INFO);
+        User oldUserPending = userRepository.findByIdAndStatus(currentUserId, UserStatus.NEED_INFO);
+        if (oldUserPending == null)
+            throw new RuntimeException("Your account is not in addition info status");
+
         teacher.getUser().setStatus(UserStatus.ENABLED);
         teacherRepository.addOrUpdate(teacher);
         userService.updateCurrentUserInfo(teacher.getUser(), avatar);

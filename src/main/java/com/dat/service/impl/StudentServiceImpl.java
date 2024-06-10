@@ -56,11 +56,14 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public void additionalStudentInfo(MultipartFile avatar) {
         Integer currentUserId = userService.getCurrentUser().getId();
-        User oldUser = userRepository.getById(currentUserId);
+        User oldUserPending = userRepository.findByIdAndStatus(currentUserId, UserStatus.NEED_INFO);
+        if (oldUserPending == null)
+            throw new RuntimeException("Your account is not in additional info status");
+
         try {
-            userService.uploadAvatar(oldUser, avatar);
-            oldUser.setStatus(UserStatus.ENABLED);
-            userRepository.addOrUpdate(oldUser);
+            userService.uploadAvatar(oldUserPending, avatar);
+            oldUserPending.setStatus(UserStatus.ENABLED);
+            userRepository.addOrUpdate(oldUserPending);
         } catch (IOException ex) {
             Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }

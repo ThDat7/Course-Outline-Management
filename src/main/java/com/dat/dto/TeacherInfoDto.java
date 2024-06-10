@@ -18,6 +18,7 @@ public class TeacherInfoDto {
     private String lastName;
     private String email;
     private Integer majorId;
+    private String phone;
     private MultipartFile avatar;
     private String image;
 }

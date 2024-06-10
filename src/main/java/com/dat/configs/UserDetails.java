@@ -60,6 +60,10 @@ public class UserDetails implements org.springframework.security.core.userdetail
         return user;
     }
 
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     public UserDetails(User user) {
         this.user = user;
     }

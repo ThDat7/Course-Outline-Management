@@ -90,4 +90,13 @@ public class UserRepositoryImpl
                 .setParameter("username", username)
                 .uniqueResult();
     }
+
+    @Override
+    public User findByIdAndStatus(Integer id, UserStatus status) {
+        Session s = factory.getObject().getCurrentSession();
+        return s.createQuery("SELECT u FROM User u where u.id = :id and u.status = :status", User.class)
+                .setParameter("id", id)
+                .setParameter("status", status)
+                .uniqueResult();
+    }
 }

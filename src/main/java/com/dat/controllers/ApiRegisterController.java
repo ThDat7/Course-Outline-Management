@@ -38,14 +38,11 @@ public class ApiRegisterController {
     }
 
     @PostMapping("/student")
-    public void studentRegister(@RequestBody StudentInfoDto studentInfoDto) {
+    public void studentRegister(@ModelAttribute StudentInfoDto studentInfoDto) {
         studentService.studentRegister(studentDto2User(studentInfoDto));
     }
 
-    @PostMapping(path = "/teacher", consumes = {
-            MediaType.APPLICATION_JSON_VALUE,
-            MediaType.MULTIPART_FORM_DATA_VALUE
-    })
+    @PostMapping("/teacher")
     public void teacherRegister(@ModelAttribute TeacherInfoDto teacherInfoDto) {
         teacherService.teacherRegister(teacherDto2User(teacherInfoDto),
                 teacherInfoDto.getMajorId(), teacherInfoDto.getAvatar());

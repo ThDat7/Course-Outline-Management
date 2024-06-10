@@ -72,7 +72,6 @@ public class DataGenerator {
         user1.setLastName(faker.name().lastName());
         user1.setEmail(faker.internet().emailAddress());
         s.save(user1);
-        userList.add(user1);
 
         User user2 = new User();
         user2.setUsername("teacher");
@@ -88,6 +87,7 @@ public class DataGenerator {
         teacher.setUser(user2);
         teacher.setMajor(new Major(1));
         s.save(teacher);
+        teacherList.add(teacher);
 
         User user3 = new User();
         user3.setUsername("student");

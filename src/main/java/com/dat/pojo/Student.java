@@ -19,6 +19,7 @@ public class Student {
     private Integer id;
 
     private String studentCode;
+    private Integer schoolYear;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id")

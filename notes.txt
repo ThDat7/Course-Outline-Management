@@ -32,30 +32,9 @@ tìm kiếm đề cương (filtering theo năm học, theo khoa, theo ngành, th
     xem chi tiết, cmt
 
 
-** tích hợp firebase realtime chat
 
-
-
-
-
-lấy tất cả đề cương của K23 ngành cntt khoa cntt
-lấy các môn học chưa có đề cương của K23 ngành cntt khoa cntt
-đề cương môn học chỉ thuộc 1 khóa học, có thể phân nhiều năm học
-1 năm học có nhiều khóa học
-mỗi năm học có thể có các khoa khác nhau
-
-
-ADMIN: DELETE METHOD SỬA SAU, HIỆN GET METHOD.
-TẠM THỜI EAGER CÁC RELATION ĐỂ VIEWS.
-
-Check tối đa 1 đề cương 2 năm client và backend
-
-Đề cương đã biên soạn xong, nhưng chưa tới deadline, adminpublish, thì chặn cho teacher không thể sửa nữa (query phía client sẽ filter published, hoặc thêm field)
 course outline khi đã select môn, sẽ hiện các giáo viên thuộc khoa đó có thể biên soạn
-
-delete course outline bị lỗi
-null constraint khi delete
-
-check các quyền khi update course
-
-teacher client update course outline kiểm tra course assessment đủ 100% không
+* add filter refuse user pending
+** tích hợp firebase realtime chat
+*** validate bean
+*** username unique

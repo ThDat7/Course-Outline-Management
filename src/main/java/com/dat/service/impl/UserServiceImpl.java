@@ -86,6 +86,15 @@ public class UserServiceImpl
         return ((com.dat.configs.UserDetails) authentication.getPrincipal()).getUser();
     }
 
+    public void updateAuthCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getPrincipal().equals("anonymousUser"))
+            throw new RuntimeException("Unauthenticated user!");
+        User user = ((com.dat.configs.UserDetails) authentication.getPrincipal()).getUser();
+        User newUser = userRepository.getById(user.getId());
+        ((com.dat.configs.UserDetails) authentication.getPrincipal()).setUser(newUser);
+    }
+
     @Override
     public User getByUserName(String username) {
         return userRepository.findByUsername(username);
@@ -101,7 +110,7 @@ public class UserServiceImpl
     }
 
     public void updateCurrentUserInfo(User user, MultipartFile avatar) {
-        Integer currentUserId = 3;
+        Integer currentUserId = getCurrentUser().getId();
 
         User oldUser = userRepository.getById(currentUserId);
         oldUser.setFirstName(user.getFirstName());
@@ -118,6 +127,7 @@ public class UserServiceImpl
             Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         userRepository.addOrUpdate(oldUser);
+        updateAuthCurrentUser();
     }
 
     public void uploadAvatar(User user, MultipartFile avatar) throws IOException {

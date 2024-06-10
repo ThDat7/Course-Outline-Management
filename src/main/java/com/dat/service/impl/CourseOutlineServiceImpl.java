@@ -36,6 +36,8 @@ public class CourseOutlineServiceImpl
 
     @Override
     public boolean addOrUpdate(CourseOutline courseOutline) {
+        validateCourseAssessmentPercent(courseOutline.getCourseAssessments());
+
         CourseOutline oldCourseOutline = null;
         if (courseOutline.getId() != null) {
             oldCourseOutline = courseOutlineRepository.getById(courseOutline.getId());
@@ -88,6 +90,8 @@ public class CourseOutlineServiceImpl
 
         if (courseOutline.getStatus() == OutlineStatus.PUBLISHED)
             throw new RuntimeException("Cannot update a published course outline");
+
+        validateCourseAssessmentPercent(courseOutline.getCourseAssessments());
 
         courseOutline.setId(id);
         CourseOutline oldCourseOutline = courseOutlineRepository.getById(id);
@@ -159,5 +163,23 @@ public class CourseOutlineServiceImpl
         }
 
         return oldAM;
+    }
+
+    private void validateCourseAssessmentPercent(List<CourseAssessment> courseAssessments)
+    {
+        // check sum of all weight percent of course assessments must be 100
+        for (CourseAssessment courseAssessment : courseAssessments) {
+            List<AssessmentMethod> assessmentMethods = courseAssessment.getAssessmentMethods();
+            if (assessmentMethods.stream().anyMatch(am -> am.getWeightPercent() <= 0))
+                throw new RuntimeException("Weight percent of assessment methods must be greater than 0");
+        }
+
+        double sum = courseAssessments.stream()
+                .mapToInt(ca -> ca.getAssessmentMethods().stream()
+                        .mapToInt(AssessmentMethod::getWeightPercent)
+                        .sum())
+                .sum();
+        if (sum != 100)
+            throw new RuntimeException("Sum of weight percent of course assessments must be 100");
     }
 }
