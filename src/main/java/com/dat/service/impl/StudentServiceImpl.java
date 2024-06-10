@@ -2,10 +2,8 @@ package com.dat.service.impl;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
-import com.dat.pojo.Student;
-import com.dat.pojo.User;
-import com.dat.pojo.UserRole;
-import com.dat.pojo.UserStatus;
+import com.dat.pojo.*;
+import com.dat.repository.BaseRepository;
 import com.dat.repository.StudentRepository;
 import com.dat.repository.UserRepository;
 import com.dat.service.StudentService;
@@ -21,7 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Service
-public class StudentServiceImpl implements StudentService {
+public class StudentServiceImpl extends BaseServiceImpl<Student, Integer> implements StudentService {
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
@@ -32,6 +30,10 @@ public class StudentServiceImpl implements StudentService {
     private Cloudinary cloudinary;
     @Autowired
     private UserService userService;
+
+    public StudentServiceImpl(BaseRepository<Student, Integer> repository) {
+        super(repository);
+    }
 
     @Override
     public void studentRegister(Student student) {
@@ -78,5 +80,32 @@ public class StudentServiceImpl implements StudentService {
         oldStudent.setStudentCode(student.getStudentCode());
         studentRepository.update(oldStudent);
         userService.updateCurrentUserInfo(student.getUser(), avatar);
+    }
+
+    @Override
+    public boolean addOrUpdate(Student student, MultipartFile avatar) {
+        User updateUser = null;
+        try {
+            updateUser = userService.addOrUpdate(student.getUser(), avatar);
+            student.setUser(updateUser);
+            return studentRepository.addOrUpdate(student);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void acceptPendingStudent(Student student, MultipartFile avatar) {
+        User oldUserPending = userRepository.findByIdAndStatus(student.getUser().getId(), UserStatus.PENDING);
+        if (oldUserPending == null)
+            throw new RuntimeException("User is not in pending status");
+        try {
+            student.getUser().setStatus(UserStatus.ENABLED);
+            User updateUser = userService.addOrUpdate(student.getUser(), avatar);
+            student.setUser(updateUser);
+            studentRepository.addOrUpdate(student);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

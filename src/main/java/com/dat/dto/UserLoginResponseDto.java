@@ -14,4 +14,5 @@ public class UserLoginResponseDto {
     private String fullName;
     private String role;
     private String avatar;
+    private String status;
 }

@@ -37,6 +37,7 @@ public class ApiLoginController {
         ulrd.setToken(token);
         ulrd.setFullName(String.format("%s %s", user.getLastName(), user.getFirstName()));
         ulrd.setRole(user.getRole().name());
+        ulrd.setStatus(user.getStatus().name());
         ulrd.setAvatar(user.getImage());
         return ulrd;
     }

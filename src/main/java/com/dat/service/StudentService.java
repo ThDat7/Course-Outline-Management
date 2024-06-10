@@ -5,7 +5,7 @@ import com.dat.pojo.Student;
 import com.dat.pojo.User;
 import org.springframework.web.multipart.MultipartFile;
 
-public interface StudentService {
+public interface StudentService extends BaseService<Student, Integer> {
     void studentRegister(Student student);
 
     Student getProfile();
@@ -13,4 +13,8 @@ public interface StudentService {
     void additionalStudentInfo(MultipartFile avatar);
 
     void updateProfile(Student student, MultipartFile avatar);
+
+    void acceptPendingStudent(Student student, MultipartFile avatar);
+
+    boolean addOrUpdate(Student student, MultipartFile avatar);
 }

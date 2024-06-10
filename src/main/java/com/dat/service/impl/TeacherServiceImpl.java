@@ -79,13 +79,42 @@ public class TeacherServiceImpl
         if (oldUserPending == null)
             throw new RuntimeException("Your account is not in addition info status");
 
-        teacher.getUser().setStatus(UserStatus.ENABLED);
-        teacherRepository.addOrUpdate(teacher);
+        Teacher oldTeacher = teacherRepository.getByUserId(currentUserId);
+        oldTeacher.getUser().setStatus(UserStatus.ENABLED);
+        teacherRepository.addOrUpdate(oldTeacher);
         userService.updateCurrentUserInfo(teacher.getUser(), avatar);
     }
 
     @Override
     public void updateProfile(Teacher teacher, MultipartFile avatar) {
         userService.updateCurrentUserInfo(teacher.getUser(), avatar);
+    }
+
+    @Override
+    public boolean addOrUpdate(Teacher teacher, MultipartFile avatar) {
+        User updateUser = null;
+        try {
+            updateUser = userService.addOrUpdate(teacher.getUser(), avatar);
+            teacher.setUser(updateUser);
+            return teacherRepository.addOrUpdate(teacher);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void acceptPending(Teacher teacher, MultipartFile avatar) {
+        User oldUserPending = userRepository.findByIdAndStatus(teacher.getUser().getId(), UserStatus.PENDING);
+        if (oldUserPending == null)
+            throw new RuntimeException("User is not in pending status");
+
+        try {
+            teacher.getUser().setStatus(UserStatus.ENABLED);
+            User updateUser = userService.addOrUpdate(teacher.getUser(), avatar);
+            teacher.setUser(updateUser);
+            addOrUpdate(teacher);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

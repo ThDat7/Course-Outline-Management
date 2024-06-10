@@ -69,12 +69,32 @@
         <label for="status">Trạng thái</label>
     </div>
     <div class="form-floating mb-3 mt-3">
-        <form:input type="file" class="form-control"
-                    path="file" id="file"/>
-        <label for="file">Avatar</label>
+        <input type="file" class="form-control"
+                    name="avatar" id="avatar"/>
+        <label for="avatar">Avatar</label>
+
+        <form:hidden path="image" id="image"/>
     </div>
+    <img class="preview-avatar" src="#" style="max-height: 300px"/>
 
     <div class="form-floating mt-1">
         <button class="btn btn-info" type="submit">Thêm người dùng</button>
     </div>
 </form:form>
+<script>
+$(document).ready(function () {
+    const oldImg = $('#image').val()
+    if (oldImg) {
+        $('.preview-avatar').attr('src', oldImg)
+    }
+
+    $('#avatar').change(function () {
+            let file = this.files[0];
+            let reader = new FileReader();
+            reader.onload = function (e) {
+                $('.preview-avatar').attr('src', e.target.result);
+            };
+            reader.readAsDataURL(file);
+        });
+    });
+</script>

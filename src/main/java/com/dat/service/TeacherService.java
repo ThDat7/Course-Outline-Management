@@ -16,4 +16,8 @@ public interface TeacherService extends BaseService<Teacher, Integer> {
     void additionalInfo(Teacher teacherInfoDto2Entity, MultipartFile avatar);
 
     void updateProfile(Teacher teacher, MultipartFile avatar);
+
+    void acceptPending(Teacher teacher, MultipartFile avatar);
+
+    boolean addOrUpdate(Teacher teacher, MultipartFile avatar);
 }

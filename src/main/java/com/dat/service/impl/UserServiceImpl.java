@@ -41,20 +41,6 @@ public class UserServiceImpl
     }
 
     @Override
-    public boolean addOrUpdate(User u) {
-//        if (u.getFile() != null && u.getFile().getSize() > 0) {
-//            try {
-//                Map res = this.cloudinary.uploader().upload(u.getFile().getBytes(), ObjectUtils.asMap("resource_type", "auto"));
-//                u.setImage(res.get("secure_url").toString());
-//            } catch (IOException ex) {
-//                Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-//        }
-
-        return super.addOrUpdate(u);
-    }
-
-    @Override
     public List<User> getUserPending(Map<String, String> params) {
         params.put("userStatus", "PENDING");
         return super.getAll(params);
@@ -64,11 +50,6 @@ public class UserServiceImpl
     public boolean updateAndAcceptUser(User user) {
         user.setStatus(UserStatus.NEED_INFO);
         return super.addOrUpdate(user);
-    }
-
-    @Override
-    public void rejectPending(Integer id) {
-        userRepository.updateStatus(id, UserStatus.DISABLED);
     }
 
     @Override
@@ -107,6 +88,21 @@ public class UserServiceImpl
             throw new UsernameNotFoundException("User not found");
 
         return passwordEncoder.matches(password, user.getPassword());
+    }
+
+    public User addOrUpdate(User user, MultipartFile avatar) throws IOException {
+        if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        } else {
+            User oldUser = userRepository.getById(user.getId());
+            if (oldUser == null)
+                throw new RuntimeException("Create User with null password");
+            user.setPassword(oldUser.getPassword());
+        }
+
+        uploadAvatar(user, avatar);
+        userRepository.addOrUpdate(user);
+        return user;
     }
 
     public void updateCurrentUserInfo(User user, MultipartFile avatar) {

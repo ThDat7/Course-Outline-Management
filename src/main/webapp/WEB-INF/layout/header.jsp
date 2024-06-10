@@ -23,6 +23,12 @@
                     <a class="nav-link" href=<c:url value='/users/'/>>Quản lý Người dùng</a>
                 </li>
                 <li class=" nav-item">
+                    <a class="nav-link" href=<c:url value="/teachers/"/>>Quản lý Giảng viên</a>
+                </li>
+                <li class=" nav-item">
+                    <a class="nav-link" href=<c:url value="/students/"/>>Quản lý Học sinh</a>
+                </li>
+                <li class=" nav-item">
                     <a class="nav-link" href=<c:url value="/users/pending/"/>>Quản lý Yêu cầu tài khoản</a>
                 </li>
                 <li class="nav-item">

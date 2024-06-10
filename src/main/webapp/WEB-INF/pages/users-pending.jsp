@@ -40,8 +40,9 @@
                 <td>${u.role.toString()}</td>
                 <td>${u.email}</td>
                 <td>
-                    <a href="<c:url value='/users/pending/${u.id}'/>" class="btn btn-success">Chi tiết</a>
-                    <a href="<c:url value='/users/pending/reject/${u.id}'/>" class="btn btn-danger">Từ chối</a>
+                    <c:set var="role" value="${u.role.name().toLowerCase()}"/>
+                    <a href="<c:url value='/users/pending/${role}/${u.id}'/>" class="btn btn-success">Chi tiết</a>
+                    <a href="<c:url value='/users/pending/${role}/delete/${u.id}'/>" class="btn btn-danger">Xóa yêu cầu</a>
                 </td>
             </tr>
         </c:forEach>

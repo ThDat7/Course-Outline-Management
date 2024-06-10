@@ -73,17 +73,6 @@ public class UserRepositoryImpl
     }
 
     @Override
-    public void updateStatus(Integer id, UserStatus status) {
-        Session s = factory.getObject().getCurrentSession();
-        User u = s.get(User.class, id);
-        if (u == null)
-            return;
-
-        u.setStatus(status);
-        s.update(u);
-    }
-
-    @Override
     public User findByUsername(String username) {
         Session s = factory.getObject().getCurrentSession();
         return s.createQuery("SELECT u FROM User u where u.username = :username", User.class)

@@ -1,5 +1,6 @@
 package com.dat.controllers;
 
+import com.dat.pojo.Teacher;
 import com.dat.pojo.User;
 import com.dat.pojo.UserRole;
 import com.dat.pojo.UserStatus;
@@ -11,7 +12,9 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -34,9 +37,19 @@ public class UserController extends EntityListController<User, Integer> {
         this.userService = userService;
     }
 
+    @Override
+    public String detail(Model model, @PathVariable Integer id) {
+        String destination = super.detail(model, id);
+        User user = (User) model.getAttribute("user");
+        user.setPassword("");
+        model.addAttribute("user", user);
+        return destination;
+    }
+
     @PostMapping
-    public String add(@ModelAttribute User user) {
-        return super.add(user);
+    public String add(@ModelAttribute User user, @RequestParam(name = "avatar", required = false) MultipartFile avatar) throws IOException {
+        userService.addOrUpdate(user, avatar);
+        return "redirect:/users";
     }
 
     @Override

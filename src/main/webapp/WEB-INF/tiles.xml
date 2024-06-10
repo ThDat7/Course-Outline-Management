@@ -105,4 +105,16 @@
                        value="/WEB-INF/pages/list-educationProgram.jsp"/>
     </definition>
 
+    <definition name="student-detail" extends="baseLayout">
+        <put-attribute name="title" value="Quản trị"/>
+        <put-attribute name="content"
+                       value="/WEB-INF/pages/student-detail.jsp"/>
+    </definition>
+
+    <definition name="teacher-detail" extends="baseLayout">
+        <put-attribute name="title" value="Quản trị"/>
+        <put-attribute name="content"
+                       value="/WEB-INF/pages/teacher-detail.jsp"/>
+    </definition>
+
 </tiles-definitions>

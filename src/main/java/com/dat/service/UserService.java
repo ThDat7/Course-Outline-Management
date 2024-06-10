@@ -16,8 +16,6 @@ public interface UserService
 
     boolean updateAndAcceptUser(User user);
 
-    void rejectPending(Integer id);
-
     void updateCurrentUserInfo(User user, MultipartFile avatar);
 
     void uploadAvatar(User user, MultipartFile avatar) throws IOException;
@@ -27,4 +25,6 @@ public interface UserService
     User getByUserName(String username);
 
     boolean authenticate(String username, String password);
+
+    User addOrUpdate(User user, MultipartFile avatar) throws IOException;
 }
