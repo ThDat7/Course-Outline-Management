@@ -22,4 +22,5 @@
     </form:select>
 
     <label for="${param.field}" class="form-label">${param.label}</label>
+    <form:errors path="${param.field}" cssClass="text-danger"/>
 </div>

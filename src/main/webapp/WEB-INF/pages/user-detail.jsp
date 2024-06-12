@@ -26,32 +26,38 @@
         <form:input type="text" class="form-control"
                     path="lastName" id="lastName" placeholder="Họ..."/>
         <label for="lastName">Họ</label>
+        <form:errors path="lastName" element="div" cssClass="text-danger" />
     </div>
     <div class="form-floating mb-3 mt-3">
         <form:input type="text" class="form-control"
                     path="firstName" id="firstName" placeholder="Tên..."/>
         <label for="firstName">Tên</label>
+        <form:errors path="firstName" element="div" cssClass="text-danger" />
     </div>
     <div class="form-floating mb-3 mt-3">
         <form:input type="text" class="form-control"
                     path="email" id="email" placeholder="Email..."/>
         <label for="email">Email</label>
+        <form:errors path="email" element="div" cssClass="text-danger" />
     </div>
     <div class="form-floating mb-3 mt-3">
         <form:input type="text" class="form-control"
                     path="username" id="username" placeholder="Tên đăng nhập..."/>
         <label for="username">Tên đăng nhập</label>
+        <form:errors path="username" element="div" cssClass="text-danger" />
     </div>
     <div class="form-floating mb-3 mt-3">
         <form:input type="password" class="form-control"
                     path="password" id="password" placeholder="Mật khẩu..."/>
         <label for="password">Mật khẩu</label>
+        <form:errors path="password" element="div" cssClass="text-danger" />
     </div>
     <div class="form-floating mb-3 mt-3">
         <form:select class="form-control" path="role" id="role">
             <form:options items="${roles}"/>
         </form:select>
         <label for="role">Chức vụ</label>
+        <form:errors path="role" element="div" cssClass="text-danger" />
     </div>
     <div class="form-floating mb-3 mt-3">
         <form:select class="form-control" path="status" id="status">
@@ -67,6 +73,7 @@
             </c:forEach>
         </form:select>
         <label for="status">Trạng thái</label>
+        <form:errors path="status" element="div" cssClass="text-danger" />
     </div>
     <div class="form-floating mb-3 mt-3">
         <input type="file" class="form-control"
@@ -78,7 +85,7 @@
     <img class="preview-avatar" src="#" style="max-height: 300px"/>
 
     <div class="form-floating mt-1">
-        <button class="btn btn-info" type="submit">Thêm người dùng</button>
+        <button class="btn btn-info" type="submit">Lưu</button>
     </div>
 </form:form>
 <script>

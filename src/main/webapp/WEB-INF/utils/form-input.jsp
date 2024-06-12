@@ -6,4 +6,5 @@
     <form:input type="text" class="form-control"
                 path="${param.field}" id="${param.field}"/>
     <label for="${param.field}">${param.label}</label>
+    <form:errors path="${param.field}" cssClass="text-danger"/>
 </div>

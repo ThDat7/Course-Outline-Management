@@ -10,8 +10,11 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -71,7 +74,7 @@ public class MajorController
     }
 
     @PostMapping()
-    public String add(@ModelAttribute("major") Major major) {
-        return super.add(major);
+    public String add(@ModelAttribute("major") @Valid Major major, BindingResult rs, Model model) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        return super.add(major, rs, model);
     }
 }

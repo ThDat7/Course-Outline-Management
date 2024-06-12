@@ -11,9 +11,11 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -37,7 +39,15 @@ public class TeacherController extends EntityListController<Teacher, Integer> {
     }
 
     @PostMapping("/pending/accept")
-    public String acceptPendingStudent(@ModelAttribute Teacher teacher, @RequestParam(name = "avatar", required = false) MultipartFile avatar) {
+    public String acceptPendingStudent(@ModelAttribute @Valid Teacher teacher,
+                                       BindingResult rs,
+                                       @RequestParam(name = "avatar", required = false) MultipartFile avatar,
+                                       Model model) {
+        if (rs.hasErrors()) {
+            addDetailAttributes(model);
+            return "teacher-detail";
+        }
+
         teacherService.acceptPending(teacher, avatar);
         return "redirect:/teachers";
     }
@@ -62,7 +72,15 @@ public class TeacherController extends EntityListController<Teacher, Integer> {
     }
 
     @PostMapping
-    public String add(@ModelAttribute Teacher teacher, @RequestParam(name = "avatar", required = false) MultipartFile avatar) {
+    public String add(@ModelAttribute @Valid Teacher teacher,
+                      BindingResult rs,
+                      @RequestParam(name = "avatar", required = false) MultipartFile avatar,
+                      Model model) {
+        if (rs.hasErrors()) {
+            addDetailAttributes(model);
+            return "teacher-detail";
+        }
+
         teacherService.addOrUpdate(teacher, avatar);
         return "redirect:/teachers";
     }

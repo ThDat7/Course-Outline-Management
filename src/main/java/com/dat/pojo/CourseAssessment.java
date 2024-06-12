@@ -5,6 +5,9 @@
 package com.dat.pojo;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,6 +32,10 @@ public class CourseAssessment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @Column(nullable = false)
+    @NotNull(message = "{courseAssessment.type.nullErr}")
+    @NotBlank(message = "{courseAssessment.type.blankErr}")
     private String type;
 
     @OneToMany(mappedBy = "courseAssessment", cascade = CascadeType.ALL, orphanRemoval = true)

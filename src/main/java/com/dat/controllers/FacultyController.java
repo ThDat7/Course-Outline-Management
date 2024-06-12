@@ -6,8 +6,11 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -47,8 +50,8 @@ public class FacultyController
     }
 
     @PostMapping
-    public String add(Faculty f) {
-        return super.add(f);
+    public String add(@Valid Faculty f, BindingResult rs, Model model) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        return super.add(f, rs, model);
     }
 
     @Override

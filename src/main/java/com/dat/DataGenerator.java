@@ -102,6 +102,8 @@ public class DataGenerator {
         Student student = new Student();
         student.setUser(user3);
         student.setMajor(new Major(1));
+        student.setSchoolYear(2022);
+        student.setStudentCode("B20DCCN001");
         s.save(student);
 
         for (int i = 0; i < number; i++) {

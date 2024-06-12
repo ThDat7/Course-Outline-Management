@@ -11,9 +11,11 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -47,7 +49,15 @@ public class UserController extends EntityListController<User, Integer> {
     }
 
     @PostMapping
-    public String add(@ModelAttribute User user, @RequestParam(name = "avatar", required = false) MultipartFile avatar) throws IOException {
+    public String add(@Valid @ModelAttribute("user") User user,
+                      BindingResult rs,
+                      @RequestParam(name = "avatar", required = false) MultipartFile avatar,
+                      Model model) throws IOException {
+        if (rs.hasErrors()) {
+            addDetailAttributes(model);
+            return "user-detail";
+        }
+
         userService.addOrUpdate(user, avatar);
         return "redirect:/users";
     }

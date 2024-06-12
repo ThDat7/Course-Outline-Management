@@ -12,8 +12,10 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
@@ -91,11 +93,17 @@ public class EducationProgramController
 
 
     @PostMapping()
-    public String add(@ModelAttribute("educationProgram") EducationProgram educationProgram, @RequestParam(name = "courses", required = false) List<String> courses) {
-        if (educationProgramService.addOrUpdate(educationProgram, courses))
-            return "redirect:/education-programs/";
+    public String add(@ModelAttribute("educationProgram") @Valid EducationProgram educationProgram,
+                      BindingResult rs,
+                      @RequestParam(name = "courses", required = false) List<String> courses,
+                      Model model) {
+        if (rs.hasErrors()) {
+            addDetailAttributes(model);
+            return "educationProgram-detail";
+        }
 
-        return "educationProgram-detail";
+        educationProgramService.addOrUpdate(educationProgram, courses);
+        return "redirect:/education-programs/";
     }
 
     @Override

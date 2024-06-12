@@ -5,13 +5,10 @@
 package com.dat.pojo;
 
 import java.time.LocalTime;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,12 +29,20 @@ public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
+    @NotNull(message = "{comment.user.nullErr}")
     private User user;
+
     @ManyToOne
     @JoinColumn(name = "course_outline_id", nullable = false)
     private CourseOutline courseOutline;
+
+    @Column(nullable = false)
+    @NotNull(message = "{comment.cmt.nullErr}")
+    @Size(min = 2, message = "{comment.cmt.lengthErr}")
     private String cmt;
+
     private LocalTime time;
 }

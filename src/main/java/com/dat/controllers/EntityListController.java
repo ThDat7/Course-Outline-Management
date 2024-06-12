@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.Serializable;
@@ -74,30 +75,35 @@ public abstract class EntityListController<T, K extends Serializable> {
     @GetMapping("/{id}")
     public String detail(Model model, @PathVariable K id) {
         T t = service.getById(id);
-        model.addAttribute("rootEndpoint", rootEndpoint);
-        model.addAttribute("entityName", entityName);
-        model.addAttribute("entityLabelName", entityLabelName.toUpperCase());
+        addDetailAttributes(model);
         model.addAttribute(entityName, t);
-        addAtributes(model);
         return String.format("%s-detail", entityName);
     }
 
     @GetMapping("/create")
     public String create(Model model) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        model.addAttribute("rootEndpoint", rootEndpoint);
-        model.addAttribute("entityName", entityName);
-        model.addAttribute("entityLabelName", entityLabelName.toUpperCase());
+        addDetailAttributes(model);
         model.addAttribute(entityName, createNewEntity());
-        addAtributes(model);
         return String.format("%s-detail", entityName);
     }
 
     //    @PostMapping
-    public String add(@ModelAttribute T t) {
-        if (service.addOrUpdate(t) == true)
-            return String.format("redirect:%s/", rootEndpoint);
+    public String add(@ModelAttribute T t, BindingResult rs, Model model) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        if (rs.hasErrors()) {
+            addDetailAttributes(model);
+            return String.format("%s-detail", entityName);
+        }
 
-        return String.format("%s-detail", entityName);
+        service.addOrUpdate(t);
+        return String.format("redirect:%s/", rootEndpoint);
+
+    }
+
+    protected void addDetailAttributes(Model model) {
+        model.addAttribute("rootEndpoint", rootEndpoint);
+        model.addAttribute("entityName", entityName);
+        model.addAttribute("entityLabelName", entityLabelName.toUpperCase());
+        addAtributes(model);
     }
 
     @GetMapping("/delete/{id}")

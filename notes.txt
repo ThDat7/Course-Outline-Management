@@ -38,3 +38,5 @@ course outline khi đã select môn, sẽ hiện các giáo viên thuộc khoa �
 ** tích hợp firebase realtime chat
 *** validate bean
 *** username unique
+
+# refactor: user-detail
