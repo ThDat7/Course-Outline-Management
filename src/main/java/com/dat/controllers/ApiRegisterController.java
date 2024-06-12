@@ -2,6 +2,7 @@ package com.dat.controllers;
 
 import com.dat.dto.MajorDto;
 import com.dat.dto.StudentInfoDto;
+import com.dat.dto.StudentRegisterRequestDto;
 import com.dat.dto.TeacherInfoDto;
 import com.dat.pojo.Major;
 import com.dat.pojo.Student;
@@ -16,6 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -38,19 +40,19 @@ public class ApiRegisterController {
     }
 
     @PostMapping("/student")
-    public void studentRegister(@ModelAttribute StudentInfoDto studentInfoDto) {
-        studentService.studentRegister(studentDto2User(studentInfoDto));
+    public void studentRegister(@Valid @ModelAttribute StudentRegisterRequestDto studentDto) {
+        studentService.studentRegister(studentRegisterDto2User(studentDto));
     }
 
     @PostMapping("/teacher")
-    public void teacherRegister(@ModelAttribute TeacherInfoDto teacherInfoDto) {
+    public void teacherRegister(@Valid @ModelAttribute TeacherInfoDto teacherInfoDto) {
         teacherService.teacherRegister(teacherDto2User(teacherInfoDto),
                 teacherInfoDto.getMajorId(), teacherInfoDto.getAvatar());
     }
 
-    private Student studentDto2User(StudentInfoDto studentInfoDto) {
-        User user = modelMapper.map(studentInfoDto, User.class);
-        Student student = modelMapper.map(studentInfoDto, Student.class);
+    private Student studentRegisterDto2User(StudentRegisterRequestDto studentDto) {
+        User user = modelMapper.map(studentDto, User.class);
+        Student student = modelMapper.map(studentDto, Student.class);
         student.setUser(user);
         return student;
     }

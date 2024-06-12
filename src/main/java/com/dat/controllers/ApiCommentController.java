@@ -7,6 +7,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/api/comments")
 @CrossOrigin
@@ -17,7 +19,7 @@ public class ApiCommentController {
     private ModelMapper modelMapper;
 
     @PostMapping("/{courseOutlineId}")
-    public void newComment(@PathVariable Integer courseOutlineId, @RequestBody CommentRequestDto commentRequestDto) {
+    public void newComment(@PathVariable Integer courseOutlineId, @RequestBody @Valid CommentRequestDto commentRequestDto) {
         Comment comment = dto2Entity(commentRequestDto);
         commentService.saveOrUpdate(comment, courseOutlineId);
     }

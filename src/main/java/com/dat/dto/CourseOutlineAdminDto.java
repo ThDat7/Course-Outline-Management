@@ -17,7 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CourseOutlineAdminDto {
-    private int id;
+    private Integer id;
     private String content;
     private int yearPublished;
     private CourseDto course;

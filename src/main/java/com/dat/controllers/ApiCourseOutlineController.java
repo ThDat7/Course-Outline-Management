@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.Map;
@@ -56,8 +57,8 @@ public class ApiCourseOutlineController {
     @PostMapping("/{courseOutlineId}")
     @ResponseStatus(HttpStatus.OK)
     public void update(@PathVariable("courseOutlineId") int id,
-                       @RequestBody CourseOutlineDto courseOutlineDto) {
-        courseOutlineService.update(id, dto2Entity(courseOutlineDto));
+                       @Valid @RequestBody CourseOutlineEditRequestDto coDto) {
+        courseOutlineService.update(id, dto2Entity(coDto));
     }
 
     @PostMapping
@@ -76,7 +77,7 @@ public class ApiCourseOutlineController {
         return dto;
     }
 
-    private CourseOutline dto2Entity(CourseOutlineDto courseOutlineDto) {
+    private CourseOutline dto2Entity(CourseOutlineEditRequestDto courseOutlineDto) {
         return modelMapper.map(courseOutlineDto, CourseOutline.class);
     }
 

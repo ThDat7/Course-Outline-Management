@@ -8,10 +8,9 @@ import com.dat.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/login")
@@ -22,8 +21,8 @@ public class ApiLoginController {
     @Autowired
     private JwtService jwtService;
 
-    @RequestMapping
-    public ResponseEntity<UserLoginResponseDto> login(@RequestBody UserLoginRequestDto userLoginRequestDto) {
+    @PostMapping
+    public ResponseEntity<UserLoginResponseDto> login(@Valid @RequestBody UserLoginRequestDto userLoginRequestDto) {
         if (userService.authenticate(userLoginRequestDto.getUsername(), userLoginRequestDto.getPassword())) {
             String token = this.jwtService.generateTokenLogin(userLoginRequestDto.getUsername());
             User user = userService.getByUserName(userLoginRequestDto.getUsername());

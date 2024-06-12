@@ -15,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/api/profile")
 @CrossOrigin
@@ -41,17 +43,17 @@ public class ApiProfileController {
     }
 
     @PostMapping("/teacher")
-    public void updateTeacherProfile(@ModelAttribute TeacherInfoDto teacherInfoDto) {
+    public void updateTeacherProfile(@Valid @ModelAttribute TeacherInfoDto teacherInfoDto) {
         teacherService.updateProfile(teacherInfoDto2Entity(teacherInfoDto), teacherInfoDto.getAvatar());
     }
 
     @PostMapping("/student")
-    public void updateStudentProfile(@ModelAttribute StudentInfoDto studentInfoDto) {
+    public void updateStudentProfile(@Valid @ModelAttribute StudentInfoDto studentInfoDto) {
         studentService.updateProfile(studentInfoDto2Entity(studentInfoDto), studentInfoDto.getAvatar());
     }
 
     @PostMapping("/additional-info/teacher")
-    public void additionalInfoTeacher(@ModelAttribute TeacherInfoDto teacherInfoDto) {
+    public void additionalInfoTeacher(@Valid @ModelAttribute TeacherInfoDto teacherInfoDto) {
         teacherService.additionalInfo(teacherInfoDto2Entity(teacherInfoDto), teacherInfoDto.getAvatar());
     }
 

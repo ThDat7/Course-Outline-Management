@@ -41,8 +41,8 @@ public class StudentServiceImpl extends BaseServiceImpl<Student, Integer> implem
         student.getUser().setId(null);
         student.getUser().setStatus(UserStatus.PENDING);
         student.getUser().setRole(UserRole.STUDENT);
-        student.getUser().setUsername(null);
-        student.getUser().setPassword(null);
+        student.getUser().setUsername("");
+        student.getUser().setPassword("");
         studentRepository.add(student);
     }
 

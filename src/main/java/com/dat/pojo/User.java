@@ -42,7 +42,7 @@ public class User {
     private String phone;
 
     @NotNull(message = "{user.username.nullErr}")
-    @Size(min = 1, max = 50, message = "{user.username.lengthErr}")
+    @Size(max = 50, message = "{user.username.lengthErr}")
     @Column(unique = true, nullable = false, length = 50)
     private String username;
 
