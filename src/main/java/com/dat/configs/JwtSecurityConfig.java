@@ -2,19 +2,27 @@ package com.dat.configs;
 
 import com.dat.filters.JwtAuthenticationTokenFilter;
 import com.dat.filters.RestAuthenticationEntryPoint;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.access.AccessDecisionManager;
+import org.springframework.security.access.vote.AuthenticatedVoter;
+import org.springframework.security.access.vote.RoleVoter;
+import org.springframework.security.access.vote.UnanimousBased;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.access.expression.WebExpressionVoter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -28,6 +36,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 })
 @Order(1)
 public class JwtSecurityConfig extends WebSecurityConfigurerAdapter {
+    @Autowired
+    private UserStatusAccessDecisionVoter userStatusAccessDecisionVoter;
 
     @Bean
     public JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter() throws Exception {
@@ -39,6 +49,16 @@ public class JwtSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public RestAuthenticationEntryPoint restServicesEntryPoint() {
         return new RestAuthenticationEntryPoint();
+    }
+
+    @Bean
+    public AccessDecisionManager accessDecisionManager() {
+        return new UnanimousBased(List.of(
+                new WebExpressionVoter(),
+                new RoleVoter(),
+                new AuthenticatedVoter()
+                ,userStatusAccessDecisionVoter
+        ));
     }
 
     @Bean
@@ -71,6 +91,10 @@ public class JwtSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/education-programs/view/**").authenticated()
 
                 .antMatchers("/api/login", "/api/registry").permitAll()
+
+                .antMatchers("/api/**").authenticated()
+                .accessDecisionManager(accessDecisionManager())
+
                 .and()
                 .addFilterBefore(jwtAuthenticationTokenFilter(), UsernamePasswordAuthenticationFilter.class);
     }
