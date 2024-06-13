@@ -42,7 +42,7 @@ This repository is a course outline management system designed to streamline the
 
 1. Clone the repository:
    ```
-   git clone https://github.com/ThDat7/quanlydecuong.git
+   git clone https://github.com/ThDat7/Course-Outline-Management.git
    ```
 2. Navigate to the project directory:
    ```
