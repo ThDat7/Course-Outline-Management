@@ -40,5 +40,4 @@ course outline khi đã select môn, sẽ hiện các giáo viên thuộc khoa �
 *** username unique
 
 
-chưa valid dto của admin (course outline api)
-# refactor: user-detail
+# refactor: user-detail, auto wired thay vi constructor

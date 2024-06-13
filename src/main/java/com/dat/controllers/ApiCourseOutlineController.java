@@ -12,9 +12,13 @@ import com.dat.service.CourseOutlineService;
 import com.dat.service.MajorService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -62,11 +66,17 @@ public class ApiCourseOutlineController {
     }
 
     @PostMapping
-    public void add(@RequestBody CourseOutlineAdminDto coDto) {
-        CourseOutline co = dto2Entity(coDto);
+    public void add(@RequestBody @Valid CourseOutlineAdminDto coDto, BindingResult rs) throws MethodArgumentNotValidException {
+        if (rs.hasErrors())
+            throw new MethodArgumentNotValidException(null, rs);
 
-        if (!courseOutlineService.addOrUpdate(dto2Entity(coDto)))
-            throw new RuntimeException("Add course outline failed");
+        try {
+            courseOutlineService.addOrUpdate(dto2Entity(coDto), coDto.getEpcId());
+        } catch (RuntimeException e) {
+            rs.addError(
+                new FieldError("courseOutline", "courseAssessments", e.getMessage()));
+            throw new MethodArgumentNotValidException(null, rs);
+        }
     }
 
     private CourseOutlineDto entity2Dto(CourseOutline courseOutline) {

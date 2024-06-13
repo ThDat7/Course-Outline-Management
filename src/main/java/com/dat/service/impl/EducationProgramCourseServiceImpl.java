@@ -47,17 +47,6 @@ public class EducationProgramCourseServiceImpl implements EducationProgramCourse
     }
 
     @Override
-    public void associateOutline(int epcId, CourseOutline courseOutline) {
-        EducationProgramCourse epc = educationProgramCourseRepository.getById(epcId);
-        courseOutline.setYearPublished(Year.now().getValue());
-        courseOutlineRepository.addOrUpdate(courseOutline);
-        epc.setCourseOutline(courseOutline);
-
-        educationProgramCourseRepository.addOrUpdate(epc);
-        courseOutlineService.addOrUpdate(courseOutline);
-    }
-
-    @Override
     public EducationProgram getView(int id) {
         return educationProgramCourseRepository.getView(id);
     }

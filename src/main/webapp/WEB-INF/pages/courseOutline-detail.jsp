@@ -8,6 +8,8 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <script type="text/javascript" src="<c:url value="/js/course-outline-detail.js"/>"></script>
 
+<div class="err-msg text-danger">
+</div>
 <form:hidden path="id"/>
 <jsp:include page="../utils/form-select.jsp">
     <jsp:param name="field" value="course"/>

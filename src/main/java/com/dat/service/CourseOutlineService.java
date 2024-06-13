@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface CourseOutlineService extends BaseService<CourseOutline, Integer> {
-    boolean addOrUpdate(CourseOutline courseOutline);
+    void addOrUpdate(CourseOutline courseOutline, Integer epcId);
 
     boolean update(int id, CourseOutline courseOutline);
 

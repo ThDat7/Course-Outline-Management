@@ -4,8 +4,11 @@ import com.dat.dto.DataWithCounterDto;
 import com.dat.pojo.*;
 import com.dat.repository.CourseAssessmentRepository;
 import com.dat.repository.CourseOutlineRepository;
+import com.dat.repository.EducationProgramCourseRepository;
 import com.dat.service.CourseOutlineService;
+import com.dat.service.EducationProgramCourseService;
 import com.dat.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +25,8 @@ public class CourseOutlineServiceImpl
 
     private CourseOutlineRepository courseOutlineRepository;
     private CourseAssessmentRepository courseAssessmentRepository;
+    @Autowired
+    private EducationProgramCourseRepository educationProgramCourseRepository;
     private UserService userService;
 
 
@@ -35,20 +40,30 @@ public class CourseOutlineServiceImpl
     }
 
     @Override
-    public boolean addOrUpdate(CourseOutline courseOutline) {
+    public void addOrUpdate(CourseOutline courseOutline, Integer epcId) {
         validateCourseAssessmentPercent(courseOutline.getCourseAssessments());
 
         CourseOutline oldCourseOutline = null;
         if (courseOutline.getId() != null) {
             oldCourseOutline = courseOutlineRepository.getById(courseOutline.getId());
             courseOutline.setYearPublished(oldCourseOutline.getYearPublished());
-        } else courseOutline.setYearPublished(Year.now().getValue());
-
-        courseOutline.setCourseAssessments(
-                updateCourseAssessments(courseOutline.getCourseAssessments(),
-                        oldCourseOutline));
-
-        return courseOutlineRepository.addOrUpdate(courseOutline);
+            courseOutline.setCourseAssessments(
+                    updateCourseAssessments(courseOutline.getCourseAssessments(),
+                            oldCourseOutline));
+        } else {
+            courseOutline.setYearPublished(Year.now().getValue());
+            courseOutline.getCourseAssessments().forEach(ca -> {
+                ca.setCourseOutline(courseOutline);
+                ca.getAssessmentMethods().forEach(am -> am.setCourseAssessment(ca));
+            });
+        }
+        courseOutlineRepository.addOrUpdate(courseOutline);
+        if (epcId != null) {
+            EducationProgramCourse epc = educationProgramCourseRepository
+                    .getById(epcId);
+            epc.setCourseOutline(courseOutline);
+            educationProgramCourseRepository.addOrUpdate(epc);
+        }
     }
 
     public DataWithCounterDto<CourseOutline> searchApi(Map<String, String> params) {

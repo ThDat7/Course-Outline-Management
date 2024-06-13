@@ -68,6 +68,10 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/courses/**").hasAuthority("ADMIN")
                 .antMatchers("/assign-outlines/**").hasAuthority("ADMIN")
 
+                .antMatchers("/api/education-programs/remove-outline/**").hasAuthority("ADMIN")
+                .antMatchers(HttpMethod.POST, "/api/course-outlines/").hasAuthority("ADMIN")
+                .antMatchers("/api/assign-outlines/create/**").hasAuthority("ADMIN")
+
                 // Common endpoints
                 .antMatchers("/login", "/logout").permitAll()
 

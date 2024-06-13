@@ -54,10 +54,6 @@ public class JwtSecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().ignoringAntMatchers("/api/**");
         http.antMatcher("/api/**").httpBasic().authenticationEntryPoint(restServicesEntryPoint()).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
-                .antMatchers("/api/education-programs/remove-outline/**").hasAuthority("ADMIN")
-                .antMatchers(HttpMethod.POST, "/api/course-outlines/").hasAuthority("ADMIN")
-                .antMatchers("/api/assign-outlines/create/**").hasAuthority("ADMIN")
-
                 // Teacher endpoints
                 .antMatchers("/api/profile/teacher").hasAuthority("TEACHER")
                 .antMatchers("/api/profile/additional-info/teacher").hasAuthority("TEACHER")

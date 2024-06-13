@@ -136,9 +136,13 @@ function submitData(e) {
             })
         }
     })
+    const isCreate = window.location.href.includes('create')
+    const locationTokens = window.location.href.split('/')
+    let epcId = null
+    if (isCreate) epcId = parseInt(locationTokens[locationTokens.length - 2])
 
     const contextPath = window.location.pathname.split('/')[1]
-    const currentId = parseInt(window.location.href.split('/').pop())
+    const currentId = parseInt(locationTokens[locationTokens.length - 1])
     const teacher = {id: parseInt($('select[name="teacher"]').val())}
     const course = {id: parseInt($('select[name="course"]').val())}
     const content = $('textarea[name="content"]').val()
@@ -152,7 +156,8 @@ function submitData(e) {
         teacher,
         status,
         courseAssessments,
-        deadlineDate
+        deadlineDate,
+        epcId
     }
 
     $.ajax({
@@ -162,6 +167,10 @@ function submitData(e) {
         data: JSON.stringify(data),
         success: (res) => {
             window.location.href = `/${contextPath}/course-outlines/`
+        },
+        error: (res) => {
+            let err = res.responseText
+            $(".err-msg").text(err)
         }
     });
 }

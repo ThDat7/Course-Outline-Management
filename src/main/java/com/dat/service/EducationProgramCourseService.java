@@ -14,7 +14,5 @@ public interface EducationProgramCourseService {
 
     void removeOutline(int epId, int courseId);
 
-    void associateOutline(int epcId, CourseOutline courseOutline);
-
     EducationProgram getView(int id);
 }

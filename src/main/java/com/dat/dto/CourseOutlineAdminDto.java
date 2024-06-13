@@ -8,6 +8,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,10 +22,16 @@ import java.util.List;
 public class CourseOutlineAdminDto {
     private Integer id;
     private String content;
-    private int yearPublished;
+
+    @Min(value = 2000, message = "{courseOutline.yearPublished.minErr}")
+    private Integer yearPublished;
     private CourseDto course;
     private TeacherDto teacher;
+    @NotNull(message = "{courseOutline.status.nullErr}")
     private OutlineStatus status;
+    @Valid
     private List<CourseAssessmentDto> courseAssessments = new ArrayList<>();
+    @NotNull(message = "{courseOutline.deadlineDate.nullErr}")
     private Date deadlineDate;
+    private Integer epcId;
 }
