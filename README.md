@@ -35,7 +35,7 @@ This repository is a course outline management system designed to streamline the
 
 ### Frameworks
 
-- Spring Boot
+- Spring MVC
 - ReactJs (Client side - [Another repository](#about-client-repository))
 
 ## Setup
