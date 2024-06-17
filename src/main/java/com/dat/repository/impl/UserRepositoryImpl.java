@@ -88,4 +88,12 @@ public class UserRepositoryImpl
                 .setParameter("status", status)
                 .uniqueResult();
     }
+
+    @Override
+    public List<User> getByIds(List<Integer> ids) {
+        Session s = factory.getObject().getCurrentSession();
+        return s.createQuery("SELECT u FROM User u where u.id in :ids", User.class)
+                .setParameter("ids", ids)
+                .getResultList();
+    }
 }

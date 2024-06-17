@@ -89,6 +89,7 @@ public class JwtSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/comments/**").authenticated()
                 .antMatchers("/api/course-outlines/view/**").authenticated()
                 .antMatchers("/api/education-programs/view/**").authenticated()
+                .antMatchers("/api/users/**").authenticated()
 
                 .antMatchers("/api/login", "/api/registry").permitAll()
 

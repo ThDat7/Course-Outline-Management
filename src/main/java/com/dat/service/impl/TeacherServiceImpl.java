@@ -103,6 +103,11 @@ public class TeacherServiceImpl
     }
 
     @Override
+    public List<Teacher> search(String keyword, List<Integer> excludedIds) {
+        return teacherRepository.search(keyword, excludedIds, 5);
+    }
+
+    @Override
     public void acceptPending(Teacher teacher, MultipartFile avatar) {
         User oldUserPending = userRepository.findByIdAndStatus(teacher.getUser().getId(), UserStatus.PENDING);
         if (oldUserPending == null)

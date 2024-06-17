@@ -105,6 +105,11 @@ public class UserServiceImpl
         return user;
     }
 
+    @Override
+    public List<User> getByIds(List<Integer> ids) {
+        return userRepository.getByIds(ids);
+    }
+
     public void updateCurrentUserInfo(User user, MultipartFile avatar) {
         Integer currentUserId = getCurrentUser().getId();
 

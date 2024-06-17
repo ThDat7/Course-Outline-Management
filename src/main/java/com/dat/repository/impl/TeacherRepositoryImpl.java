@@ -1,9 +1,6 @@
 package com.dat.repository.impl;
 
-import com.dat.pojo.Course;
-import com.dat.pojo.Teacher;
-import com.dat.pojo.User;
-import com.dat.pojo.UserStatus;
+import com.dat.pojo.*;
 import com.dat.repository.TeacherRepository;
 import org.hibernate.Session;
 import org.springframework.context.annotation.PropertySource;
@@ -86,5 +83,17 @@ public class TeacherRepositoryImpl
                 .setParameter("id", id)
                 .setParameter("status", status)
                 .getSingleResult();
+    }
+
+    @Override
+    public List<Teacher> search(String keyword, List<Integer> excludedIds, int limit) {
+        Session s = factory.getObject().getCurrentSession();
+        return s.createQuery("SELECT t FROM Teacher t WHERE " +
+                        "CONCAT(t.user.lastName, ' ', t.user.firstName) LIKE :kw " +
+                        "AND t.user.id NOT IN :excludedIds", Teacher.class)
+                .setParameter("kw", String.format("%%%s%%", keyword))
+                .setParameter("excludedIds", excludedIds)
+                .setMaxResults(limit)
+                .list();
     }
 }

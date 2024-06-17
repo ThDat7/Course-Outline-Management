@@ -27,4 +27,6 @@ public interface UserService
     boolean authenticate(String username, String password);
 
     User addOrUpdate(User user, MultipartFile avatar) throws IOException;
+
+    List<User> getByIds(List<Integer> ids);
 }

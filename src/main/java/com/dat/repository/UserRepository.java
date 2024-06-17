@@ -10,4 +10,6 @@ public interface UserRepository extends BaseRepository<User, Integer> {
     User findByUsername(String username);
 
     User findByIdAndStatus(Integer id, UserStatus status);
+
+    List<User> getByIds(List<Integer> ids);
 }

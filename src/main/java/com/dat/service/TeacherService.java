@@ -1,6 +1,7 @@
 package com.dat.service;
 
 import com.dat.pojo.Teacher;
+import com.dat.pojo.User;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -20,4 +21,6 @@ public interface TeacherService extends BaseService<Teacher, Integer> {
     void acceptPending(Teacher teacher, MultipartFile avatar);
 
     boolean addOrUpdate(Teacher teacher, MultipartFile avatar);
+
+    List<Teacher> search(String keyword, List<Integer> excludedIds);
 }

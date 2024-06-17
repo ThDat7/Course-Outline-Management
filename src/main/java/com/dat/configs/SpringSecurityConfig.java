@@ -75,8 +75,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 // Common endpoints
                 .antMatchers("/login", "/logout").permitAll()
 
-                // Generate data endpoint
+                // Generate data and dev test endpoint
                 .antMatchers("/data").permitAll()
+                .antMatchers("/test").permitAll()
 
                 // Any other requests need authentication
                 .anyRequest().authenticated();
