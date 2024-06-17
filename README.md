@@ -22,6 +22,7 @@ This repository is a course outline management system designed to streamline the
 - Syllabus Reuse: Reuse course outlines across multiple years.
 
 ### Client Features
+- Firebase Real-time chat: Communicate with teachers and students.
 - Teachers: View and edit assigned course outlines.
 - Students: Search, view educational programs and detailed course outlines.
 
@@ -36,7 +37,7 @@ This repository is a course outline management system designed to streamline the
 ### Frameworks
 
 - Spring MVC
-- ReactJs (Client side - [Another repository](#about-client-repository))
+- ReactJs (Client side - [Frontend repository](#about-client-repository))
 
 ## Setup
 
